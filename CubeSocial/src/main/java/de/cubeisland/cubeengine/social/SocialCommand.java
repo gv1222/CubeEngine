@@ -13,12 +13,11 @@ import java.util.Map;
 
 public class SocialCommand
 {
-    public final Map<String, FacebookClient> clients;
+    private final Social module;
 
-    public SocialCommand()
+    public SocialCommand(Social module)
     {
-        clients = new HashMap<String, FacebookClient>();
-        clients.put("public", new com.restfb.DefaultFacebookClient());
+        this.module = module;
     }
 
     @Command
@@ -26,23 +25,33 @@ public class SocialCommand
             names = {"facebook", "fb"},
             desc = "Facebook",
             params = {
-                    @Param(names= {"Token", "t"}, types = String.class)
+                    @Param(names= {"Token", "t"}, types = String.class), //This token can be generated for use at: http://developers.facebook.com/tools/explorer
+                    @Param(names = {"User", "u"}, types = String.class)
             }
     )
     public void facebook(CommandContext context)
     {
-        if (clients.containsKey(context.getSender()))
+        if (module.clients.containsKey(context.getSender()))
         {
             context.sendMessage("You are initialized");
-            FacebookClient client = clients.get(context);
+            FacebookClient client = module.clients.get(context);
             com.restfb.types.User fUser = client.fetchObject("me", com.restfb.types.User.class);
             context.sendMessage("social", "Your name is: {0}", fUser.getName());
             context.sendMessage("social", "Your facebook username is: {0}", fUser.getUsername());
         }
-        else if (context.getString("Token") != null)
+        else if (context.hasNamed("Token"))
         {
-            clients.put(context.getSender().getName(), new com.restfb.DefaultFacebookClient(context.getString("Token")));
-            FacebookClient client = clients.get(context.getSender().getName());
+            FacebookClient client;
+            if (context.hasNamed("User"))
+            {
+                module.clients.put(context.getString("User"), new com.restfb.DefaultFacebookClient(context.getString("Token")));
+                client = module.clients.get(context.getString("User"));
+            }
+            else
+            {
+                module.clients.put(context.getSender().getName(), new com.restfb.DefaultFacebookClient(context.getString("Token")));
+                client = module.clients.get(context.getSender().getName());
+            }
             com.restfb.types.User fUser = client.fetchObject("me", com.restfb.types.User.class);
             context.sendMessage("social", "Your name is: %s", fUser.getName());
             context.sendMessage("social", "Your facebook username is: %s", fUser.getUsername());
