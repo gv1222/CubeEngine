@@ -2,6 +2,9 @@ package de.cubeisland.cubeengine.social;
 
 import com.restfb.FacebookClient;
 import de.cubeisland.cubeengine.core.module.Module;
+import de.cubeisland.cubeengine.social.interactions.SocialCommand;
+import de.cubeisland.cubeengine.social.interactions.SocialListener;
+import de.cubeisland.cubeengine.social.interactions.SocialSubCommand;
 import org.bukkit.Location;
 
 import java.util.HashMap;

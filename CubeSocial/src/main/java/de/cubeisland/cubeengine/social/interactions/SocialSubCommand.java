@@ -1,4 +1,4 @@
-package de.cubeisland.cubeengine.social;
+package de.cubeisland.cubeengine.social.interactions;
 
 import com.restfb.DefaultFacebookClient;
 import com.restfb.FacebookClient;
@@ -9,6 +9,7 @@ import com.restfb.types.User;
 import de.cubeisland.cubeengine.core.command.CommandContext;
 import de.cubeisland.cubeengine.core.command.annotation.Command;
 import de.cubeisland.cubeengine.core.command.annotation.Param;
+import de.cubeisland.cubeengine.social.Social;
 import org.bukkit.Material;
 import org.bukkit.block.Block;
 import org.bukkit.block.Sign;

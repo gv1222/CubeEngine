@@ -1,9 +1,10 @@
-package de.cubeisland.cubeengine.social;
+package de.cubeisland.cubeengine.social.interactions;
 
 import com.restfb.FacebookClient;
 import com.restfb.Parameter;
 import com.restfb.types.Like;
 import com.restfb.types.Page;
+import de.cubeisland.cubeengine.social.Social;
 import org.bukkit.Location;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;

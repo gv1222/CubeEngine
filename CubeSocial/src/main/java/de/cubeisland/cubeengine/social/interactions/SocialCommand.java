@@ -1,4 +1,4 @@
-package de.cubeisland.cubeengine.social;
+package de.cubeisland.cubeengine.social.interactions;
 
 import com.restfb.DefaultFacebookClient;
 import com.restfb.FacebookClient;
@@ -6,6 +6,7 @@ import de.cubeisland.cubeengine.core.command.CommandContext;
 import de.cubeisland.cubeengine.core.command.annotation.Command;
 import de.cubeisland.cubeengine.core.command.annotation.Param;
 import de.cubeisland.cubeengine.core.user.User;
+import de.cubeisland.cubeengine.social.Social;
 import org.bukkit.command.CommandSender;
 
 import java.util.HashMap;
