@@ -22,83 +22,89 @@
 
 package com.restfb.types;
 
-import static com.restfb.util.DateUtils.toDateFromLongFormat;
-import static java.util.Collections.unmodifiableList;
+import com.restfb.Facebook;
 
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 
-import com.restfb.Facebook;
+import static com.restfb.util.DateUtils.toDateFromLongFormat;
+import static java.util.Collections.unmodifiableList;
 
 /**
  * Represents the <a
  * href="http://developers.facebook.com/docs/reference/api/question">Question
  * Graph API type</a>.
- * 
+ *
  * @author <a href="http://restfb.com">Mark Allen</a>
  * @since 1.6.10
  */
-public class Question extends FacebookType {
-  @Facebook
-  private NamedFacebookType from;
+public class Question extends FacebookType
+{
+    @Facebook
+    private NamedFacebookType from;
 
-  @Facebook
-  private String question;
+    @Facebook
+    private String question;
 
-  @Facebook("created_time")
-  private String createdTime;
+    @Facebook("created_time")
+    private String createdTime;
 
-  @Facebook("updated_time")
-  private String updatedTime;
+    @Facebook("updated_time")
+    private String updatedTime;
 
-  @Facebook
-  private List<QuestionOption> options = new ArrayList<QuestionOption>();
+    @Facebook
+    private List<QuestionOption> options = new ArrayList<QuestionOption>();
 
-  private static final long serialVersionUID = 1L;
+    private static final long serialVersionUID = 1L;
 
-  /**
-   * User who asked the question.
-   * 
-   * @return User who asked the question.
-   */
-  public NamedFacebookType getFrom() {
-    return from;
-  }
+    /**
+     * User who asked the question.
+     *
+     * @return User who asked the question.
+     */
+    public NamedFacebookType getFrom()
+    {
+        return from;
+    }
 
-  /**
-   * Text of the question.
-   * 
-   * @return Text of the question.
-   */
-  public String getQuestion() {
-    return question;
-  }
+    /**
+     * Text of the question.
+     *
+     * @return Text of the question.
+     */
+    public String getQuestion()
+    {
+        return question;
+    }
 
-  /**
-   * Time when question was created.
-   * 
-   * @return Time when question was created.
-   */
-  public Date getCreatedTime() {
-    return toDateFromLongFormat(createdTime);
-  }
+    /**
+     * Time when question was created.
+     *
+     * @return Time when question was created.
+     */
+    public Date getCreatedTime()
+    {
+        return toDateFromLongFormat(createdTime);
+    }
 
-  /**
-   * Time when question was last updated.
-   * 
-   * @return Time when question was last updated.
-   */
-  public Date getUpdatedTime() {
-    return toDateFromLongFormat(updatedTime);
-  }
+    /**
+     * Time when question was last updated.
+     *
+     * @return Time when question was last updated.
+     */
+    public Date getUpdatedTime()
+    {
+        return toDateFromLongFormat(updatedTime);
+    }
 
-  /**
-   * The list of options available as answers to the question.
-   * 
-   * @return The list of options available as answers to the question.
-   */
-  public List<QuestionOption> getOptions() {
-    return unmodifiableList(options);
-  }
+    /**
+     * The list of options available as answers to the question.
+     *
+     * @return The list of options available as answers to the question.
+     */
+    public List<QuestionOption> getOptions()
+    {
+        return unmodifiableList(options);
+    }
 }

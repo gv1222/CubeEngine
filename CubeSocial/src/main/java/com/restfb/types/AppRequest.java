@@ -22,116 +22,125 @@
 
 package com.restfb.types;
 
-import static com.restfb.util.DateUtils.toDateFromLongFormat;
+import com.restfb.Facebook;
 
 import java.util.Date;
 
-import com.restfb.Facebook;
+import static com.restfb.util.DateUtils.toDateFromLongFormat;
 
 /**
  * Represents the <a
  * href="https://developers.facebook.com/docs/reference/api/user/#apprequests"
  * >App Request Graph API type</a>.
- * 
+ *
  * @author <a href="http://restfb.com">Mark Allen</a>
  * @since 1.6.10
  */
-public class AppRequest extends FacebookType {
-  @Facebook
-  private Application application;
-
-  @Facebook
-  private NamedFacebookType to;
-
-  @Facebook
-  private NamedFacebookType from;
-
-  @Facebook
-  private String message;
-
-  @Facebook("created_time")
-  private String createdTime;
-
-  private static final long serialVersionUID = 1L;
-
-  /**
-   * Represents the <a
-   * href="http://developers.facebook.com/docs/reference/api/page">Cover Graph
-   * API type</a>.
-   * 
-   * @author <a href="http://restfb.com">Mark Allen</a>
-   * @since 1.6.10
-   */
-  public static class Application extends NamedFacebookType {
-    @Facebook("canvas_name")
-    private String canvasName;
+public class AppRequest extends FacebookType
+{
+    @Facebook
+    private Application application;
 
     @Facebook
-    private String namespace;
+    private NamedFacebookType to;
+
+    @Facebook
+    private NamedFacebookType from;
+
+    @Facebook
+    private String message;
+
+    @Facebook("created_time")
+    private String createdTime;
 
     private static final long serialVersionUID = 1L;
 
     /**
-     * The application's canvas name.
-     * 
-     * @return The application's canvas name.
+     * Represents the <a
+     * href="http://developers.facebook.com/docs/reference/api/page">Cover Graph
+     * API type</a>.
+     *
+     * @author <a href="http://restfb.com">Mark Allen</a>
+     * @since 1.6.10
      */
-    public String getCanvasName() {
-      return canvasName;
+    public static class Application extends NamedFacebookType
+    {
+        @Facebook("canvas_name")
+        private String canvasName;
+
+        @Facebook
+        private String namespace;
+
+        private static final long serialVersionUID = 1L;
+
+        /**
+         * The application's canvas name.
+         *
+         * @return The application's canvas name.
+         */
+        public String getCanvasName()
+        {
+            return canvasName;
+        }
+
+        /**
+         * The application's namespace.
+         *
+         * @return The application's namespace.
+         */
+        public String getNamespace()
+        {
+            return namespace;
+        }
     }
 
     /**
-     * The application's namespace.
-     * 
-     * @return The application's namespace.
+     * App associated with the request.
+     *
+     * @return App associated with the request.
      */
-    public String getNamespace() {
-      return namespace;
+    public Application getApplication()
+    {
+        return application;
     }
-  }
 
-  /**
-   * App associated with the request.
-   * 
-   * @return App associated with the request.
-   */
-  public Application getApplication() {
-    return application;
-  }
+    /**
+     * The recipient user associated with the request.
+     *
+     * @return The recipient user associated with the request.
+     */
+    public NamedFacebookType getTo()
+    {
+        return to;
+    }
 
-  /**
-   * The recipient user associated with the request.
-   * 
-   * @return The recipient user associated with the request.
-   */
-  public NamedFacebookType getTo() {
-    return to;
-  }
+    /**
+     * The sender user associated with the request.
+     *
+     * @return The sender user associated with the request.
+     */
+    public NamedFacebookType getFrom()
+    {
+        return from;
+    }
 
-  /**
-   * The sender user associated with the request.
-   * 
-   * @return The sender user associated with the request.
-   */
-  public NamedFacebookType getFrom() {
-    return from;
-  }
+    /**
+     * A string describing the request.
+     *
+     * @return A string describing the request.
+     */
+    public String getMessage()
+    {
+        return message;
+    }
 
-  /**
-   * A string describing the request.
-   * 
-   * @return A string describing the request.
-   */
-  public String getMessage() {
-    return message;
-  }
-
-  /**
-   * Timestamp when the request was created.
-   * 
-   * @return Timestamp when the request was created.
-   */
-  public Date getCreatedTime() {
-    return toDateFromLongFormat(createdTime);
-  }
+    /**
+     * Timestamp when the request was created.
+     *
+     * @return Timestamp when the request was created.
+     */
+    public Date getCreatedTime()
+    {
+        return toDateFromLongFormat(createdTime);
+    }
 }

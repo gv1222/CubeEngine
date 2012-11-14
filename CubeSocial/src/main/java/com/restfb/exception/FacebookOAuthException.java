@@ -25,50 +25,49 @@ package com.restfb.exception;
 /**
  * Indicates that the Facebook Graph API endpoint returned JSON which indicates
  * an error condition related to the OAuth token included in the request.
- * <p>
+ * <p/>
  * Example:<code>
-  {
-      "error": {
-        "type": "OAuthException",
-        "message": "(#210) User not visible",
-        "code": 210
-      }
-  } </code>
- * 
+ * {
+ * "error": {
+ * "type": "OAuthException",
+ * "message": "(#210) User not visible",
+ * "code": 210
+ * }
+ * } </code>
+ *
  * @author <a href="http://restfb.com">Mark Allen</a>
  * @since 1.6
  */
-public class FacebookOAuthException extends FacebookGraphException {
-  /**
-   * The Facebook API error code.
-   */
-  private Integer errorCode;
+public class FacebookOAuthException extends FacebookGraphException
+{
+    /**
+     * The Facebook API error code.
+     */
+    private Integer errorCode;
 
-  private static final long serialVersionUID = 1L;
+    private static final long serialVersionUID = 1L;
 
-  /**
-   * Creates an exception with the given error type and message.
-   * 
-   * @param errorType
-   *          Value of the Facebook response attribute {@code error.type}.
-   * @param errorMessage
-   *          Value of the Facebook response attribute {@code error.message}.
-   * @param errorCode
-   *          Value of the Facebook response attribute {@code error.code}.
-   * @param httpStatusCode
-   *          The HTTP status code returned by the server, e.g. 500.
-   */
-  public FacebookOAuthException(String errorType, String errorMessage, Integer errorCode, Integer httpStatusCode) {
-    super(errorType, errorMessage, httpStatusCode);
-    this.errorCode = errorCode;
-  }
+    /**
+     * Creates an exception with the given error type and message.
+     *
+     * @param errorType      Value of the Facebook response attribute {@code error.type}.
+     * @param errorMessage   Value of the Facebook response attribute {@code error.message}.
+     * @param errorCode      Value of the Facebook response attribute {@code error.code}.
+     * @param httpStatusCode The HTTP status code returned by the server, e.g. 500.
+     */
+    public FacebookOAuthException(String errorType, String errorMessage, Integer errorCode, Integer httpStatusCode)
+    {
+        super(errorType, errorMessage, httpStatusCode);
+        this.errorCode = errorCode;
+    }
 
-  /**
-   * Gets the Facebook API error code.
-   * 
-   * @return The Facebook API error code.
-   */
-  public Integer getErrorCode() {
-    return errorCode;
-  }
+    /**
+     * Gets the Facebook API error code.
+     *
+     * @return The Facebook API error code.
+     */
+    public Integer getErrorCode()
+    {
+        return errorCode;
+    }
 }

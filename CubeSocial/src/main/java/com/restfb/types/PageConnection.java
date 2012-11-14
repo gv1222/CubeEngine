@@ -22,32 +22,34 @@
 
 package com.restfb.types;
 
-import static com.restfb.util.DateUtils.toDateFromLongFormat;
+import com.restfb.Facebook;
 
 import java.util.Date;
 
-import com.restfb.Facebook;
+import static com.restfb.util.DateUtils.toDateFromLongFormat;
 
 /**
  * Represents a Connection to a <a
  * href="http://developers.facebook.com/docs/reference/api/page">Page Graph API
  * type</a>, for example the Pages returned from {@code me/music}.
- * 
+ *
  * @author Patrick Alberts
  * @since 1.6.3
  */
-public class PageConnection extends CategorizedFacebookType {
-  @Facebook("created_time")
-  private String createdTime;
+public class PageConnection extends CategorizedFacebookType
+{
+    @Facebook("created_time")
+    private String createdTime;
 
-  private static final long serialVersionUID = 1L;
+    private static final long serialVersionUID = 1L;
 
-  /**
-   * The time the connection was initially created.
-   * 
-   * @return The time the connection was initially created.
-   */
-  public Date getCreatedTime() {
-    return toDateFromLongFormat(createdTime);
-  }
+    /**
+     * The time the connection was initially created.
+     *
+     * @return The time the connection was initially created.
+     */
+    public Date getCreatedTime()
+    {
+        return toDateFromLongFormat(createdTime);
+    }
 }

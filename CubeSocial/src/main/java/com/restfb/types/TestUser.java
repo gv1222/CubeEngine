@@ -27,62 +27,67 @@ import com.restfb.Facebook;
 /**
  * Represents the <a href="https://developers.facebook.com/docs/test_users">Test
  * User type</a>.
- * 
+ *
  * @author <a href="http://ex-nerd.com">Chris Petersen</a>
  * @author <a href="http://restfb.com">Mark Allen</a>
  * @since 1.6.10
  */
-public class TestUser extends FacebookType {
-  @Facebook("access_token")
-  private String accessToken;
+public class TestUser extends FacebookType
+{
+    @Facebook("access_token")
+    private String accessToken;
 
-  @Facebook("login_url")
-  private String loginUrl;
+    @Facebook("login_url")
+    private String loginUrl;
 
-  @Facebook
-  private String email;
+    @Facebook
+    private String email;
 
-  @Facebook
-  private String password;
+    @Facebook
+    private String password;
 
-  private static final long serialVersionUID = 1L;
+    private static final long serialVersionUID = 1L;
 
-  /**
-   * You can use this access token to make API calls on behalf of the test user.
-   * This is available only if your app has been installed by the test user.
-   * 
-   * @return The test user's access token.
-   */
-  public String getAccessToken() {
-    return accessToken;
-  }
+    /**
+     * You can use this access token to make API calls on behalf of the test user.
+     * This is available only if your app has been installed by the test user.
+     *
+     * @return The test user's access token.
+     */
+    public String getAccessToken()
+    {
+        return accessToken;
+    }
 
-  /**
-   * You can login as the test user by going to this url.
-   * 
-   * @return The test user's login url.
-   */
-  public String getLoginUrl() {
-    return loginUrl;
-  }
+    /**
+     * You can login as the test user by going to this url.
+     *
+     * @return The test user's login url.
+     */
+    public String getLoginUrl()
+    {
+        return loginUrl;
+    }
 
-  /**
-   * If logging in manually (that is, not using the login_url), you can use this
-   * as the user's email address.
-   * 
-   * @return The test user's email address.
-   */
-  public String getEmail() {
-    return email;
-  }
+    /**
+     * If logging in manually (that is, not using the login_url), you can use this
+     * as the user's email address.
+     *
+     * @return The test user's email address.
+     */
+    public String getEmail()
+    {
+        return email;
+    }
 
-  /**
-   * If logging in manually (that is, not using the login_url), you can use this
-   * as the user's password.
-   * 
-   * @return The test user's password.
-   */
-  public String getPassword() {
-    return password;
-  }
+    /**
+     * If logging in manually (that is, not using the login_url), you can use this
+     * as the user's password.
+     *
+     * @return The test user's password.
+     */
+    public String getPassword()
+    {
+        return password;
+    }
 }

@@ -2,6 +2,9 @@ package de.cubeisland.cubeengine.social.sites.facebook;
 
 import com.restfb.DefaultFacebookClient;
 import com.restfb.FacebookClient;
+import com.restfb.Parameter;
+import com.restfb.exception.FacebookException;
+import com.restfb.types.FacebookType;
 import com.restfb.types.User;
 
 public class FacebookUser
@@ -15,24 +18,24 @@ public class FacebookUser
         this.client = new DefaultFacebookClient(this.authToken);
     }
 
-    public String publishMessage(String message, String object)
+    public FacebookType publishMessage(String message, String object) throws FacebookException
     {
-        return null; // TODO
+        return client.publish(object + "/feed", FacebookType.class, Parameter.with("message", message));
     }
 
-    public String publishMessage(String message)
+    public FacebookType publishMessage(String message) throws FacebookException
     {
         return this.publishMessage(message, "me");
     }
 
-    public String likeObject(String object)
+    public String likeObject(String object) throws FacebookException
     {
         return null; // TODO
     }
 
-    public User getUserInfo()
+    public User getUserInfo() throws FacebookException
     {
-        return null; // TODO
+        return client.fetchObject("me", User.class);
     }
 
     public String getAuthToken()

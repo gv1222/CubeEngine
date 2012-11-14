@@ -25,22 +25,22 @@ package com.restfb.exception;
 /**
  * Indicates that the Facebook Graph API endpoint returned an unexpected
  * response body.
- * 
+ *
  * @author <a href="http://restfb.com">Mark Allen</a>
  * @since 1.6.10
  */
-public class FacebookResponseContentException extends FacebookException {
-  private static final long serialVersionUID = 1L;
+public class FacebookResponseContentException extends FacebookException
+{
+    private static final long serialVersionUID = 1L;
 
-  /**
-   * Creates an exception with the given message and cause.
-   * 
-   * @param message
-   *          A message describing this exception.
-   * @param cause
-   *          The exception that caused this exception to be thrown.
-   */
-  public FacebookResponseContentException(String message, Throwable cause) {
-    super(message, cause);
-  }
+    /**
+     * Creates an exception with the given message and cause.
+     *
+     * @param message A message describing this exception.
+     * @param cause   The exception that caused this exception to be thrown.
+     */
+    public FacebookResponseContentException(String message, Throwable cause)
+    {
+        super(message, cause);
+    }
 }

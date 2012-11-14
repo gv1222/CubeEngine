@@ -26,47 +26,53 @@ import com.restfb.Facebook;
 
 /**
  * Represents a Facebook URL.
- * 
+ *
  * @author <a href="http://restfb.com">Mark Allen</a>
  * @deprecated As of 1.6.10, this type is deprecated and will be removed in a
  *             future release.
  */
 @Deprecated
-public class Url extends NamedFacebookType {
-  @Facebook
-  private Long shares;
+public class Url extends NamedFacebookType
+{
+    @Facebook
+    private Long shares;
 
-  @Facebook
-  private String picture;
+    @Facebook
+    private String picture;
 
-  @Facebook
-  private String link;
+    @Facebook
+    private String link;
 
-  @Facebook
-  private String category;
+    @Facebook
+    private String category;
 
-  @Facebook("fan_count")
-  private Long fanCount;
+    @Facebook("fan_count")
+    private Long fanCount;
 
-  private static final long serialVersionUID = 1L;
+    private static final long serialVersionUID = 1L;
 
-  public Long getShares() {
-    return shares;
-  }
+    public Long getShares()
+    {
+        return shares;
+    }
 
-  public String getPicture() {
-    return picture;
-  }
+    public String getPicture()
+    {
+        return picture;
+    }
 
-  public String getLink() {
-    return link;
-  }
+    public String getLink()
+    {
+        return link;
+    }
 
-  public String getCategory() {
-    return category;
-  }
+    public String getCategory()
+    {
+        return category;
+    }
 
-  public Long getFanCount() {
-    return fanCount;
-  }
+    public Long getFanCount()
+    {
+        return fanCount;
+    }
 }

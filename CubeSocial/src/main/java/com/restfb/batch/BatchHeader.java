@@ -28,75 +28,82 @@ import com.restfb.util.ReflectionUtils;
 /**
  * Represents an HTTP header name/value pair used by {@link BatchRequest} and
  * {@link BatchResponse}.
- * 
+ *
  * @author <a href="http://restfb.com">Mark Allen</a>
  * @since 1.6.5
  */
-public class BatchHeader {
-  @Facebook
-  private String name;
+public class BatchHeader
+{
+    @Facebook
+    private String name;
 
-  @Facebook
-  private String value;
+    @Facebook
+    private String value;
 
-  /**
-   * "Magic" no-argument constructor so we can reflectively make instances of
-   * this class with DefaultJsonMapper, but normal client code cannot.
-   */
-  protected BatchHeader() {}
+    /**
+     * "Magic" no-argument constructor so we can reflectively make instances of
+     * this class with DefaultJsonMapper, but normal client code cannot.
+     */
+    protected BatchHeader()
+    {
+    }
 
-  /**
-   * Creates a {@code BatchHeader} with the given name/value pair.
-   * 
-   * @param name
-   *          The name of the header.
-   * @param value
-   *          The value of the header.
-   */
-  public BatchHeader(String name, String value) {
-    this.name = name;
-    this.value = value;
-  }
+    /**
+     * Creates a {@code BatchHeader} with the given name/value pair.
+     *
+     * @param name  The name of the header.
+     * @param value The value of the header.
+     */
+    public BatchHeader(String name, String value)
+    {
+        this.name = name;
+        this.value = value;
+    }
 
-  /**
-   * @see java.lang.Object#hashCode()
-   */
-  @Override
-  public int hashCode() {
-    return ReflectionUtils.hashCode(this);
-  }
+    /**
+     * @see java.lang.Object#hashCode()
+     */
+    @Override
+    public int hashCode()
+    {
+        return ReflectionUtils.hashCode(this);
+    }
 
-  /**
-   * @see java.lang.Object#equals(java.lang.Object)
-   */
-  @Override
-  public boolean equals(Object that) {
-    return ReflectionUtils.equals(this, that);
-  }
+    /**
+     * @see java.lang.Object#equals(java.lang.Object)
+     */
+    @Override
+    public boolean equals(Object that)
+    {
+        return ReflectionUtils.equals(this, that);
+    }
 
-  /**
-   * @see java.lang.Object#toString()
-   */
-  @Override
-  public String toString() {
-    return ReflectionUtils.toString(this);
-  }
+    /**
+     * @see java.lang.Object#toString()
+     */
+    @Override
+    public String toString()
+    {
+        return ReflectionUtils.toString(this);
+    }
 
-  /**
-   * The name of the HTTP header.
-   * 
-   * @return The name of the HTTP header.
-   */
-  public String getName() {
-    return name;
-  }
+    /**
+     * The name of the HTTP header.
+     *
+     * @return The name of the HTTP header.
+     */
+    public String getName()
+    {
+        return name;
+    }
 
-  /**
-   * The value of the HTTP header.
-   * 
-   * @return The value of the HTTP header.
-   */
-  public String getValue() {
-    return value;
-  }
+    /**
+     * The value of the HTTP header.
+     *
+     * @return The value of the HTTP header.
+     */
+    public String getValue()
+    {
+        return value;
+    }
 }

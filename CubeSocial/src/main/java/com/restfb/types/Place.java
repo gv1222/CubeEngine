@@ -27,26 +27,28 @@ import com.restfb.Facebook;
 /**
  * Represents information about the place where an event occurred, for example a
  * {@link Checkin} or {@link Photo}.
- * 
+ *
  * @author <a href="http://ex-nerd.com">Chris Petersen</a>
  * @author <a href="http://restfb.com">Mark Allen</a>
  * @since 1.6.10
  */
-public class Place extends NamedFacebookType {
-  @Facebook
-  private Location location;
+public class Place extends NamedFacebookType
+{
+    @Facebook
+    private Location location;
 
-  private static final long serialVersionUID = 1L;
+    private static final long serialVersionUID = 1L;
 
-  /**
-   * Location containing geographic information such as latitude, longitude,
-   * country, and other fields (fields will vary based on geography and
-   * availability of information).
-   * 
-   * @return Location containing geographic information such as latitude,
-   *         longitude, country, and other fields.
-   */
-  public Location getLocation() {
-    return location;
-  }
+    /**
+     * Location containing geographic information such as latitude, longitude,
+     * country, and other fields (fields will vary based on geography and
+     * availability of information).
+     *
+     * @return Location containing geographic information such as latitude,
+     *         longitude, country, and other fields.
+     */
+    public Location getLocation()
+    {
+        return location;
+    }
 }

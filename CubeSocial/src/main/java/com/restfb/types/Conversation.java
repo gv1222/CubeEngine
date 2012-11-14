@@ -40,182 +40,198 @@ import static com.restfb.util.DateUtils.toDateFromLongFormat;
  * @author <a href="http://restfb.com">Mark Allen</a>
  * @author Felipe Kurkowski
  */
-public class Conversation extends FacebookType {
-  @Facebook
-  private String snippet;
+public class Conversation extends FacebookType
+{
+    @Facebook
+    private String snippet;
 
-  @Facebook("updated_time")
-  private String updatedTime;
+    @Facebook("updated_time")
+    private String updatedTime;
 
-  @Facebook("message_count")
-  private Long messageCount;
+    @Facebook("message_count")
+    private Long messageCount;
 
-  /**
-   * Facebook does not send the unread count if there aren't any new messages.
-   * In order to keep data consistency, we set the default value to zero. If
-   * this value is sent, the {@link com.restfb.JsonMapper} will override it.
-   */
-  @Facebook("unread_count")
-  private Long unreadCount = 0L;
-
-  @Facebook
-  private List<Tag> tags = new ArrayList<Tag>();
-
-  @Facebook
-  private List<NamedFacebookType> participants = new ArrayList<NamedFacebookType>();
-
-  @Facebook
-  private List<NamedFacebookType> senders = new ArrayList<NamedFacebookType>();
-
-  @Facebook("can_reply")
-  private Boolean canReply;
-
-  @Facebook("is_subscribed")
-  private Boolean isSubscribed;
-
-  @Facebook
-  private List<Message> messages;
-
-  private static final long serialVersionUID = 1L;
-
-  /**
-   * Represents the <a
-   * href="http://developers.facebook.com/docs/reference/api/page/#conversations">
-   * Tag Graph API type</a>.
-   *
-   * @author <a href="http://restfb.com">Mark Allen</a>
-   * @author Felipe Kurkowski
-   */
-  public static class Tag implements Serializable {
+    /**
+     * Facebook does not send the unread count if there aren't any new messages.
+     * In order to keep data consistency, we set the default value to zero. If
+     * this value is sent, the {@link com.restfb.JsonMapper} will override it.
+     */
+    @Facebook("unread_count")
+    private Long unreadCount = 0L;
 
     @Facebook
-    private String name;
+    private List<Tag> tags = new ArrayList<Tag>();
+
+    @Facebook
+    private List<NamedFacebookType> participants = new ArrayList<NamedFacebookType>();
+
+    @Facebook
+    private List<NamedFacebookType> senders = new ArrayList<NamedFacebookType>();
+
+    @Facebook("can_reply")
+    private Boolean canReply;
+
+    @Facebook("is_subscribed")
+    private Boolean isSubscribed;
+
+    @Facebook
+    private List<Message> messages;
 
     private static final long serialVersionUID = 1L;
 
     /**
-     * @see java.lang.Object#hashCode()
-     */
-    @Override
-    public int hashCode() {
-      return ReflectionUtils.hashCode(this);
-    }
-
-    /**
-     * @see java.lang.Object#equals(java.lang.Object)
-     */
-    @Override
-    public boolean equals(Object that) {
-      return ReflectionUtils.equals(this, that);
-    }
-
-    /**
-     * @see java.lang.Object#toString()
-     */
-    @Override
-    public String toString() {
-      return ReflectionUtils.toString(this);
-    }
-
-    /**
-     * The name field for this type.
+     * Represents the <a
+     * href="http://developers.facebook.com/docs/reference/api/page/#conversations">
+     * Tag Graph API type</a>.
      *
-     * @return The name field for this type.
+     * @author <a href="http://restfb.com">Mark Allen</a>
+     * @author Felipe Kurkowski
      */
-    public String getName() {
-      return name;
+    public static class Tag implements Serializable
+    {
+
+        @Facebook
+        private String name;
+
+        private static final long serialVersionUID = 1L;
+
+        /**
+         * @see java.lang.Object#hashCode()
+         */
+        @Override
+        public int hashCode()
+        {
+            return ReflectionUtils.hashCode(this);
+        }
+
+        /**
+         * @see java.lang.Object#equals(java.lang.Object)
+         */
+        @Override
+        public boolean equals(Object that)
+        {
+            return ReflectionUtils.equals(this, that);
+        }
+
+        /**
+         * @see java.lang.Object#toString()
+         */
+        @Override
+        public String toString()
+        {
+            return ReflectionUtils.toString(this);
+        }
+
+        /**
+         * The name field for this type.
+         *
+         * @return The name field for this type.
+         */
+        public String getName()
+        {
+            return name;
+        }
     }
-  }
 
-  /**
-   * The title of a message in the conversation
-   *
-   * @return The title of a message in the conversation
-   */
-  public String getSnippet() {
-    return snippet;
-  }
+    /**
+     * The title of a message in the conversation
+     *
+     * @return The title of a message in the conversation
+     */
+    public String getSnippet()
+    {
+        return snippet;
+    }
 
-  /**
-   * Last update time of the conversation
-   *
-   * @return Last update time of the conversation
-   */
-  public Date getUpdatedTime() {
-    return toDateFromLongFormat(updatedTime);
-  }
+    /**
+     * Last update time of the conversation
+     *
+     * @return Last update time of the conversation
+     */
+    public Date getUpdatedTime()
+    {
+        return toDateFromLongFormat(updatedTime);
+    }
 
-  /**
-   * The number of messages in the conversation
-   *
-   * @return The number of messages in the conversation
-   */
-  public Long getMessageCount() {
-    return messageCount;
-  }
+    /**
+     * The number of messages in the conversation
+     *
+     * @return The number of messages in the conversation
+     */
+    public Long getMessageCount()
+    {
+        return messageCount;
+    }
 
-  /**
-   * The number of unread messages in the conversation
-   *
-   * @return The number of unread messages in the conversation
-   */
-  public Long getUnreadCount() {
-    return unreadCount;
-  }
+    /**
+     * The number of unread messages in the conversation
+     *
+     * @return The number of unread messages in the conversation
+     */
+    public Long getUnreadCount()
+    {
+        return unreadCount;
+    }
 
-  /**
-   * A list of tags indicating the message folder, and whether the conversation
-   * is read and seen.
-   *
-   * @return A list of tags indicating the message folder, and whether the
-   *         conversation is read and seen.
-   */
-  public List<Tag> getTags() {
-    return tags;
-  }
+    /**
+     * A list of tags indicating the message folder, and whether the conversation
+     * is read and seen.
+     *
+     * @return A list of tags indicating the message folder, and whether the
+     *         conversation is read and seen.
+     */
+    public List<Tag> getTags()
+    {
+        return tags;
+    }
 
-  /**
-   * Users who are on this message conversation
-   *
-   * @return Users who are on this message conversation
-   */
-  public List<NamedFacebookType> getParticipants() {
-    return participants;
-  }
+    /**
+     * Users who are on this message conversation
+     *
+     * @return Users who are on this message conversation
+     */
+    public List<NamedFacebookType> getParticipants()
+    {
+        return participants;
+    }
 
-  /**
-   * Users who send a message on the conversation
-   *
-   * @return Users who send a message on the conversation
-   */
-  public List<NamedFacebookType> getSenders() {
-    return senders;
-  }
+    /**
+     * Users who send a message on the conversation
+     *
+     * @return Users who send a message on the conversation
+     */
+    public List<NamedFacebookType> getSenders()
+    {
+        return senders;
+    }
 
-  /**
-   * Whether The Page can reply to the conversation
-   *
-   * @return Whether The Page can reply to the conversation
-   */
-  public Boolean getCanReply() {
-    return canReply;
-  }
+    /**
+     * Whether The Page can reply to the conversation
+     *
+     * @return Whether The Page can reply to the conversation
+     */
+    public Boolean getCanReply()
+    {
+        return canReply;
+    }
 
-  /**
-   * Whether you are subscribed to the conversation
-   *
-   * @return Whether you are subscribed to the conversation
-   */
-  public Boolean getSubscribed() {
-    return isSubscribed;
-  }
+    /**
+     * Whether you are subscribed to the conversation
+     *
+     * @return Whether you are subscribed to the conversation
+     */
+    public Boolean getSubscribed()
+    {
+        return isSubscribed;
+    }
 
-  /**
-   * List of all messages in the conversation
-   *
-   * @return List of all messages in the conversation
-   */
-  public List<Message> getMessages() {
-    return messages;
-  }
+    /**
+     * List of all messages in the conversation
+     *
+     * @return List of all messages in the conversation
+     */
+    public List<Message> getMessages()
+    {
+        return messages;
+    }
 }

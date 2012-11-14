@@ -37,54 +37,59 @@ import static com.restfb.util.DateUtils.toDateFromLongFormat;
  * @author <a href="http://restfb.com">Mark Allen</a>
  * @author Felipe Kurkowski
  */
-public class Message extends FacebookType {
-  @Facebook("created_time")
-  private String createdTime;
+public class Message extends FacebookType
+{
+    @Facebook("created_time")
+    private String createdTime;
 
-  @Facebook
-  private NamedFacebookType from;
+    @Facebook
+    private NamedFacebookType from;
 
-  @Facebook
-  private List<NamedFacebookType> to;
+    @Facebook
+    private List<NamedFacebookType> to;
 
-  @Facebook
-  private String message;
+    @Facebook
+    private String message;
 
-  private static final long serialVersionUID = 1L;
+    private static final long serialVersionUID = 1L;
 
-  /**
-   * The time the message was initially created.
-   *
-   * @return The time the message was initially created.
-   */
-  public Date getCreatedTime() {
-    return toDateFromLongFormat(createdTime);
-  }
+    /**
+     * The time the message was initially created.
+     *
+     * @return The time the message was initially created.
+     */
+    public Date getCreatedTime()
+    {
+        return toDateFromLongFormat(createdTime);
+    }
 
-  /**
-   * The sender of this message
-   *
-   * @return The sender of this message
-   */
-  public NamedFacebookType getFrom() {
-    return from;
-  }
+    /**
+     * The sender of this message
+     *
+     * @return The sender of this message
+     */
+    public NamedFacebookType getFrom()
+    {
+        return from;
+    }
 
-  /**
-   * A list of the message recipients
-   *
-   * @return A list of the message recipients
-   */
-  public List<NamedFacebookType> getTo() {
-    return to;
-  }
+    /**
+     * A list of the message recipients
+     *
+     * @return A list of the message recipients
+     */
+    public List<NamedFacebookType> getTo()
+    {
+        return to;
+    }
 
-  /**
-   * The text of the message
-   *
-   * @return The text of the message
-   */
-  public String getMessage() {
-    return message;
-  }
+    /**
+     * The text of the message
+     *
+     * @return The text of the message
+     */
+    public String getMessage()
+    {
+        return message;
+    }
 }

@@ -28,22 +28,24 @@ import com.restfb.Facebook;
  * Superclass for <a
  * href="http://developers.facebook.com/docs/reference/api/">Graph API types</a>
  * that include a {@code category} field.
- * 
+ *
  * @author <a href="http://restfb.com">Mark Allen</a>
  * @since 1.5
  */
-public class CategorizedFacebookType extends NamedFacebookType {
-  @Facebook
-  private String category;
-  
-  private static final long serialVersionUID = 1L;
+public class CategorizedFacebookType extends NamedFacebookType
+{
+    @Facebook
+    private String category;
 
-  /**
-   * The category field for this type.
-   * 
-   * @return The category field for this type.
-   */
-  public String getCategory() {
-    return category;
-  }
+    private static final long serialVersionUID = 1L;
+
+    /**
+     * The category field for this type.
+     *
+     * @return The category field for this type.
+     */
+    public String getCategory()
+    {
+        return category;
+    }
 }

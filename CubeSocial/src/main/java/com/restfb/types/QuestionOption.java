@@ -22,68 +22,73 @@
 
 package com.restfb.types;
 
-import static com.restfb.util.DateUtils.toDateFromLongFormat;
+import com.restfb.Facebook;
 
 import java.util.Date;
 
-import com.restfb.Facebook;
+import static com.restfb.util.DateUtils.toDateFromLongFormat;
 
 /**
  * Represents the <a
  * href="http://developers.facebook.com/docs/reference/api/question_option"
  * >QuestionOption Graph API type</a>.
- * 
+ *
  * @author <a href="http://restfb.com">Mark Allen</a>
  * @since 1.6.10
  */
-public class QuestionOption extends NamedFacebookType {
-  @Facebook
-  private NamedFacebookType from;
+public class QuestionOption extends NamedFacebookType
+{
+    @Facebook
+    private NamedFacebookType from;
 
-  @Facebook
-  private Integer votes;
+    @Facebook
+    private Integer votes;
 
-  @Facebook
-  private CategorizedFacebookType object;
+    @Facebook
+    private CategorizedFacebookType object;
 
-  @Facebook("created_time")
-  private String createdTime;
+    @Facebook("created_time")
+    private String createdTime;
 
-  private static final long serialVersionUID = 1L;
+    private static final long serialVersionUID = 1L;
 
-  /**
-   * User who asked the question.
-   * 
-   * @return User who asked the question.
-   */
-  public NamedFacebookType getFrom() {
-    return from;
-  }
+    /**
+     * User who asked the question.
+     *
+     * @return User who asked the question.
+     */
+    public NamedFacebookType getFrom()
+    {
+        return from;
+    }
 
-  /**
-   * Number of votes this option has received.
-   * 
-   * @return Number of votes this option has received.
-   */
-  public Integer getVotes() {
-    return votes;
-  }
+    /**
+     * Number of votes this option has received.
+     *
+     * @return Number of votes this option has received.
+     */
+    public Integer getVotes()
+    {
+        return votes;
+    }
 
-  /**
-   * Optional page associated with this option.
-   * 
-   * @return Optional page associated with this option.
-   */
-  public CategorizedFacebookType getObject() {
-    return object;
-  }
+    /**
+     * Optional page associated with this option.
+     *
+     * @return Optional page associated with this option.
+     */
+    public CategorizedFacebookType getObject()
+    {
+        return object;
+    }
 
-  /**
-   * Time when option was created.
-   * 
-   * @return Time when option was created.
-   */
-  public Date getCreatedTime() {
-    return toDateFromLongFormat(createdTime);
-  }
+    /**
+     * Time when option was created.
+     *
+     * @return Time when option was created.
+     */
+    public Date getCreatedTime()
+    {
+        return toDateFromLongFormat(createdTime);
+    }
 }

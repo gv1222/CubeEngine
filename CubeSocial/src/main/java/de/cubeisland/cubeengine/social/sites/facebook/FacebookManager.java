@@ -30,8 +30,14 @@ public class FacebookManager
         return users.get(user);
     }
 
-    public boolean initializeUser(User user)
+    public boolean initializeUser(User user, String accessToken)
     {
-        return false; // TODO
+        FacebookUser facebookUser = new FacebookUser(accessToken);
+        if (facebookUser.getUserInfo() != null)
+        {
+            users.put(user, facebookUser);
+            return true;
+        }
+        return false;
     }
 }

@@ -1,18 +1,10 @@
 package de.cubeisland.cubeengine.social.interactions;
 
-import com.restfb.DefaultFacebookClient;
-import com.restfb.FacebookClient;
-import com.restfb.Parameter;
-import com.restfb.types.FacebookType;
-import com.restfb.types.Page;
-import com.restfb.types.User;
+import com.restfb.exception.FacebookException;
 import de.cubeisland.cubeengine.core.command.CommandContext;
 import de.cubeisland.cubeengine.core.command.annotation.Command;
 import de.cubeisland.cubeengine.core.command.annotation.Param;
 import de.cubeisland.cubeengine.social.Social;
-import org.bukkit.Material;
-import org.bukkit.block.Block;
-import org.bukkit.block.Sign;
 
 public class SocialSubCommand
 {
@@ -25,21 +17,31 @@ public class SocialSubCommand
 
     @Command
             (
-                    desc = "post a message",
-                    params = {
-                            @Param(names = {"Post", "p"}, types = String.class)
-                    }
+                    desc = "post a message"
             )
     public void post(CommandContext context)
     {
-        if (context.hasNamed("Post") && module.clients.containsKey(context.getSender().getName()))
+        if (module.getFacebookManager().hasUser(context.getSenderAsUser()))
         {
-            FacebookType publishMessageResponse = module.clients.get(context.getSender().getName()).publish("me/feed", FacebookType.class, Parameter.with("message", context.getString("post")));
-            context.sendMessage("shout", "Your message id was: %s", publishMessageResponse.getId());
+            StringBuilder message = new StringBuilder();
+            for (int x = 0; x > context.indexedCount(); x++)
+            {
+                message.append(context.getString(x));
+            }
+
+            try
+            {
+                context.sendMessage("shout", "Your message has been posted, id: %s",
+                        module.getFacebookManager().getUser(context.getSenderAsUser()).publishMessage(message.toString()).getId());
+            }
+            catch(FacebookException ex)
+            {
+                context.sendMessage("shout", "Your message could for some reason not be sent.");
+            }
         }
         else
         {
-            context.sendMessage("shout", "You have to do post, or you are not initialized");
+            context.sendMessage("shout", "You have to be a player to use this command");
         }
     }
 
@@ -51,28 +53,8 @@ public class SocialSubCommand
                     }
             )
     public void sign(CommandContext context)
-    { // This don't work
-        Block targetBlock = context.getSenderAsUser("shout", "").getTargetBlock(null, 9);
-        if (context.hasNamed("Message") && targetBlock != null && (targetBlock.getType() == Material.SIGN || targetBlock.getType() == Material.WALL_SIGN) && module.clients.containsKey(context.getSender().getName()))
-        {
-            Sign sign = (Sign)targetBlock.getState();
-            if (sign.getLine(0).equalsIgnoreCase("[FaceBook]"))
-            {
-                FacebookClient client = module.clients.get(context.getSender().getName());
-                Page page = client.fetchObject(sign.getLine(1), Page.class);
-                if(page.getLikes() != null)//this will be false if the page isn't a page
-                {
-                    context.sendMessage("Your page id is: " + page.getId());
-                    FacebookClient pageClient = new DefaultFacebookClient(page.getAccessToken());
-                    FacebookType publishMessageResponse = pageClient.publish(page.getId()+"/feed", FacebookType.class, Parameter.with("message", context.getString("Message")));
-                    context.sendMessage("Your message id is: " + publishMessageResponse.getId());
-                    module.posts.put(targetBlock.getLocation(), publishMessageResponse.getId());
-                    sign.setLine(0, "&3[Facebook]");
-                    sign.update();
-                }
-
-            }
-        }
+    {
+        // TODO assign a post to a sign
     }
 
 }

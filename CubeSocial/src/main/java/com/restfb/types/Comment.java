@@ -22,114 +22,126 @@
 
 package com.restfb.types;
 
-import static com.restfb.util.DateUtils.toDateFromLongFormat;
+import com.restfb.Facebook;
 
 import java.util.Date;
 
-import com.restfb.Facebook;
+import static com.restfb.util.DateUtils.toDateFromLongFormat;
 
 /**
  * Represents the <a
  * href="http://developers.facebook.com/docs/reference/api/event">Comment Graph
  * API type</a>.
- * 
+ *
  * @author <a href="http://restfb.com">Mark Allen</a>
  * @since 1.5
  */
-public class Comment extends FacebookType {
-  @Facebook
-  private CategorizedFacebookType from;
+public class Comment extends FacebookType
+{
+    @Facebook
+    private CategorizedFacebookType from;
 
-  @Facebook
-  private String message;
+    @Facebook
+    private String message;
 
-  @Facebook("created_time")
-  private String createdTime;
+    @Facebook("created_time")
+    private String createdTime;
 
-  @Facebook
-  private Long likes;
+    @Facebook
+    private Long likes;
 
-  @Facebook("like_count")
-  private Long likeCount;
+    @Facebook("like_count")
+    private Long likeCount;
 
-  @Facebook("can_remove")
-  private Boolean canRemove;
+    @Facebook("can_remove")
+    private Boolean canRemove;
 
-  @Facebook("user_likes")
-  private Boolean userLikes;
+    @Facebook("user_likes")
+    private Boolean userLikes;
 
-  private static final long serialVersionUID = 2L;
+    private static final long serialVersionUID = 2L;
 
-  /**
-   * User who posted the comment.
-   * 
-   * @return User who posted the comment.
-   */
-  public CategorizedFacebookType getFrom() {
-    return from;
-  }
+    /**
+     * User who posted the comment.
+     *
+     * @return User who posted the comment.
+     */
+    public CategorizedFacebookType getFrom()
+    {
+        return from;
+    }
 
-  /**
-   * Text contents of the comment.
-   * 
-   * @return Text contents of the comment.
-   */
-  public String getMessage() {
-    return message;
-  }
+    /**
+     * Text contents of the comment.
+     *
+     * @return Text contents of the comment.
+     */
+    public String getMessage()
+    {
+        return message;
+    }
 
-  /**
-   * Date on which the comment was created.
-   * 
-   * @return Date on which the comment was created.
-   */
-  public Date getCreatedTime() {
-    return toDateFromLongFormat(createdTime);
-  }
+    /**
+     * Date on which the comment was created.
+     *
+     * @return Date on which the comment was created.
+     */
+    public Date getCreatedTime()
+    {
+        return toDateFromLongFormat(createdTime);
+    }
 
-  /**
-   * The number of likes on this comment.
-   * 
-   * @return The number of likes on this comment.
-   * @deprecated As of September 5, 2012, Facebook is changing over to
-   *             {@code like_count}, so this method will be replaced by
-   *             {@link #likeCount}.
-   */
-  @Deprecated
-  public Long getLikes() {
-    return likes;
-  }
+    /**
+     * The number of likes on this comment.
+     *
+     * @return The number of likes on this comment.
+     *
+     * @deprecated As of September 5, 2012, Facebook is changing over to
+     *             {@code like_count}, so this method will be replaced by
+     *             {@link #likeCount}.
+     */
+    @Deprecated
+    public Long getLikes()
+    {
+        return likes;
+    }
 
-  /**
-   * The number of likes on this comment.
-   * 
-   * @return The number of likes on this comment.
-   * @since 1.6.10
-   */
-  public Long getLikeCount() {
-    return likeCount;
-  }
+    /**
+     * The number of likes on this comment.
+     *
+     * @return The number of likes on this comment.
+     *
+     * @since 1.6.10
+     */
+    public Long getLikeCount()
+    {
+        return likeCount;
+    }
 
-  /**
-   * This field is returned only if the authenticated user can remove this
-   * comment.
-   * 
-   * @return This field is returned only if the authenticated user can remove
-   *         this comment.
-   * @since 1.6.10
-   */
-  public Boolean getCanRemove() {
-    return canRemove;
-  }
+    /**
+     * This field is returned only if the authenticated user can remove this
+     * comment.
+     *
+     * @return This field is returned only if the authenticated user can remove
+     *         this comment.
+     *
+     * @since 1.6.10
+     */
+    public Boolean getCanRemove()
+    {
+        return canRemove;
+    }
 
-  /**
-   * This field is returned only if the authenticated user likes this comment
-   * 
-   * @return This field is returned only if the authenticated user likes this
-   *         comment.
-   * @since 1.6.10
-   */
-  public Boolean getUserLikes() {
-    return userLikes;
-  }
+    /**
+     * This field is returned only if the authenticated user likes this comment
+     *
+     * @return This field is returned only if the authenticated user likes this
+     *         comment.
+     *
+     * @since 1.6.10
+     */
+    public Boolean getUserLikes()
+    {
+        return userLikes;
+    }
 }

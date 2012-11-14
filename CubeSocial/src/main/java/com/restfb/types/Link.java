@@ -22,107 +22,116 @@
 
 package com.restfb.types;
 
-import static com.restfb.util.DateUtils.toDateFromLongFormat;
+import com.restfb.Facebook;
 
 import java.util.Date;
 
-import com.restfb.Facebook;
+import static com.restfb.util.DateUtils.toDateFromLongFormat;
 
 /**
  * Represents the <a
  * href="http://developers.facebook.com/docs/reference/api/link">Link Graph API
  * type</a>.
- * 
+ *
  * @author <a href="http://restfb.com">Mark Allen</a>
  * @author Patrick Alberts
  * @since 1.5
  */
-public class Link extends NamedFacebookType {
-  @Facebook
-  private NamedFacebookType from;
+public class Link extends NamedFacebookType
+{
+    @Facebook
+    private NamedFacebookType from;
 
-  @Facebook
-  private String message;
+    @Facebook
+    private String message;
 
-  @Facebook
-  private String picture;
+    @Facebook
+    private String picture;
 
-  @Facebook
-  private String link;
+    @Facebook
+    private String link;
 
-  @Facebook
-  private String description;
+    @Facebook
+    private String description;
 
-  @Facebook
-  private String icon;
+    @Facebook
+    private String icon;
 
-  @Facebook("created_time")
-  private String createdTime;
-  
-  private static final long serialVersionUID = 1L;
+    @Facebook("created_time")
+    private String createdTime;
 
-  /**
-   * An object containing the name and ID of the user who posted the link.
-   * 
-   * @return An object containing the name and ID of the user who posted the
-   *         link.
-   */
-  public NamedFacebookType getFrom() {
-    return from;
-  }
+    private static final long serialVersionUID = 1L;
 
-  /**
-   * The link message content.
-   * 
-   * @return The link message content.
-   */
-  public String getMessage() {
-    return message;
-  }
+    /**
+     * An object containing the name and ID of the user who posted the link.
+     *
+     * @return An object containing the name and ID of the user who posted the
+     *         link.
+     */
+    public NamedFacebookType getFrom()
+    {
+        return from;
+    }
 
-  /**
-   * The picture associated with the link.
-   * 
-   * @return The picture associated with the link.
-   */
-  public String getPicture() {
-    return picture;
-  }
+    /**
+     * The link message content.
+     *
+     * @return The link message content.
+     */
+    public String getMessage()
+    {
+        return message;
+    }
 
-  /**
-   * The actual URL that was shared.
-   * 
-   * @return The actual URL that was shared.
-   */
-  public String getLink() {
-    return link;
-  }
+    /**
+     * The picture associated with the link.
+     *
+     * @return The picture associated with the link.
+     */
+    public String getPicture()
+    {
+        return picture;
+    }
 
-  /**
-   * The link description.
-   * 
-   * @return The link description.
-   */
-  public String getDescription() {
-    return description;
-  }
+    /**
+     * The actual URL that was shared.
+     *
+     * @return The actual URL that was shared.
+     */
+    public String getLink()
+    {
+        return link;
+    }
 
-  /**
-   * The link icon.
-   * 
-   * @return The link icon.
-   */
-  public String getIcon() {
-    return icon;
-  }
+    /**
+     * The link description.
+     *
+     * @return The link description.
+     */
+    public String getDescription()
+    {
+        return description;
+    }
 
-  /**
-   * The time at which this object was created, if available.
-   * 
-   * @return The time at which this object was created.
-   * @since 1.6.3
-   */
-  public Date getCreatedTime() {
-    return toDateFromLongFormat(createdTime);
-  }
+    /**
+     * The link icon.
+     *
+     * @return The link icon.
+     */
+    public String getIcon()
+    {
+        return icon;
+    }
+
+    /**
+     * The time at which this object was created, if available.
+     *
+     * @return The time at which this object was created.
+     *
+     * @since 1.6.3
+     */
+    public Date getCreatedTime()
+    {
+        return toDateFromLongFormat(createdTime);
+    }
 }

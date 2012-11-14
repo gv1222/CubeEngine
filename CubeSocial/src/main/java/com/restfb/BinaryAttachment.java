@@ -22,101 +22,106 @@
 
 package com.restfb;
 
-import static com.restfb.util.StringUtils.isBlank;
-import static java.lang.String.format;
+import com.restfb.util.ReflectionUtils;
 
 import java.io.InputStream;
 
-import com.restfb.util.ReflectionUtils;
+import static com.restfb.util.StringUtils.isBlank;
+import static java.lang.String.format;
 
 /**
  * Represents a binary file that can be uploaded to Facebook.
- * <p>
+ * <p/>
  * Normally this would be a photo or video.
- * 
+ *
  * @author <a href="http://restfb.com">Mark Allen</a>
  * @since 1.6.5
  */
-public class BinaryAttachment {
-  private String filename;
-  private InputStream data;
+public class BinaryAttachment
+{
+    private String filename;
+    private InputStream data;
 
-  /**
-   * Creates a new binary attachment.
-   * 
-   * @param filename
-   *          The attachment's filename.
-   * @param data
-   *          The attachment's data.
-   * @throws IllegalArgumentException
-   *           If {@code data} is {@code null} or {@code filename} is
-   *           {@code null} or blank.
-   */
-  protected BinaryAttachment(String filename, InputStream data) {
-    if (isBlank(filename))
-      throw new IllegalArgumentException("Binary attachment filename cannot be blank.");
-    if (data == null)
-      throw new IllegalArgumentException("Binary attachment data cannot be null.");
+    /**
+     * Creates a new binary attachment.
+     *
+     * @param filename The attachment's filename.
+     * @param data     The attachment's data.
+     *
+     * @throws IllegalArgumentException If {@code data} is {@code null} or {@code filename} is
+     *                                  {@code null} or blank.
+     */
+    protected BinaryAttachment(String filename, InputStream data)
+    {
+        if (isBlank(filename))
+            throw new IllegalArgumentException("Binary attachment filename cannot be blank.");
+        if (data == null)
+            throw new IllegalArgumentException("Binary attachment data cannot be null.");
 
-    this.filename = filename;
-    this.data = data;
-  }
+        this.filename = filename;
+        this.data = data;
+    }
 
-  /**
-   * Creates a binary attachment.
-   * 
-   * @param filename
-   *          The attachment's filename.
-   * @param data
-   *          The attachment's data.
-   * @return A binary attachment.
-   * @throws IllegalArgumentException
-   *           If {@code data} is {@code null} or {@code filename} is
-   *           {@code null} or blank.
-   */
-  public static BinaryAttachment with(String filename, InputStream data) {
-    return new BinaryAttachment(filename, data);
-  }
+    /**
+     * Creates a binary attachment.
+     *
+     * @param filename The attachment's filename.
+     * @param data     The attachment's data.
+     *
+     * @return A binary attachment.
+     *
+     * @throws IllegalArgumentException If {@code data} is {@code null} or {@code filename} is
+     *                                  {@code null} or blank.
+     */
+    public static BinaryAttachment with(String filename, InputStream data)
+    {
+        return new BinaryAttachment(filename, data);
+    }
 
-  /**
-   * @see java.lang.Object#hashCode()
-   */
-  @Override
-  public int hashCode() {
-    return ReflectionUtils.hashCode(this);
-  }
+    /**
+     * @see java.lang.Object#hashCode()
+     */
+    @Override
+    public int hashCode()
+    {
+        return ReflectionUtils.hashCode(this);
+    }
 
-  /**
-   * @see java.lang.Object#equals(java.lang.Object)
-   */
-  @Override
-  public boolean equals(Object that) {
-    return ReflectionUtils.equals(this, that);
-  }
+    /**
+     * @see java.lang.Object#equals(java.lang.Object)
+     */
+    @Override
+    public boolean equals(Object that)
+    {
+        return ReflectionUtils.equals(this, that);
+    }
 
-  /**
-   * @see java.lang.Object#toString()
-   */
-  @Override
-  public String toString() {
-    return format("[filename=%s]", getFilename());
-  }
+    /**
+     * @see java.lang.Object#toString()
+     */
+    @Override
+    public String toString()
+    {
+        return format("[filename=%s]", getFilename());
+    }
 
-  /**
-   * The attachment's filename.
-   * 
-   * @return The attachment's filename.
-   */
-  public String getFilename() {
-    return filename;
-  }
+    /**
+     * The attachment's filename.
+     *
+     * @return The attachment's filename.
+     */
+    public String getFilename()
+    {
+        return filename;
+    }
 
-  /**
-   * The attachment's data.
-   * 
-   * @return The attachment's data.
-   */
-  public InputStream getData() {
-    return data;
-  }
+    /**
+     * The attachment's data.
+     *
+     * @return The attachment's data.
+     */
+    public InputStream getData()
+    {
+        return data;
+    }
 }
