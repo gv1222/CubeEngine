@@ -40,6 +40,7 @@ import java.util.Map.Entry;
 import java.util.logging.Logger;
 
 import static com.restfb.json.JsonObject.NULL;
+import static com.restfb.util.ReflectionUtils.*;
 import static com.restfb.util.StringUtils.isBlank;
 import static com.restfb.util.StringUtils.trimToEmpty;
 import static java.lang.String.format;
@@ -56,7 +57,7 @@ public class DefaultJsonMapper implements JsonMapper
 {
     /**
      * We call this instance's
-     * {@link JsonMappingErrorHandler#handleMappingError(String)} method on
+     *  method on
      * mapping failure so client code can decide how to handle the problem.
      */
     protected JsonMappingErrorHandler jsonMappingErrorHandler;
