@@ -2,6 +2,7 @@ package de.cubeisland.cubeengine.social.sites.facebook;
 
 import com.restfb.DefaultFacebookClient;
 import com.restfb.FacebookClient;
+import com.restfb.exception.FacebookException;
 import de.cubeisland.cubeengine.core.user.User;
 
 import java.util.HashMap;
@@ -32,12 +33,19 @@ public class FacebookManager
 
     public boolean initializeUser(User user, String accessToken)
     {
-        FacebookUser facebookUser = new FacebookUser(accessToken);
-        if (facebookUser.getUserInfo() != null)
+        try
         {
-            users.put(user, facebookUser);
-            return true;
+            FacebookUser facebookUser = new FacebookUser(accessToken);
+            if (facebookUser.getUserInfo() != null)
+            {
+                users.put(user, facebookUser);
+                return true;
+            }
+            return false;
         }
-        return false;
+        catch (FacebookException ex)
+        {
+            return false;
+        }
     }
 }

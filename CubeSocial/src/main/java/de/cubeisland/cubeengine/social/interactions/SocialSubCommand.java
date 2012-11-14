@@ -6,6 +6,8 @@ import de.cubeisland.cubeengine.core.command.annotation.Command;
 import de.cubeisland.cubeengine.core.command.annotation.Param;
 import de.cubeisland.cubeengine.social.Social;
 
+import java.util.logging.Level;
+
 public class SocialSubCommand
 {
     private final Social module;
@@ -24,19 +26,20 @@ public class SocialSubCommand
         if (module.getFacebookManager().hasUser(context.getSenderAsUser()))
         {
             StringBuilder message = new StringBuilder();
-            for (int x = 0; x > context.indexedCount(); x++)
+            for (int x = 0; x < context.indexedCount(); x++)
             {
-                message.append(context.getString(x));
+                message.append(context.getString(x)).append(' ');
             }
 
             try
             {
-                context.sendMessage("shout", "Your message has been posted, id: %s",
+                context.sendMessage("social", "Your message has been posted, id: %s",
                         module.getFacebookManager().getUser(context.getSenderAsUser()).publishMessage(message.toString()).getId());
             }
             catch(FacebookException ex)
             {
-                context.sendMessage("shout", "Your message could for some reason not be sent.");
+                context.sendMessage("social", "Your message could for some reason not be sent.");
+                context.sendMessage("social", "The error message: %s", ex.getLocalizedMessage());
             }
         }
         else
