@@ -1,16 +1,13 @@
 /*
  * Copyright (c) 2010-2012 Mark Allen.
- * 
  * Permission is hereby granted, free of charge, to any person obtaining a copy
  * of this software and associated documentation files (the "Software"), to deal
  * in the Software without restriction, including without limitation the rights
  * to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
  * copies of the Software, and to permit persons to whom the Software is
  * furnished to do so, subject to the following conditions:
- * 
  * The above copyright notice and this permission notice shall be included in
  * all copies or substantial portions of the Software.
- * 
  * THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
  * IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
  * FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
@@ -65,7 +62,7 @@ public class DefaultJsonMapper implements JsonMapper
     /**
      * Logger.
      */
-    private static final Logger logger = Logger.getLogger(DefaultJsonMapper.class.getName());
+    private static final Logger       logger = Logger.getLogger(DefaultJsonMapper.class.getName());
 
     /**
      * Creates a JSON mapper which will throw
@@ -163,7 +160,8 @@ public class DefaultJsonMapper implements JsonMapper
 
                     json = jsonDataObject.toString();
                 }
-            } catch (JsonException e)
+            }
+            catch (JsonException e)
             {
                 // Should never get here, but just in case...
                 if (jsonMappingErrorHandler.handleMappingError(json, type, e))
@@ -183,10 +181,12 @@ public class DefaultJsonMapper implements JsonMapper
                 list.add(toJavaObject(jsonArray.get(i).toString(), type));
 
             return unmodifiableList(list);
-        } catch (FacebookJsonMappingException e)
+        }
+        catch (FacebookJsonMappingException e)
         {
             throw e;
-        } catch (Exception e)
+        }
+        catch (Exception e)
         {
             if (jsonMappingErrorHandler.handleMappingError(json, type, e))
                 return null;
@@ -220,7 +220,7 @@ public class DefaultJsonMapper implements JsonMapper
         {
             // Are we asked to map to JsonObject? If so, short-circuit right away.
             if (type.equals(JsonObject.class))
-                return (T) new JsonObject(json);
+                return (T)new JsonObject(json);
 
             List<FieldWithAnnotation<Facebook>> fieldsWithAnnotation = findFieldsWithAnnotation(type, Facebook.class);
             Set<String> facebookFieldNamesWithMultipleMappings = facebookFieldNamesWithMultipleMappings(fieldsWithAnnotation);
@@ -238,7 +238,8 @@ public class DefaultJsonMapper implements JsonMapper
                     invokeJsonMappingCompletedMethods(instance);
 
                     return instance;
-                } else
+                }
+                else
                 {
                     return toPrimitiveJavaType(json, type);
                 }
@@ -262,7 +263,7 @@ public class DefaultJsonMapper implements JsonMapper
             T instance = createInstance(type);
 
             if (instance instanceof JsonObject)
-                return (T) jsonObject;
+                return (T)jsonObject;
 
             // For each Facebook-annotated field on the current Java object, pull data
             // out of the JSON object and put it in the Java object
@@ -293,20 +294,24 @@ public class DefaultJsonMapper implements JsonMapper
                     {
                         fieldWithAnnotation.getField()
                                 .set(instance, toJavaType(fieldWithAnnotation, jsonObject, facebookFieldName));
-                    } catch (FacebookJsonMappingException e)
-                    {
-                        logMultipleMappingFailedForField(facebookFieldName, fieldWithAnnotation, json);
-                    } catch (JsonException e)
+                    }
+                    catch (FacebookJsonMappingException e)
                     {
                         logMultipleMappingFailedForField(facebookFieldName, fieldWithAnnotation, json);
                     }
-                } else
+                    catch (JsonException e)
+                    {
+                        logMultipleMappingFailedForField(facebookFieldName, fieldWithAnnotation, json);
+                    }
+                }
+                else
                 {
                     try
                     {
                         fieldWithAnnotation.getField()
                                 .set(instance, toJavaType(fieldWithAnnotation, jsonObject, facebookFieldName));
-                    } catch (Exception e)
+                    }
+                    catch (Exception e)
                     {
                         if (!jsonMappingErrorHandler.handleMappingError(json, type, e))
                             throw e;
@@ -319,10 +324,12 @@ public class DefaultJsonMapper implements JsonMapper
             invokeJsonMappingCompletedMethods(instance);
 
             return instance;
-        } catch (FacebookJsonMappingException e)
+        }
+        catch (FacebookJsonMappingException e)
         {
             throw e;
-        } catch (Exception e)
+        }
+        catch (Exception e)
         {
             if (jsonMappingErrorHandler.handleMappingError(json, type, e))
                 return null;
@@ -482,7 +489,7 @@ public class DefaultJsonMapper implements JsonMapper
         if (object instanceof List<?>)
         {
             JsonArray jsonArray = new JsonArray();
-            for (Object o : (List<?>) object)
+            for (Object o : (List<?>)object)
                 jsonArray.put(toJsonInternal(o, ignoreNullValuedProperties));
 
             return jsonArray;
@@ -491,7 +498,7 @@ public class DefaultJsonMapper implements JsonMapper
         if (object instanceof Map<?, ?>)
         {
             JsonObject jsonObject = new JsonObject();
-            for (Entry<?, ?> entry : ((Map<?, ?>) object).entrySet())
+            for (Entry<?, ?> entry : ((Map<?, ?>)object).entrySet())
             {
                 if (!(entry.getKey() instanceof String))
                     throw new FacebookJsonMappingException("Your Map keys must be of type " + String.class
@@ -499,8 +506,9 @@ public class DefaultJsonMapper implements JsonMapper
 
                 try
                 {
-                    jsonObject.put((String) entry.getKey(), toJsonInternal(entry.getValue(), ignoreNullValuedProperties));
-                } catch (JsonException e)
+                    jsonObject.put((String)entry.getKey(), toJsonInternal(entry.getValue(), ignoreNullValuedProperties));
+                }
+                catch (JsonException e)
                 {
                     throw new FacebookJsonMappingException("Unable to process value '" + entry.getValue() + "' for key '"
                             + entry.getKey() + "' in Map " + object, e);
@@ -514,10 +522,10 @@ public class DefaultJsonMapper implements JsonMapper
             return object;
 
         if (object instanceof BigInteger)
-            return ((BigInteger) object).longValue();
+            return ((BigInteger)object).longValue();
 
         if (object instanceof BigDecimal)
-            return ((BigDecimal) object).doubleValue();
+            return ((BigDecimal)object).doubleValue();
 
         // We've passed the special-case bits, so let's try to marshal this as a
         // plain old Javabean...
@@ -549,7 +557,8 @@ public class DefaultJsonMapper implements JsonMapper
 
                 if (!(ignoreNullValuedProperties && fieldValue == null))
                     jsonObject.put(facebookFieldName, toJsonInternal(fieldValue, ignoreNullValuedProperties));
-            } catch (Exception e)
+            }
+            catch (Exception e)
             {
                 throw new FacebookJsonMappingException("Unable to process field '" + facebookFieldName + "' for "
                         + object.getClass(), e);
@@ -588,23 +597,23 @@ public class DefaultJsonMapper implements JsonMapper
                 json = json.substring(0, json.length() - 1);
             }
 
-            return (T) json;
+            return (T)json;
         }
 
         if (Integer.class.equals(type) || Integer.TYPE.equals(type))
-            return (T) new Integer(json);
+            return (T)new Integer(json);
         if (Boolean.class.equals(type) || Boolean.TYPE.equals(type))
-            return (T) new Boolean(json);
+            return (T)new Boolean(json);
         if (Long.class.equals(type) || Long.TYPE.equals(type))
-            return (T) new Long(json);
+            return (T)new Long(json);
         if (Double.class.equals(type) || Double.TYPE.equals(type))
-            return (T) new Double(json);
+            return (T)new Double(json);
         if (Float.class.equals(type) || Float.TYPE.equals(type))
-            return (T) new Float(json);
+            return (T)new Float(json);
         if (BigInteger.class.equals(type))
-            return (T) new BigInteger(json);
+            return (T)new BigInteger(json);
         if (BigDecimal.class.equals(type))
-            return (T) new BigDecimal(json);
+            return (T)new BigDecimal(json);
 
         if (jsonMappingErrorHandler.handleMappingError(json, type, null))
             return null;
@@ -651,7 +660,7 @@ public class DefaultJsonMapper implements JsonMapper
             // Per Antonello Naccarato, sometimes FB will return an empty JSON array
             // instead of an empty string. Look for that here.
             if (rawValue instanceof JsonArray)
-                if (((JsonArray) rawValue).length() == 0)
+                if (((JsonArray)rawValue).length() == 0)
                 {
                     if (logger.isLoggable(FINER))
                         logger.finer("Coercing an empty JSON array " + "to an empty string for " + fieldWithAnnotation);
@@ -735,7 +744,8 @@ public class DefaultJsonMapper implements JsonMapper
             // invoked
             defaultConstructor.setAccessible(true);
             return defaultConstructor.newInstance();
-        } catch (Exception e)
+        }
+        catch (Exception e)
         {
             throw new FacebookJsonMappingException(errorMessage, e);
         }

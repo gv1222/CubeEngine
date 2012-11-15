@@ -1,16 +1,13 @@
 /*
  * Copyright (c) 2010-2012 Mark Allen.
- * 
  * Permission is hereby granted, free of charge, to any person obtaining a copy
  * of this software and associated documentation files (the "Software"), to deal
  * in the Software without restriction, including without limitation the rights
  * to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
  * copies of the Software, and to permit persons to whom the Software is
  * furnished to do so, subject to the following conditions:
- * 
  * The above copyright notice and this permission notice shall be included in
  * all copies or substantial portions of the Software.
- * 
  * THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
  * IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
  * FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
@@ -54,7 +51,7 @@ public class DefaultFacebookClient extends BaseFacebookClient implements Faceboo
     /**
      * Graph API access token.
      */
-    protected String accessToken;
+    protected String                  accessToken;
 
     /**
      * Knows how to map Graph API exceptions to formal Java exception types.
@@ -64,74 +61,74 @@ public class DefaultFacebookClient extends BaseFacebookClient implements Faceboo
     /**
      * API endpoint URL.
      */
-    protected static final String FACEBOOK_GRAPH_ENDPOINT_URL = "https://graph.facebook.com";
+    protected static final String     FACEBOOK_GRAPH_ENDPOINT_URL            = "https://graph.facebook.com";
 
     /**
      * Read-only API endpoint URL.
      */
-    protected static final String FACEBOOK_READ_ONLY_ENDPOINT_URL = "https://api-read.facebook.com/method";
+    protected static final String     FACEBOOK_READ_ONLY_ENDPOINT_URL        = "https://api-read.facebook.com/method";
 
     /**
      * Video Upload API endpoint URL.
      *
      * @since 1.6.5
      */
-    protected static final String FACEBOOK_GRAPH_VIDEO_ENDPOINT_URL = "https://graph-video.facebook.com";
+    protected static final String     FACEBOOK_GRAPH_VIDEO_ENDPOINT_URL      = "https://graph-video.facebook.com";
 
     /**
      * Reserved method override parameter name.
      */
-    protected static final String METHOD_PARAM_NAME = "method";
+    protected static final String     METHOD_PARAM_NAME                      = "method";
 
     /**
      * Reserved "multiple IDs" parameter name.
      */
-    protected static final String IDS_PARAM_NAME = "ids";
+    protected static final String     IDS_PARAM_NAME                         = "ids";
 
     /**
      * Reserved FQL query parameter name.
      */
-    protected static final String QUERY_PARAM_NAME = "query";
+    protected static final String     QUERY_PARAM_NAME                       = "query";
 
     /**
      * Reserved FQL multiquery parameter name.
      */
-    protected static final String QUERIES_PARAM_NAME = "queries";
+    protected static final String     QUERIES_PARAM_NAME                     = "queries";
 
     /**
      * Reserved "result format" parameter name.
      */
-    protected static final String FORMAT_PARAM_NAME = "format";
+    protected static final String     FORMAT_PARAM_NAME                      = "format";
 
     /**
      * API error response 'error' attribute name.
      */
-    protected static final String ERROR_ATTRIBUTE_NAME = "error";
+    protected static final String     ERROR_ATTRIBUTE_NAME                   = "error";
 
     /**
      * API error response 'type' attribute name.
      */
-    protected static final String ERROR_TYPE_ATTRIBUTE_NAME = "type";
+    protected static final String     ERROR_TYPE_ATTRIBUTE_NAME              = "type";
 
     /**
      * API error response 'message' attribute name.
      */
-    protected static final String ERROR_MESSAGE_ATTRIBUTE_NAME = "message";
+    protected static final String     ERROR_MESSAGE_ATTRIBUTE_NAME           = "message";
 
     /**
      * API error response 'code' attribute name.
      */
-    protected static final String ERROR_CODE_ATTRIBUTE_NAME = "code";
+    protected static final String     ERROR_CODE_ATTRIBUTE_NAME              = "code";
 
     /**
      * Batch API error response 'error' attribute name.
      */
-    protected static final String BATCH_ERROR_ATTRIBUTE_NAME = "error";
+    protected static final String     BATCH_ERROR_ATTRIBUTE_NAME             = "error";
 
     /**
      * Batch API error response 'error_description' attribute name.
      */
-    protected static final String BATCH_ERROR_DESCRIPTION_ATTRIBUTE_NAME = "error_description";
+    protected static final String     BATCH_ERROR_DESCRIPTION_ATTRIBUTE_NAME = "error_description";
 
     /**
      * Creates a Facebook Graph API client with no access token.
@@ -176,7 +173,9 @@ public class DefaultFacebookClient extends BaseFacebookClient implements Faceboo
         graphFacebookExceptionMapper = createGraphFacebookExceptionMapper();
 
         illegalParamNames.addAll(Arrays
-                .asList(new String[]{ACCESS_TOKEN_PARAM_NAME, METHOD_PARAM_NAME, FORMAT_PARAM_NAME}));
+                .asList(new String[] {
+                ACCESS_TOKEN_PARAM_NAME, METHOD_PARAM_NAME, FORMAT_PARAM_NAME
+                }));
     }
 
     /**
@@ -260,9 +259,10 @@ public class DefaultFacebookClient extends BaseFacebookClient implements Faceboo
                     new JsonObject(makeRequest("",
                             parametersWithAdditionalParameter(Parameter.with(IDS_PARAM_NAME, join(ids)), parameters)));
 
-            return objectType.equals(JsonObject.class) ? (T) jsonObject : jsonMapper.toJavaObject(jsonObject.toString(),
+            return objectType.equals(JsonObject.class) ? (T)jsonObject : jsonMapper.toJavaObject(jsonObject.toString(),
                     objectType);
-        } catch (JsonException e)
+        }
+        catch (JsonException e)
         {
             throw new FacebookJsonMappingException("Unable to map connection JSON to Java objects", e);
         }
@@ -327,9 +327,10 @@ public class DefaultFacebookClient extends BaseFacebookClient implements Faceboo
                 normalizedJson.put(jsonObject.getString("name"), resultsArray);
             }
 
-            return objectType.equals(JsonObject.class) ? (T) normalizedJson : jsonMapper.toJavaObject(
+            return objectType.equals(JsonObject.class) ? (T)normalizedJson : jsonMapper.toJavaObject(
                     normalizedJson.toString(), objectType);
-        } catch (JsonException e)
+        }
+        catch (JsonException e)
         {
             throw new FacebookJsonMappingException("Unable to process fql.multiquery JSON response", e);
         }
@@ -359,7 +360,7 @@ public class DefaultFacebookClient extends BaseFacebookClient implements Faceboo
      */
     public List<BatchResponse> executeBatch(BatchRequest... batchRequests)
     {
-        return executeBatch(asList(batchRequests), Collections.<BinaryAttachment>emptyList());
+        return executeBatch(asList(batchRequests), Collections.<BinaryAttachment> emptyList());
     }
 
     /**
@@ -411,7 +412,8 @@ public class DefaultFacebookClient extends BaseFacebookClient implements Faceboo
         try
         {
             return AccessToken.fromQueryString(response);
-        } catch (Throwable t)
+        }
+        catch (Throwable t)
         {
             throw new FacebookResponseContentException("Unable to extract access token from response.", t);
         }
@@ -458,7 +460,8 @@ public class DefaultFacebookClient extends BaseFacebookClient implements Faceboo
         try
         {
             return AccessToken.fromQueryString(response);
-        } catch (Throwable t)
+        }
+        catch (Throwable t)
         {
             throw new FacebookResponseContentException("Unable to extract access token from response.", t);
         }
@@ -526,15 +529,14 @@ public class DefaultFacebookClient extends BaseFacebookClient implements Faceboo
                 createEndpointForApiCall(endpoint, binaryAttachments != null && binaryAttachments.size() > 0);
         final String parameterString = toParameterString(parameters);
 
-        return makeRequestAndProcessResponse(new Requestor()
-        {
+        return makeRequestAndProcessResponse(new Requestor() {
             /**
              * @see com.restfb.DefaultFacebookClient.Requestor#makeRequest()
              */
             public Response makeRequest() throws IOException
             {
                 return executeAsPost ? webRequestor.executePost(fullEndpoint, parameterString, binaryAttachments == null ? null
-                        : binaryAttachments.toArray(new BinaryAttachment[]{})) : webRequestor.executeGet(fullEndpoint + "?"
+                        : binaryAttachments.toArray(new BinaryAttachment[] {})) : webRequestor.executeGet(fullEndpoint + "?"
                         + parameterString);
             }
         });
@@ -553,7 +555,8 @@ public class DefaultFacebookClient extends BaseFacebookClient implements Faceboo
         try
         {
             response = requestor.makeRequest();
-        } catch (Throwable t)
+        }
+        catch (Throwable t)
         {
             throw new FacebookNetworkException("Facebook request failed", t);
         }
@@ -629,7 +632,8 @@ public class DefaultFacebookClient extends BaseFacebookClient implements Faceboo
             throw graphFacebookExceptionMapper
                     .exceptionForTypeAndMessage(errorCode, httpStatusCode, innerErrorObject.getString(ERROR_TYPE_ATTRIBUTE_NAME),
                             innerErrorObject.getString(ERROR_MESSAGE_ATTRIBUTE_NAME));
-        } catch (JsonException e)
+        }
+        catch (JsonException e)
         {
             throw new FacebookJsonMappingException("Unable to process the Facebook API response", e);
         }
@@ -665,9 +669,9 @@ public class DefaultFacebookClient extends BaseFacebookClient implements Faceboo
             try
             {
                 errorObject = new JsonObject(json);
-            } catch (JsonException e)
-            {
             }
+            catch (JsonException e)
+            {}
 
             if (errorObject == null || !errorObject.has(BATCH_ERROR_ATTRIBUTE_NAME)
                     || !errorObject.has(BATCH_ERROR_DESCRIPTION_ATTRIBUTE_NAME))
@@ -675,7 +679,8 @@ public class DefaultFacebookClient extends BaseFacebookClient implements Faceboo
 
             throw legacyFacebookExceptionMapper.exceptionForTypeAndMessage(errorObject.getInt(BATCH_ERROR_ATTRIBUTE_NAME),
                     httpStatusCode, null, errorObject.getString(BATCH_ERROR_DESCRIPTION_ATTRIBUTE_NAME));
-        } catch (JsonException e)
+        }
+        catch (JsonException e)
         {
             throw new FacebookJsonMappingException("Unable to process the Facebook API response", e);
         }

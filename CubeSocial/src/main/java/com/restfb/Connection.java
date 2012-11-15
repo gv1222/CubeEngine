@@ -1,16 +1,13 @@
 /*
  * Copyright (c) 2010-2012 Mark Allen.
- * 
  * Permission is hereby granted, free of charge, to any person obtaining a copy
  * of this software and associated documentation files (the "Software"), to deal
  * in the Software without restriction, including without limitation the rights
  * to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
  * copies of the Software, and to permit persons to whom the Software is
  * furnished to do so, subject to the following conditions:
- * 
  * The above copyright notice and this permission notice shall be included in
  * all copies or substantial portions of the Software.
- * 
  * THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
  * IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
  * FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
@@ -45,10 +42,10 @@ import static java.util.Collections.unmodifiableList;
 public class Connection<T> implements Iterable<List<T>>
 {
     private FacebookClient facebookClient;
-    private Class<T> connectionType;
-    private List<T> data;
-    private String previousPageUrl;
-    private String nextPageUrl;
+    private Class<T>       connectionType;
+    private List<T>        data;
+    private String         previousPageUrl;
+    private String         nextPageUrl;
 
     /**
      * @see java.lang.Iterable#iterator()
@@ -68,7 +65,7 @@ public class Connection<T> implements Iterable<List<T>>
     protected static class ConnectionIterator<T> implements Iterator<List<T>>
     {
         private Connection<T> connection;
-        private boolean initialPage = true;
+        private boolean       initialPage = true;
 
         /**
          * Creates a new iterator over the given {@code connection}.
@@ -148,7 +145,8 @@ public class Connection<T> implements Iterable<List<T>>
         try
         {
             jsonObject = new JsonObject(json);
-        } catch (JsonException e)
+        }
+        catch (JsonException e)
         {
             throw new FacebookJsonMappingException("The connection JSON you provided was invalid: " + json, e);
         }
@@ -156,7 +154,7 @@ public class Connection<T> implements Iterable<List<T>>
         // Pull out data
         JsonArray jsonData = jsonObject.getJsonArray("data");
         for (int i = 0; i < jsonData.length(); i++)
-            data.add(connectionType.equals(JsonObject.class) ? (T) jsonData.get(i) : facebookClient.getJsonMapper()
+            data.add(connectionType.equals(JsonObject.class) ? (T)jsonData.get(i) : facebookClient.getJsonMapper()
                     .toJavaObject(jsonData.get(i).toString(), connectionType));
 
         // Pull out paging info, if present
@@ -173,7 +171,8 @@ public class Connection<T> implements Iterable<List<T>>
             {
                 nextPageUrl = nextPageUrl.replaceFirst("http://", "https://");
             }
-        } else
+        }
+        else
         {
             previousPageUrl = null;
             nextPageUrl = null;

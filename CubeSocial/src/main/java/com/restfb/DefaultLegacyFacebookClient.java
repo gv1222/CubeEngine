@@ -1,16 +1,13 @@
 /*
  * Copyright (c) 2010-2012 Mark Allen.
- * 
  * Permission is hereby granted, free of charge, to any person obtaining a copy
  * of this software and associated documentation files (the "Software"), to deal
  * in the Software without restriction, including without limitation the rights
  * to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
  * copies of the Software, and to permit persons to whom the Software is
  * furnished to do so, subject to the following conditions:
- * 
  * The above copyright notice and this permission notice shall be included in
  * all copies or substantial portions of the Software.
- * 
  * THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
  * IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
  * FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
@@ -54,22 +51,22 @@ public class DefaultLegacyFacebookClient extends BaseFacebookClient implements L
     /**
      * Facebook API key.
      */
-    protected String apiKey;
+    protected String              apiKey;
 
     /**
      * Facebook application secret key.
      */
-    protected String secretKey;
+    protected String              secretKey;
 
     /**
      * OAuth Access token.
      */
-    protected String accessToken;
+    protected String              accessToken;
 
     /**
      * API endpoint URL.
      */
-    protected static final String FACEBOOK_REST_ENDPOINT_URL = "https://api.facebook.com/restserver.php";
+    protected static final String FACEBOOK_REST_ENDPOINT_URL      = "https://api.facebook.com/restserver.php";
 
     /**
      * Read-only API endpoint URL.
@@ -77,18 +74,18 @@ public class DefaultLegacyFacebookClient extends BaseFacebookClient implements L
     protected static final String FACEBOOK_READ_ONLY_ENDPOINT_URL = "https://api-read.facebook.com/restserver.php";
 
     // Common parameter names/values that must be included in all API requests
-    protected static final String METHOD_PARAM_NAME = "method";
-    protected static final String FORMAT_PARAM_NAME = "format";
-    protected static final String FORMAT_PARAM_VALUE = "json";
+    protected static final String METHOD_PARAM_NAME               = "method";
+    protected static final String FORMAT_PARAM_NAME               = "format";
+    protected static final String FORMAT_PARAM_VALUE              = "json";
 
     // Common parameter names/values that must be included in all API requests
     // that do not use the new OAuth scheme.
-    protected static final String API_KEY_PARAM_NAME = "api_key";
-    protected static final String CALL_ID_PARAM_NAME = "call_id";
-    protected static final String SIG_PARAM_NAME = "sig";
-    protected static final String SESSION_KEY_PARAM_NAME = "session_key";
-    protected static final String VERSION_PARAM_NAME = "v";
-    protected static final String VERSION_PARAM_VALUE = "1.0";
+    protected static final String API_KEY_PARAM_NAME              = "api_key";
+    protected static final String CALL_ID_PARAM_NAME              = "call_id";
+    protected static final String SIG_PARAM_NAME                  = "sig";
+    protected static final String SESSION_KEY_PARAM_NAME          = "session_key";
+    protected static final String VERSION_PARAM_NAME              = "v";
+    protected static final String VERSION_PARAM_VALUE             = "1.0";
 
     /**
      * Creates a Facebook API client with the given <a
@@ -187,7 +184,7 @@ public class DefaultLegacyFacebookClient extends BaseFacebookClient implements L
     @Override
     public void execute(String method, Parameter... parameters)
     {
-        execute(method, (String) null, parameters);
+        execute(method, (String)null, parameters);
     }
 
     /**
@@ -286,7 +283,8 @@ public class DefaultLegacyFacebookClient extends BaseFacebookClient implements L
 
                 normalizedJson.put(jsonObject.getString("name"), resultsArray);
             }
-        } catch (JsonException e)
+        }
+        catch (JsonException e)
         {
             throw new FacebookJsonMappingException("Unable to process fql.multiquery JSON response", e);
         }
@@ -321,7 +319,8 @@ public class DefaultLegacyFacebookClient extends BaseFacebookClient implements L
         try
         {
             response = webRequestor.executePost(createEndpointForApiCall(method, false), parametersAsString);
-        } catch (Throwable t)
+        }
+        catch (Throwable t)
         {
             throw new FacebookNetworkException("Facebook POST failed", t);
         }
@@ -368,7 +367,8 @@ public class DefaultLegacyFacebookClient extends BaseFacebookClient implements L
                         + "for authentication, you cannot " + "specify a session key.");
 
             sortedParameters.put(ACCESS_TOKEN_PARAM_NAME, accessToken);
-        } else
+        }
+        else
         {
             sortedParameters.put(API_KEY_PARAM_NAME, apiKey);
             sortedParameters.put(VERSION_PARAM_NAME, VERSION_PARAM_VALUE);
@@ -445,7 +445,8 @@ public class DefaultLegacyFacebookClient extends BaseFacebookClient implements L
                 result.append(Integer.toHexString(b & 0x0f));
             }
             return result.toString();
-        } catch (NoSuchAlgorithmException e)
+        }
+        catch (NoSuchAlgorithmException e)
         {
             // Should never happen
             throw new IllegalStateException("MD5 isn't available on this JVM", e);
@@ -477,8 +478,10 @@ public class DefaultLegacyFacebookClient extends BaseFacebookClient implements L
      */
     protected void initializeIllegalParamNames()
     {
-        illegalParamNames.addAll(Arrays.asList(new String[]{API_KEY_PARAM_NAME, CALL_ID_PARAM_NAME, SIG_PARAM_NAME,
-                METHOD_PARAM_NAME, SESSION_KEY_PARAM_NAME, FORMAT_PARAM_NAME, VERSION_PARAM_NAME, ACCESS_TOKEN_PARAM_NAME}));
+        illegalParamNames.addAll(Arrays.asList(new String[] {
+        API_KEY_PARAM_NAME, CALL_ID_PARAM_NAME, SIG_PARAM_NAME,
+                METHOD_PARAM_NAME, SESSION_KEY_PARAM_NAME, FORMAT_PARAM_NAME, VERSION_PARAM_NAME, ACCESS_TOKEN_PARAM_NAME
+        }));
     }
 
     /**

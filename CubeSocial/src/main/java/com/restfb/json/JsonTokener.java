@@ -6,27 +6,24 @@ import java.io.Reader;
 import java.io.StringReader;
 
 /*
- Copyright (c) 2002 JSON.org
-
- Permission is hereby granted, free of charge, to any person obtaining a copy
- of this software and associated documentation files (the "Software"), to deal
- in the Software without restriction, including without limitation the rights
- to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
- copies of the Software, and to permit persons to whom the Software is
- furnished to do so, subject to the following conditions:
-
- The above copyright notice and this permission notice shall be included in all
- copies or substantial portions of the Software.
-
- The Software shall be used for Good, not Evil.
-
- THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
- IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
- FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
- AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
- LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
- OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
- SOFTWARE.
+ * Copyright (c) 2002 JSON.org
+ * Permission is hereby granted, free of charge, to any person obtaining a copy
+ * of this software and associated documentation files (the "Software"), to deal
+ * in the Software without restriction, including without limitation the rights
+ * to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
+ * copies of the Software, and to permit persons to whom the Software is
+ * furnished to do so, subject to the following conditions:
+ * The above copyright notice and this permission notice shall be included in
+ * all
+ * copies or substantial portions of the Software.
+ * The Software shall be used for Good, not Evil.
+ * THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
+ * IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
+ * FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
+ * AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
+ * LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
+ * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
+ * SOFTWARE.
  */
 
 /**
@@ -40,9 +37,9 @@ import java.io.StringReader;
 public class JsonTokener
 {
 
-    private int index;
-    private Reader reader;
-    private char lastChar;
+    private int     index;
+    private Reader  reader;
+    private char    lastChar;
     private boolean useLastChar;
 
     /**
@@ -144,7 +141,8 @@ public class JsonTokener
         try
         {
             c = this.reader.read();
-        } catch (IOException exc)
+        }
+        catch (IOException exc)
         {
             throw new JsonException(exc);
         }
@@ -155,7 +153,7 @@ public class JsonTokener
             return 0;
         }
         this.index += 1;
-        this.lastChar = (char) c;
+        this.lastChar = (char)c;
         return this.lastChar;
     }
 
@@ -213,7 +211,8 @@ public class JsonTokener
             {
                 pos += len;
             }
-        } catch (IOException exc)
+        }
+        catch (IOException exc)
         {
             throw new JsonException(exc);
         }
@@ -237,7 +236,7 @@ public class JsonTokener
      */
     public char nextClean()
     {
-        for (; ; )
+        for (;;)
         {
             char c = next();
             if (c == 0 || c > ' ')
@@ -264,19 +263,17 @@ public class JsonTokener
     {
         char c;
         StringBuilder sb = new StringBuilder();
-        for (; ; )
+        for (;;)
         {
             c = next();
-            switch (c)
-            {
+            switch (c) {
                 case 0:
                 case '\n':
                 case '\r':
                     throw syntaxError("Unterminated string");
                 case '\\':
                     c = next();
-                    switch (c)
-                    {
+                    switch (c) {
                         case 'b':
                             sb.append('\b');
                             break;
@@ -293,7 +290,7 @@ public class JsonTokener
                             sb.append('\r');
                             break;
                         case 'u':
-                            sb.append((char) Integer.parseInt(next(4), 16));
+                            sb.append((char)Integer.parseInt(next(4), 16));
                             break;
                         case '"':
                         case '\'':
@@ -326,7 +323,7 @@ public class JsonTokener
     public String nextTo(char d)
     {
         StringBuilder sb = new StringBuilder();
-        for (; ; )
+        for (;;)
         {
             char c = next();
             if (c == d || c == 0 || c == '\n' || c == '\r')
@@ -353,7 +350,7 @@ public class JsonTokener
     {
         char c;
         StringBuilder sb = new StringBuilder();
-        for (; ; )
+        for (;;)
         {
             c = next();
             if (delimiters.indexOf(c) >= 0 || c == 0 || c == '\n' || c == '\r')
@@ -381,8 +378,7 @@ public class JsonTokener
         char c = nextClean();
         String s;
 
-        switch (c)
-        {
+        switch (c) {
             case '"':
             case '\'':
                 return nextString(c);
@@ -396,13 +392,13 @@ public class JsonTokener
         }
 
         /*
-        * Handle unquoted text. This could be the values true, false, or null, or
-        * it can be a number. An implementation (such as this one) is allowed to
-        * also accept non-standard forms.
-        *
-        * Accumulate characters until we reach the end of the text or a formatting
-        * character.
-        */
+         * Handle unquoted text. This could be the values true, false, or null, or
+         * it can be a number. An implementation (such as this one) is allowed to
+         * also accept non-standard forms.
+         *
+         * Accumulate characters until we reach the end of the text or a formatting
+         * character.
+         */
 
         StringBuilder sb = new StringBuilder();
         while (c >= ' ' && ",:]}/\\\"[{;=#".indexOf(c) < 0)
@@ -445,8 +441,10 @@ public class JsonTokener
                     this.index = startIndex;
                     return c;
                 }
-            } while (c != to);
-        } catch (IOException exc)
+            }
+            while (c != to);
+        }
+        catch (IOException exc)
         {
             throw new JsonException(exc);
         }

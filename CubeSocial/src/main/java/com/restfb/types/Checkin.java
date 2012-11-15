@@ -1,16 +1,13 @@
 /*
  * Copyright (c) 2010-2012 Mark Allen.
- * 
  * Permission is hereby granted, free of charge, to any person obtaining a copy
  * of this software and associated documentation files (the "Software"), to deal
  * in the Software without restriction, including without limitation the rights
  * to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
  * copies of the Software, and to permit persons to whom the Software is
  * furnished to do so, subject to the following conditions:
- * 
  * The above copyright notice and this permission notice shall be included in
  * all copies or substantial portions of the Software.
- * 
  * THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
  * IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
  * FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
@@ -44,27 +41,27 @@ import static java.util.Collections.unmodifiableList;
 public class Checkin extends FacebookType
 {
     @Facebook
-    private String message;
+    private String                  message;
 
     @Facebook
-    private NamedFacebookType from;
+    private NamedFacebookType       from;
 
     @Facebook
-    private NamedFacebookType application;
+    private NamedFacebookType       application;
 
     @Facebook
-    private com.restfb.types.Place place;
+    private com.restfb.types.Place  place;
 
     @Facebook("created_time")
-    private String createdTime;
+    private String                  createdTime;
 
     @Facebook
-    private List<Comment> comments = new ArrayList<Comment>();
+    private List<Comment>           comments         = new ArrayList<Comment>();
 
     @Facebook
-    private List<NamedFacebookType> tags = new ArrayList<NamedFacebookType>();
+    private List<NamedFacebookType> tags             = new ArrayList<NamedFacebookType>();
 
-    private static final long serialVersionUID = 2L;
+    private static final long       serialVersionUID = 2L;
 
     /**
      * Represents the <a
@@ -81,7 +78,7 @@ public class Checkin extends FacebookType
         @Facebook
         private com.restfb.types.Location location;
 
-        private static final long serialVersionUID = 1L;
+        private static final long         serialVersionUID = 1L;
 
         /**
          * Represents the <a
@@ -96,19 +93,19 @@ public class Checkin extends FacebookType
         public static class Location implements Serializable
         {
             @Facebook
-            private Double latitude;
+            private Double            latitude;
 
             @Facebook
-            private Double longitude;
+            private Double            longitude;
 
             @Facebook
-            private String city;
+            private String            city;
 
             @Facebook
-            private String state;
+            private String            state;
 
             @Facebook
-            private String country;
+            private String            country;
 
             private static final long serialVersionUID = 1L;
 

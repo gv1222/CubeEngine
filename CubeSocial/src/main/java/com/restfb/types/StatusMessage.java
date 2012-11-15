@@ -1,16 +1,13 @@
 /*
  * Copyright (c) 2010-2012 Mark Allen.
- * 
  * Permission is hereby granted, free of charge, to any person obtaining a copy
  * of this software and associated documentation files (the "Software"), to deal
  * in the Software without restriction, including without limitation the rights
  * to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
  * copies of the Software, and to permit persons to whom the Software is
  * furnished to do so, subject to the following conditions:
- * 
  * The above copyright notice and this permission notice shall be included in
  * all copies or substantial portions of the Software.
- * 
  * THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
  * IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
  * FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
@@ -43,19 +40,19 @@ import static java.util.Collections.unmodifiableList;
 public class StatusMessage extends NamedFacebookType
 {
     @Facebook
-    private NamedFacebookType from;
+    private NamedFacebookType       from;
 
     @Facebook
-    private String message;
+    private String                  message;
 
     @Facebook
-    private String type;
+    private String                  type;
 
     @Facebook("updated_time")
-    private String updatedTime;
+    private String                  updatedTime;
 
     @Facebook
-    private List<NamedFacebookType> likes = new ArrayList<NamedFacebookType>();
+    private List<NamedFacebookType> likes            = new ArrayList<NamedFacebookType>();
 
     /**
      * Hack so JSON mapping won't fail when FB returns inconsistent JSON when
@@ -63,10 +60,10 @@ public class StatusMessage extends NamedFacebookType
      */
     @Facebook("likes")
     @SuppressWarnings("unused")
-    private EmptyLikes emptyLikes;
+    private EmptyLikes              emptyLikes;
 
     @Facebook
-    private List<Comment> comments = new ArrayList<Comment>();
+    private List<Comment>           comments         = new ArrayList<Comment>();
 
     /**
      * Hack so JSON mapping won't fail when FB returns inconsistent JSON when
@@ -74,9 +71,9 @@ public class StatusMessage extends NamedFacebookType
      */
     @Facebook("comments")
     @SuppressWarnings("unused")
-    private EmptyComments emptyComments;
+    private EmptyComments           emptyComments;
 
-    private static final long serialVersionUID = 2L;
+    private static final long       serialVersionUID = 2L;
 
     /**
      * Sometimes Facebook will return <tt>"likes":{"count":0}</tt> instead of the
@@ -90,7 +87,7 @@ public class StatusMessage extends NamedFacebookType
     {
         @Facebook
         @SuppressWarnings("unused")
-        private Long count;
+        private Long              count;
 
         private static final long serialVersionUID = 1L;
     }
@@ -107,7 +104,7 @@ public class StatusMessage extends NamedFacebookType
     {
         @Facebook
         @SuppressWarnings("unused")
-        private Long count;
+        private Long              count;
 
         private static final long serialVersionUID = 1L;
     }

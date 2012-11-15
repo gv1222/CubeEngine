@@ -1,16 +1,13 @@
 /*
  * Copyright (c) 2010-2012 Mark Allen.
- * 
  * Permission is hereby granted, free of charge, to any person obtaining a copy
  * of this software and associated documentation files (the "Software"), to deal
  * in the Software without restriction, including without limitation the rights
  * to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
  * copies of the Software, and to permit persons to whom the Software is
  * furnished to do so, subject to the following conditions:
- * 
  * The above copyright notice and this permission notice shall be included in
  * all copies or substantial portions of the Software.
- * 
  * THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
  * IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
  * FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
@@ -42,40 +39,39 @@ public final class DateUtils
      * Facebook "long" date format (IETF RFC 3339). Example:
      * {@code 2010-02-28T16:11:08+0000}
      */
-    public static final String FACEBOOK_LONG_DATE_FORMAT = "yyyy-MM-dd'T'HH:mm:ssZ";
+    public static final String  FACEBOOK_LONG_DATE_FORMAT                  = "yyyy-MM-dd'T'HH:mm:ssZ";
 
     /**
      * Facebook "long" date format (IETF RFC 3339) without a timezone component.
      * Example: {@code 2010-02-28T16:11:08}
      */
-    public static final String FACEBOOK_LONG_DATE_FORMAT_WITHOUT_TIMEZONE = "yyyy-MM-dd'T'HH:mm:ss";
+    public static final String  FACEBOOK_LONG_DATE_FORMAT_WITHOUT_TIMEZONE = "yyyy-MM-dd'T'HH:mm:ss";
 
     /**
      * Facebook short date format. Example: {@code 04/15/1984}
      */
-    public static final String FACEBOOK_SHORT_DATE_FORMAT = "MM/dd/yyyy";
+    public static final String  FACEBOOK_SHORT_DATE_FORMAT                 = "MM/dd/yyyy";
 
     /**
      * Facebook alternate short date format. Example: {@code 2012-09-15}
      */
-    public static final String FACEBOOK_ALTERNATE_SHORT_DATE_FORMAT = "yyyy-MM-dd";
+    public static final String  FACEBOOK_ALTERNATE_SHORT_DATE_FORMAT       = "yyyy-MM-dd";
 
     /**
      * Facebook month-year only date format. Example: {@code Example: 2007-03}
      */
-    public static final String FACEBOOK_MONTH_YEAR_DATE_FORMAT = "yyyy-MM";
+    public static final String  FACEBOOK_MONTH_YEAR_DATE_FORMAT            = "yyyy-MM";
 
     /**
      * Logger.
      */
-    private static final Logger logger = Logger.getLogger(DateUtils.class.getName());
+    private static final Logger logger                                     = Logger.getLogger(DateUtils.class.getName());
 
     /**
      * Prevents instantiation.
      */
     private DateUtils()
-    {
-    }
+    {}
 
     /**
      * Returns a Java representation of a Facebook "long" {@code date} string, or
@@ -166,7 +162,8 @@ public final class DateUtils
         try
         {
             return new SimpleDateFormat(format).parse(date);
-        } catch (ParseException e)
+        }
+        catch (ParseException e)
         {
             if (logger.isLoggable(FINER))
                 logger.fine(format("Unable to parse date '%s' using format string '%s': %s", date, format, e));

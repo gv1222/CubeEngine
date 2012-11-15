@@ -15,7 +15,7 @@ import java.util.HashMap;
 
 public class SocialListener implements Listener
 {
-    private final Social module;
+    private final Social      module;
     private final UserManager userManager;
 
     public SocialListener(Social module)

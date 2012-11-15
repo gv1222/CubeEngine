@@ -1,16 +1,13 @@
 /*
  * Copyright (c) 2010-2012 Mark Allen.
- * 
  * Permission is hereby granted, free of charge, to any person obtaining a copy
  * of this software and associated documentation files (the "Software"), to deal
  * in the Software without restriction, including without limitation the rights
  * to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
  * copies of the Software, and to permit persons to whom the Software is
  * furnished to do so, subject to the following conditions:
- * 
  * The above copyright notice and this permission notice shall be included in
  * all copies or substantial portions of the Software.
- * 
  * THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
  * IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
  * FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
@@ -46,22 +43,21 @@ public final class ReflectionUtils
      * In-memory shared cache of reflection data for
      * {@link #findFieldsWithAnnotation(Class, Class)}.
      */
-    private static final Map<ClassAnnotationCacheKey, List<?>> FIELDS_WITH_ANNOTATION_CACHE =
-            synchronizedMap(new HashMap<ClassAnnotationCacheKey, List<?>>());
+    private static final Map<ClassAnnotationCacheKey, List<?>>      FIELDS_WITH_ANNOTATION_CACHE  =
+                                                                                                      synchronizedMap(new HashMap<ClassAnnotationCacheKey, List<?>>());
 
     /**
      * In-memory shared cache of reflection data for
      * {@link #findMethodsWithAnnotation(Class, Class)}.
      */
     private static final Map<ClassAnnotationCacheKey, List<Method>> METHODS_WITH_ANNOTATION_CACHE =
-            synchronizedMap(new HashMap<ClassAnnotationCacheKey, List<Method>>());
+                                                                                                      synchronizedMap(new HashMap<ClassAnnotationCacheKey, List<Method>>());
 
     /**
      * Prevents instantiation.
      */
     private ReflectionUtils()
-    {
-    }
+    {}
 
     /**
      * Is the given {@code object} a primitive type or wrapper for a primitive
@@ -104,7 +100,7 @@ public final class ReflectionUtils
 
         @SuppressWarnings("unchecked")
         List<FieldWithAnnotation<T>> cachedResults =
-                (List<FieldWithAnnotation<T>>) FIELDS_WITH_ANNOTATION_CACHE.get(cacheKey);
+                (List<FieldWithAnnotation<T>>)FIELDS_WITH_ANNOTATION_CACHE.get(cacheKey);
 
         if (cachedResults != null)
             return cachedResults;
@@ -147,7 +143,7 @@ public final class ReflectionUtils
     public static <T extends Annotation> List<Method> findMethodsWithAnnotation(Class<?> type, Class<T> annotationType)
     {
         ClassAnnotationCacheKey cacheKey = new ClassAnnotationCacheKey(type, annotationType);
-        List<Method> cachedResults = (List<Method>) METHODS_WITH_ANNOTATION_CACHE.get(cacheKey);
+        List<Method> cachedResults = (List<Method>)METHODS_WITH_ANNOTATION_CACHE.get(cacheKey);
 
         if (cachedResults != null)
             return cachedResults;
@@ -192,9 +188,9 @@ public final class ReflectionUtils
         if (!(type instanceof ParameterizedType))
             return null;
 
-        ParameterizedType parameterizedType = (ParameterizedType) type;
+        ParameterizedType parameterizedType = (ParameterizedType)type;
         Type firstTypeArgument = parameterizedType.getActualTypeArguments()[0];
-        return (firstTypeArgument instanceof Class) ? (Class<?>) firstTypeArgument : null;
+        return (firstTypeArgument instanceof Class) ? (Class<?>)firstTypeArgument : null;
     }
 
     /**
@@ -220,8 +216,8 @@ public final class ReflectionUtils
                     && !Void.class.equals(method.getReturnType())
                     && method.getParameterTypes().length == 0
                     && ((methodName.startsWith("get") && methodName.length() > 3)
-                    || (methodName.startsWith("is") && methodName.length() > 2) || (methodName.startsWith("has") && methodName
-                    .length() > 3)))
+                        || (methodName.startsWith("is") && methodName.length() > 2) || (methodName.startsWith("has") && methodName
+                        .length() > 3)))
                 methods.add(method);
         }
 
@@ -275,7 +271,8 @@ public final class ReflectionUtils
 
                 // Accessors are guaranteed to take no parameters and return a value
                 buffer.append(method.invoke(object));
-            } catch (Exception e)
+            }
+            catch (Exception e)
             {
                 throw new IllegalStateException("Unable to reflectively invoke " + method + " on " + object.getClass(), e);
             }
@@ -308,7 +305,8 @@ public final class ReflectionUtils
                 Object result = method.invoke(object);
                 if (result != null)
                     hashCode = hashCode * 31 + result.hashCode();
-            } catch (Exception e)
+            }
+            catch (Exception e)
             {
                 throw new IllegalStateException("Unable to reflectively invoke " + method + " on " + object, e);
             }
@@ -354,7 +352,8 @@ public final class ReflectionUtils
                     return false;
                 if (!result1.equals(result2))
                     return false;
-            } catch (Exception e)
+            }
+            catch (Exception e)
             {
                 throw new IllegalStateException("Unable to reflectively invoke " + method, e);
             }
@@ -378,7 +377,7 @@ public final class ReflectionUtils
         /**
          * An annotation on the field.
          */
-        private T annotation;
+        private T     annotation;
 
         /**
          * Creates a field/annotation pair.
@@ -434,7 +433,7 @@ public final class ReflectionUtils
         /**
          * Class component of this cache key.
          */
-        private final Class<?> clazz;
+        private final Class<?>                    clazz;
 
         /**
          * Annotation component of this cache key.
@@ -479,13 +478,14 @@ public final class ReflectionUtils
             if (getClass() != obj.getClass())
                 return false;
 
-            ClassAnnotationCacheKey other = (ClassAnnotationCacheKey) obj;
+            ClassAnnotationCacheKey other = (ClassAnnotationCacheKey)obj;
 
             if (annotation == null)
             {
                 if (other.annotation != null)
                     return false;
-            } else if (!annotation.equals(other.annotation))
+            }
+            else if (!annotation.equals(other.annotation))
             {
                 return false;
             }
@@ -494,7 +494,8 @@ public final class ReflectionUtils
             {
                 if (other.clazz != null)
                     return false;
-            } else if (!clazz.equals(other.clazz))
+            }
+            else if (!clazz.equals(other.clazz))
             {
                 return false;
             }

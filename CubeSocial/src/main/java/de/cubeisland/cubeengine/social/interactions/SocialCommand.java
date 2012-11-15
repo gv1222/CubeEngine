@@ -17,15 +17,16 @@ public class SocialCommand
         this.module = module;
     }
 
-    @Command
-            (
-                    names = {"facebook", "fb"},
-                    desc = "Facebook",
-                    params = {
-                            @Param(names = {"Token", "t"}, types = String.class), //This token can be generated for use at: http://developers.facebook.com/tools/explorer
-                            @Param(names = {"User", "u"}, types = User.class)
-                    }
-            )
+    @Command(names = {
+    "facebook", "fb"
+    }, desc = "Facebook", params = {
+                            @Param(names = {
+                            "Token", "t"
+                            }, types = String.class), //This token can be generated for use at: http://developers.facebook.com/tools/explorer
+                            @Param(names = {
+                            "User", "u"
+                            }, types = User.class)
+    })
     public void facebook(CommandContext context)
     {
         if (context.hasNamed("Token"))

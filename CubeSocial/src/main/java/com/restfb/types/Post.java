@@ -1,16 +1,13 @@
 /*
  * Copyright (c) 2010-2012 Mark Allen.
- * 
  * Permission is hereby granted, free of charge, to any person obtaining a copy
  * of this software and associated documentation files (the "Software"), to deal
  * in the Software without restriction, including without limitation the rights
  * to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
  * copies of the Software, and to permit persons to whom the Software is
  * furnished to do so, subject to the following conditions:
- * 
  * The above copyright notice and this permission notice shall be included in
  * all copies or substantial portions of the Software.
- * 
  * THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
  * IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
  * FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
@@ -53,91 +50,91 @@ import static java.util.Collections.unmodifiableMap;
 public class Post extends NamedFacebookType
 {
     @Facebook
-    private CategorizedFacebookType from;
+    private CategorizedFacebookType       from;
 
     @Facebook
-    private String message;
+    private String                        message;
 
     @Facebook
-    private String picture;
+    private String                        picture;
 
     @Facebook
-    private String link;
+    private String                        link;
 
     @Facebook
-    private String caption;
+    private String                        caption;
 
     @Facebook
-    private String description;
+    private String                        description;
 
     @Facebook
-    private String source;
+    private String                        source;
 
     @Facebook
-    private String type;
+    private String                        type;
 
     @Facebook
-    private NamedFacebookType application;
+    private NamedFacebookType             application;
 
     @Facebook
-    private String icon;
+    private String                        icon;
 
     @Facebook
-    private String attribution;
+    private String                        attribution;
 
     @Facebook
-    private Privacy privacy;
+    private Privacy                       privacy;
 
     /**
      * Duplicate mapping for "likes" since FB can return it differently in
      * different situations.
      */
     @Facebook("likes")
-    private Long likesCount;
+    private Long                          likesCount;
 
     /**
      * Duplicate mapping for "likes" since FB can return it differently in
      * different situations.
      */
     @Facebook
-    private Likes likes;
+    private Likes                         likes;
 
     @Facebook("created_time")
-    private String createdTime;
+    private String                        createdTime;
 
     @Facebook("updated_time")
-    private String updatedTime;
+    private String                        updatedTime;
 
     @Facebook("object_id")
-    private String objectId;
+    private String                        objectId;
 
     @Facebook("status_type")
-    private String statusType;
+    private String                        statusType;
 
     @Facebook
-    private Comments comments;
+    private Comments                      comments;
 
     @Facebook
-    private com.restfb.types.Place place;
+    private com.restfb.types.Place        place;
 
     @Facebook
-    private List<NamedFacebookType> to = new ArrayList<NamedFacebookType>();
+    private List<NamedFacebookType>       to               = new ArrayList<NamedFacebookType>();
 
     @Facebook
-    private List<Action> actions = new ArrayList<Action>();
+    private List<Action>                  actions          = new ArrayList<Action>();
 
     @Facebook
-    private List<Property> properties = new ArrayList<Property>();
+    private List<Property>                properties       = new ArrayList<Property>();
 
     @Facebook("with_tags")
-    private List<NamedFacebookType> withTags = new ArrayList<NamedFacebookType>();
+    private List<NamedFacebookType>       withTags         = new ArrayList<NamedFacebookType>();
 
     @Facebook("message_tags")
-    private JsonObject rawMessageTags;
+    private JsonObject                    rawMessageTags;
 
-    private Map<String, List<MessageTag>> messageTags = new HashMap<String, List<MessageTag>>();
+    private Map<String, List<MessageTag>> messageTags      = new HashMap<String, List<MessageTag>>();
 
-    private static final long serialVersionUID = 3L;
+    private static final long             serialVersionUID = 3L;
 
     /**
      * Post-JSON-mapping operation that populates the {@code messageTags} field
@@ -179,7 +176,7 @@ public class Post extends NamedFacebookType
     public static class Place extends NamedFacebookType
     {
         @Facebook
-        private Location location;
+        private Location          location;
 
         private static final long serialVersionUID = 1L;
 
@@ -205,10 +202,10 @@ public class Post extends NamedFacebookType
     public static class MessageTag extends NamedFacebookType
     {
         @Facebook
-        private Integer offset;
+        private Integer           offset;
 
         @Facebook
-        private Integer length;
+        private Integer           length;
 
         private static final long serialVersionUID = 1L;
 
@@ -242,13 +239,13 @@ public class Post extends NamedFacebookType
     public static class Property implements Serializable
     {
         @Facebook
-        private String name;
+        private String            name;
 
         @Facebook
-        private String text;
+        private String            text;
 
         @Facebook
-        private String href;
+        private String            href;
 
         private static final long serialVersionUID = 1L;
 
@@ -321,12 +318,12 @@ public class Post extends NamedFacebookType
     public static class Likes implements Serializable
     {
         @Facebook
-        private Long count;
+        private Long                    count;
 
         @Facebook
-        private List<NamedFacebookType> data = new ArrayList<NamedFacebookType>();
+        private List<NamedFacebookType> data             = new ArrayList<NamedFacebookType>();
 
-        private static final long serialVersionUID = 1L;
+        private static final long       serialVersionUID = 1L;
 
         /**
          * @see java.lang.Object#hashCode()
@@ -387,10 +384,10 @@ public class Post extends NamedFacebookType
     public static class Comments implements Serializable
     {
         @Facebook
-        private Long count;
+        private Long              count;
 
         @Facebook
-        private List<Comment> data = new ArrayList<Comment>();
+        private List<Comment>     data             = new ArrayList<Comment>();
 
         private static final long serialVersionUID = 1L;
 
@@ -453,19 +450,19 @@ public class Post extends NamedFacebookType
     public static class Privacy implements Serializable
     {
         @Facebook
-        private String value;
+        private String            value;
 
         @Facebook
-        private String description;
+        private String            description;
 
         @Facebook
-        private String friends;
+        private String            friends;
 
         @Facebook
-        private String networks;
+        private String            networks;
 
         @Facebook
-        private String deny;
+        private String            deny;
 
         private static final long serialVersionUID = 1L;
 
@@ -558,10 +555,10 @@ public class Post extends NamedFacebookType
     public static class Action implements Serializable
     {
         @Facebook
-        private String name;
+        private String            name;
 
         @Facebook
-        private String link;
+        private String            link;
 
         private static final long serialVersionUID = 1L;
 

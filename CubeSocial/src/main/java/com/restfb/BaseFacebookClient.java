@@ -1,16 +1,13 @@
 /*
  * Copyright (c) 2010-2012 Mark Allen.
- * 
  * Permission is hereby granted, free of charge, to any person obtaining a copy
  * of this software and associated documentation files (the "Software"), to deal
  * in the Software without restriction, including without limitation the rights
  * to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
  * copies of the Software, and to permit persons to whom the Software is
  * furnished to do so, subject to the following conditions:
- * 
  * The above copyright notice and this permission notice shall be included in
  * all copies or substantial portions of the Software.
- * 
  * THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
  * IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
  * FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
@@ -53,12 +50,12 @@ abstract class BaseFacebookClient
     /**
      * Handles {@code GET}s and {@code POST}s to the Facebook API endpoint.
      */
-    protected WebRequestor webRequestor;
+    protected WebRequestor            webRequestor;
 
     /**
      * Handles mapping Facebook response JSON to Java objects.
      */
-    protected JsonMapper jsonMapper;
+    protected JsonMapper              jsonMapper;
 
     /**
      * Knows how to map Old REST API exceptions to formal Java exception types.
@@ -68,32 +65,32 @@ abstract class BaseFacebookClient
     /**
      * Set of parameter names that user must not specify themselves, since we use these parameters internally.
      */
-    protected final Set<String> illegalParamNames = new HashSet<String>();
+    protected final Set<String>       illegalParamNames                = new HashSet<String>();
 
     /**
      * Set of API calls that can use the read-only endpoint for a performance boost.
      */
-    protected final Set<String> readOnlyApiCalls = new HashSet<String>();
+    protected final Set<String>       readOnlyApiCalls                 = new HashSet<String>();
 
     /**
      * Legacy API error response 'error_code' attribute name.
      */
-    protected static final String LEGACY_ERROR_CODE_ATTRIBUTE_NAME = "error_code";
+    protected static final String     LEGACY_ERROR_CODE_ATTRIBUTE_NAME = "error_code";
 
     /**
      * Legacy API error response 'error_msg' attribute name.
      */
-    protected static final String LEGACY_ERROR_MSG_ATTRIBUTE_NAME = "error_msg";
+    protected static final String     LEGACY_ERROR_MSG_ATTRIBUTE_NAME  = "error_msg";
 
     /**
      * Reserved access token parameter name.
      */
-    protected static final String ACCESS_TOKEN_PARAM_NAME = "access_token";
+    protected static final String     ACCESS_TOKEN_PARAM_NAME          = "access_token";
 
     /**
      * Logger.
      */
-    protected final Logger logger = Logger.getLogger(getClass().getName());
+    protected final Logger            logger                           = Logger.getLogger(getClass().getName());
 
     /**
      * Initializes this Facebook client.
@@ -160,7 +157,8 @@ abstract class BaseFacebookClient
      */
     protected void initializeReadOnlyApiCalls()
     {
-        readOnlyApiCalls.addAll(asList(new String[]{"admin.getallocation", "admin.getappproperties",
+        readOnlyApiCalls.addAll(asList(new String[] {
+        "admin.getallocation", "admin.getappproperties",
                 "admin.getbannedusers", "admin.getlivestreamvialink", "admin.getmetrics", "admin.getrestrictioninfo",
                 "application.getpublicinfo", "auth.getapppublickey", "auth.getsession", "auth.getsignedpublicsessiondata",
                 "comments.get", "connect.getunconnectedfriendscount", "dashboard.getactivity", "dashboard.getcount",
@@ -173,7 +171,8 @@ abstract class BaseFacebookClient
                 "permissions.checkavailableapiaccess", "permissions.checkgrantedapiaccess", "photos.get", "photos.getalbums",
                 "photos.gettags", "profile.getinfo", "profile.getinfooptions", "stream.get", "stream.getcomments",
                 "stream.getfilters", "users.getinfo", "users.getloggedinuser", "users.getstandardinfo",
-                "users.hasapppermission", "users.isappuser", "users.isverified", "video.getuploadlimits"}));
+                "users.hasapppermission", "users.isappuser", "users.isverified", "video.getuploadlimits"
+        }));
     }
 
     /**
@@ -204,9 +203,9 @@ abstract class BaseFacebookClient
             try
             {
                 errorObject = new JsonObject(json);
-            } catch (JsonException e)
-            {
             }
+            catch (JsonException e)
+            {}
 
             if (errorObject == null || !errorObject.has(LEGACY_ERROR_CODE_ATTRIBUTE_NAME))
                 return;
@@ -214,7 +213,8 @@ abstract class BaseFacebookClient
             throw legacyFacebookExceptionMapper.exceptionForTypeAndMessage(
                     errorObject.getInt(LEGACY_ERROR_CODE_ATTRIBUTE_NAME), httpStatusCode, null,
                     errorObject.getString(LEGACY_ERROR_MSG_ATTRIBUTE_NAME));
-        } catch (JsonException e)
+        }
+        catch (JsonException e)
         {
             throw new FacebookJsonMappingException("Unable to process the Facebook API response", e);
         }
@@ -263,7 +263,8 @@ abstract class BaseFacebookClient
             try
             {
                 jsonObject.put(trimToEmpty(entry.getKey()), trimToEmpty(entry.getValue()));
-            } catch (JsonException e)
+            }
+            catch (JsonException e)
             {
                 // Shouldn't happen unless bizarre input is provided
                 throw new IllegalArgumentException("Unable to convert " + queries + " to JSON.", e);
@@ -341,7 +342,7 @@ abstract class BaseFacebookClient
      */
     protected void verifyParameterPresence(String parameterName, String parameter)
     {
-        verifyParameterPresence(parameterName, (Object) parameter);
+        verifyParameterPresence(parameterName, (Object)parameter);
         if (parameter.trim().length() == 0)
             throw new IllegalArgumentException("The '" + parameterName + "' parameter cannot be an empty string.");
     }

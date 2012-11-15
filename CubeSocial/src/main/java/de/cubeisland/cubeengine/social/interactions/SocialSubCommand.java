@@ -18,10 +18,7 @@ public class SocialSubCommand
         this.module = module;
     }
 
-    @Command
-            (
-                    desc = "post a message"
-            )
+    @Command(desc = "post a message")
     public void post(CommandContext context)
     {
         if (module.getFacebookManager().hasUser(context.getSenderAsUser()))
@@ -36,21 +33,20 @@ public class SocialSubCommand
             {
                 context.sendMessage("social", "Your message has been posted, id: %s",
                         module.getFacebookManager().getUser(context.getSenderAsUser()).publishMessage(message.toString()).getId());
-            } catch (FacebookException ex)
+            }
+            catch (FacebookException ex)
             {
                 context.sendMessage("social", "Your message could for some reason not be sent.");
                 context.sendMessage("social", "The error message: %s", ex.getLocalizedMessage());
             }
-        } else
+        }
+        else
         {
             context.sendMessage("shout", "You have to be a player to use this command");
         }
     }
 
-    @Command
-            (
-                    desc = "sign like!"
-            )
+    @Command(desc = "sign like!")
     public void sign(CommandContext context)
     {
         if (context.getSenderAsUser() == null)
@@ -71,7 +67,7 @@ public class SocialSubCommand
             return;
         }
 
-        Sign targetSign = (Sign) targetBlock.getState();
+        Sign targetSign = (Sign)targetBlock.getState();
         try
         {
             StringBuilder message = new StringBuilder();

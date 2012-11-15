@@ -1,27 +1,24 @@
 package com.restfb.json;
 
 /*
- Copyright (c) 2002 JSON.org
-
- Permission is hereby granted, free of charge, to any person obtaining a copy
- of this software and associated documentation files (the "Software"), to deal
- in the Software without restriction, including without limitation the rights
- to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
- copies of the Software, and to permit persons to whom the Software is
- furnished to do so, subject to the following conditions:
-
- The above copyright notice and this permission notice shall be included in all
- copies or substantial portions of the Software.
-
- The Software shall be used for Good, not Evil.
-
- THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
- IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
- FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
- AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
- LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
- OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
- SOFTWARE.
+ * Copyright (c) 2002 JSON.org
+ * Permission is hereby granted, free of charge, to any person obtaining a copy
+ * of this software and associated documentation files (the "Software"), to deal
+ * in the Software without restriction, including without limitation the rights
+ * to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
+ * copies of the Software, and to permit persons to whom the Software is
+ * furnished to do so, subject to the following conditions:
+ * The above copyright notice and this permission notice shall be included in
+ * all
+ * copies or substantial portions of the Software.
+ * The Software shall be used for Good, not Evil.
+ * THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
+ * IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
+ * FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
+ * AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
+ * LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
+ * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
+ * SOFTWARE.
  */
 
 import java.io.IOException;
@@ -110,10 +107,12 @@ public class JsonArray
         if (c == '[')
         {
             q = ']';
-        } else if (c == '(')
+        }
+        else if (c == '(')
         {
             q = ')';
-        } else
+        }
+        else
         {
             throw x.syntaxError("A JsonArray text must start with '['");
         }
@@ -122,20 +121,20 @@ public class JsonArray
             return;
         }
         x.back();
-        for (; ; )
+        for (;;)
         {
             if (x.nextClean() == ',')
             {
                 x.back();
                 this.myArrayList.add(null);
-            } else
+            }
+            else
             {
                 x.back();
                 this.myArrayList.add(x.nextValue());
             }
             c = x.nextClean();
-            switch (c)
-            {
+            switch (c) {
                 case ';':
                 case ',':
                     if (x.nextClean() == ']')
@@ -193,18 +192,19 @@ public class JsonArray
         this.myArrayList = new ArrayList<Object>();
         if (collection != null)
         {
-            Iterator<?> iter = collection.iterator();
-            ;
+            Iterator<?> iter = collection.iterator();;
             while (iter.hasNext())
             {
                 Object o = iter.next();
                 if (o instanceof Map<?, ?>)
                 {
-                    this.myArrayList.add(new JsonObject((Map<?, ?>) o, includeSuperClass));
-                } else if (!JsonObject.isStandardProperty(o.getClass()))
+                    this.myArrayList.add(new JsonObject((Map<?, ?>)o, includeSuperClass));
+                }
+                else if (!JsonObject.isStandardProperty(o.getClass()))
                 {
                     this.myArrayList.add(new JsonObject(o, includeSuperClass));
-                } else
+                }
+                else
                 {
                     this.myArrayList.add(o);
                 }
@@ -227,7 +227,8 @@ public class JsonArray
             {
                 this.put(Array.get(array, i));
             }
-        } else
+        }
+        else
         {
             throw new JsonException("JsonArray initial value should be a string or collection or array.");
         }
@@ -251,12 +252,14 @@ public class JsonArray
                 if (JsonObject.isStandardProperty(o.getClass()))
                 {
                     this.myArrayList.add(o);
-                } else
+                }
+                else
                 {
                     this.myArrayList.add(new JsonObject(o, includeSuperClass));
                 }
             }
-        } else
+        }
+        else
         {
             throw new JsonException("JsonArray initial value should be a string or collection or array.");
         }
@@ -295,10 +298,11 @@ public class JsonArray
     public boolean getBoolean(int index)
     {
         Object o = get(index);
-        if (o.equals(Boolean.FALSE) || (o instanceof String && ((String) o).equalsIgnoreCase("false")))
+        if (o.equals(Boolean.FALSE) || (o instanceof String && ((String)o).equalsIgnoreCase("false")))
         {
             return false;
-        } else if (o.equals(Boolean.TRUE) || (o instanceof String && ((String) o).equalsIgnoreCase("true")))
+        }
+        else if (o.equals(Boolean.TRUE) || (o instanceof String && ((String)o).equalsIgnoreCase("true")))
         {
             return true;
         }
@@ -320,8 +324,9 @@ public class JsonArray
         Object o = get(index);
         try
         {
-            return o instanceof Number ? ((Number) o).doubleValue() : Double.valueOf((String) o).doubleValue();
-        } catch (Exception e)
+            return o instanceof Number ? ((Number)o).doubleValue() : Double.valueOf((String)o).doubleValue();
+        }
+        catch (Exception e)
         {
             throw new JsonException("JsonArray[" + index + "] is not a number.");
         }
@@ -340,7 +345,7 @@ public class JsonArray
     public int getInt(int index)
     {
         Object o = get(index);
-        return o instanceof Number ? ((Number) o).intValue() : (int) getDouble(index);
+        return o instanceof Number ? ((Number)o).intValue() : (int)getDouble(index);
     }
 
     /**
@@ -358,7 +363,7 @@ public class JsonArray
         Object o = get(index);
         if (o instanceof JsonArray)
         {
-            return (JsonArray) o;
+            return (JsonArray)o;
         }
         throw new JsonException("JsonArray[" + index + "] is not a JsonArray.");
     }
@@ -378,7 +383,7 @@ public class JsonArray
         Object o = get(index);
         if (o instanceof JsonObject)
         {
-            return (JsonObject) o;
+            return (JsonObject)o;
         }
         throw new JsonException("JsonArray[" + index + "] is not a JsonObject.");
     }
@@ -396,7 +401,7 @@ public class JsonArray
     public long getLong(int index)
     {
         Object o = get(index);
-        return o instanceof Number ? ((Number) o).longValue() : (long) getDouble(index);
+        return o instanceof Number ? ((Number)o).longValue() : (long)getDouble(index);
     }
 
     /**
@@ -503,7 +508,8 @@ public class JsonArray
         try
         {
             return getBoolean(index);
-        } catch (Exception e)
+        }
+        catch (Exception e)
         {
             return defaultValue;
         }
@@ -538,7 +544,8 @@ public class JsonArray
         try
         {
             return getDouble(index);
-        } catch (Exception e)
+        }
+        catch (Exception e)
         {
             return defaultValue;
         }
@@ -573,7 +580,8 @@ public class JsonArray
         try
         {
             return getInt(index);
-        } catch (Exception e)
+        }
+        catch (Exception e)
         {
             return defaultValue;
         }
@@ -590,7 +598,7 @@ public class JsonArray
     public JsonArray optJsonArray(int index)
     {
         Object o = opt(index);
-        return o instanceof JsonArray ? (JsonArray) o : null;
+        return o instanceof JsonArray ? (JsonArray)o : null;
     }
 
     /**
@@ -605,7 +613,7 @@ public class JsonArray
     public JsonObject optJsonObject(int index)
     {
         Object o = opt(index);
-        return o instanceof JsonObject ? (JsonObject) o : null;
+        return o instanceof JsonObject ? (JsonObject)o : null;
     }
 
     /**
@@ -637,7 +645,8 @@ public class JsonArray
         try
         {
             return getLong(index);
-        } catch (Exception e)
+        }
+        catch (Exception e)
         {
             return defaultValue;
         }
@@ -900,7 +909,8 @@ public class JsonArray
         if (index < length())
         {
             this.myArrayList.set(index, value);
-        } else
+        }
+        else
         {
             while (index != length())
             {
@@ -968,7 +978,8 @@ public class JsonArray
         try
         {
             return '[' + join(",") + ']';
-        } catch (Exception e)
+        }
+        catch (Exception e)
         {
             return null;
         }
@@ -1016,7 +1027,8 @@ public class JsonArray
         if (len == 1)
         {
             sb.append(JsonObject.valueToString(this.myArrayList.get(0), indentFactor, indent));
-        } else
+        }
+        else
         {
             int newindent = indent + indentFactor;
             sb.append('\n');
@@ -1070,11 +1082,13 @@ public class JsonArray
                 Object v = this.myArrayList.get(i);
                 if (v instanceof JsonObject)
                 {
-                    ((JsonObject) v).write(writer);
-                } else if (v instanceof JsonArray)
+                    ((JsonObject)v).write(writer);
+                }
+                else if (v instanceof JsonArray)
                 {
-                    ((JsonArray) v).write(writer);
-                } else
+                    ((JsonArray)v).write(writer);
+                }
+                else
                 {
                     writer.write(JsonObject.valueToString(v));
                 }
@@ -1082,7 +1096,8 @@ public class JsonArray
             }
             writer.write(']');
             return writer;
-        } catch (IOException e)
+        }
+        catch (IOException e)
         {
             throw new JsonException(e);
         }

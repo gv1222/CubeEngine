@@ -8,8 +8,8 @@ import de.cubeisland.cubeengine.social.sites.facebook.FacebookManager;
 
 public class Social extends Module
 {
-    public FacebookManager facebookManager;
-    private SocialCommand baseCommand;
+    public FacebookManager   facebookManager;
+    private SocialCommand    baseCommand;
     private SocialSubCommand subCommand;
 
     @Override

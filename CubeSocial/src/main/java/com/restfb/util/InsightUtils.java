@@ -1,16 +1,13 @@
 /*
  * Copyright (c) 2010-2012 Mark Allen.
- * 
  * Permission is hereby granted, free of charge, to any person obtaining a copy
  * of this software and associated documentation files (the "Software"), to deal
  * in the Software without restriction, including without limitation the rights
  * to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
  * copies of the Software, and to permit persons to whom the Software is
  * furnished to do so, subject to the following conditions:
- * 
  * The above copyright notice and this permission notice shall be included in
  * all copies or substantial portions of the Software.
- * 
  * THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
  * IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
  * FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
@@ -49,11 +46,16 @@ public class InsightUtils
      */
     public enum Period
     {
-        DAY(60 * 60 * 24),
-        WEEK(60 * 60 * 24 * 7),
-        DAYS_28(60 * 60 * 24 * 28),
-        MONTH(2592000),
-        LIFETIME(0);
+        DAY(
+            60 * 60 * 24),
+        WEEK(
+            60 * 60 * 24 * 7),
+        DAYS_28(
+            60 * 60 * 24 * 28),
+        MONTH(
+            2592000),
+        LIFETIME(
+            0);
 
         private final int periodLength;
 
@@ -68,8 +70,8 @@ public class InsightUtils
         }
     }
 
-    private static final TimeZone PST_TIMEZONE = TimeZone.getTimeZone("PST");
-    private static final long SECONDS_IN_DAY = 60 * 60 * 24;
+    private static final TimeZone PST_TIMEZONE   = TimeZone.getTimeZone("PST");
+    private static final long     SECONDS_IN_DAY = 60 * 60 * 24;
 
     /**
      * Queries Facebook via FQL for several Insights at different date points.
@@ -150,7 +152,8 @@ public class InsightUtils
                         if (resultByDate.put(date, metricValue) != null)
                             throw new IllegalStateException(format(
                                     "MultiQuery response has two results for metricName: %s and date: %s", metricName, date));
-                    } catch (JsonException e)
+                    }
+                    catch (JsonException e)
                     {
                         throw new FacebookJsonMappingException(format("Could not decode result for %s: %s", metricResult,
                                 e.getMessage()), e);
@@ -248,10 +251,10 @@ public class InsightUtils
             JsonObject response = facebookClient.executeMultiquery(fqlByQueryIndex, JsonObject.class);
 
             // transform the response into a Map
-            for (Iterator<?> it = response.keys(); it.hasNext(); )
+            for (Iterator<?> it = response.keys(); it.hasNext();)
             {
-                String key = (String) it.next();
-                JsonArray innerResult = (JsonArray) response.get(key);
+                String key = (String)it.next();
+                JsonArray innerResult = (JsonArray)response.get(key);
 
                 try
                 {
@@ -262,7 +265,8 @@ public class InsightUtils
                         throw new IllegalStateException("MultiQuery response had an unexpected key value: " + key);
 
                     result.put(d, innerResult);
-                } catch (NumberFormatException nfe)
+                }
+                catch (NumberFormatException nfe)
                 {
                     throw new IllegalStateException("MultiQuery response had an unexpected key value: " + key, nfe);
                 }

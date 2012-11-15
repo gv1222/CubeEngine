@@ -1,16 +1,13 @@
 /*
  * Copyright (c) 2010-2012 Mark Allen.
- * 
  * Permission is hereby granted, free of charge, to any person obtaining a copy
  * of this software and associated documentation files (the "Software"), to deal
  * in the Software without restriction, including without limitation the rights
  * to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
  * copies of the Software, and to permit persons to whom the Software is
  * furnished to do so, subject to the following conditions:
- * 
  * The above copyright notice and this permission notice shall be included in
  * all copies or substantial portions of the Software.
- * 
  * THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
  * IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
  * FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
@@ -48,7 +45,7 @@ public class DefaultWebRequestor implements WebRequestor
     /**
      * Arbitrary unique boundary marker for multipart {@code POST}s.
      */
-    private static final String MULTIPART_BOUNDARY = "**boundarystringwhichwill**neverbeencounteredinthewild**";
+    private static final String MULTIPART_BOUNDARY                    = "**boundarystringwhichwill**neverbeencounteredinthewild**";
 
     /**
      * Line separator for multipart {@code POST}s.
@@ -58,22 +55,22 @@ public class DefaultWebRequestor implements WebRequestor
     /**
      * Hyphens for multipart {@code POST}s.
      */
-    private static final String MULTIPART_TWO_HYPHENS = "--";
+    private static final String MULTIPART_TWO_HYPHENS                 = "--";
 
     /**
      * Default buffer size for multipart {@code POST}s.
      */
-    private static final int MULTIPART_DEFAULT_BUFFER_SIZE = 8192;
+    private static final int    MULTIPART_DEFAULT_BUFFER_SIZE         = 8192;
 
     /**
      * By default, how long should we wait for a response (in ms)?
      */
-    private static final int DEFAULT_READ_TIMEOUT_IN_MS = 180000;
+    private static final int    DEFAULT_READ_TIMEOUT_IN_MS            = 180000;
 
     /**
      * Logger.
      */
-    private static final Logger logger = Logger.getLogger("com.restfb.HTTP");
+    private static final Logger logger                                = Logger.getLogger("com.restfb.HTTP");
 
     /**
      * @see com.restfb.WebRequestor#executeGet(java.lang.String)
@@ -108,7 +105,8 @@ public class DefaultWebRequestor implements WebRequestor
                 inputStream =
                         httpUrlConnection.getResponseCode() != HTTP_OK ? httpUrlConnection.getErrorStream() : httpUrlConnection
                                 .getInputStream();
-            } catch (IOException e)
+            }
+            catch (IOException e)
             {
                 if (logger.isLoggable(WARNING))
                     logger.warning(format("An error occurred while making a GET request to %s: %s", url, e));
@@ -120,7 +118,8 @@ public class DefaultWebRequestor implements WebRequestor
                 logger.fine("Facebook responded with " + response);
 
             return response;
-        } finally
+        }
+        finally
         {
             closeQuietly(httpUrlConnection);
         }
@@ -133,7 +132,7 @@ public class DefaultWebRequestor implements WebRequestor
     @Override
     public Response executePost(String url, String parameters) throws IOException
     {
-        return executePost(url, parameters, (BinaryAttachment[]) null);
+        return executePost(url, parameters, (BinaryAttachment[])null);
     }
 
     /**
@@ -144,7 +143,7 @@ public class DefaultWebRequestor implements WebRequestor
     public Response executePost(String url, String parameters, BinaryAttachment... binaryAttachments) throws IOException
     {
         if (binaryAttachments == null)
-            binaryAttachments = new BinaryAttachment[]{};
+            binaryAttachments = new BinaryAttachment[] {};
 
         if (logger.isLoggable(FINE))
             logger.fine("Executing a POST to " + url + " with parameters "
@@ -195,7 +194,8 @@ public class DefaultWebRequestor implements WebRequestor
                     outputStream.write((MULTIPART_CARRIAGE_RETURN_AND_NEWLINE + MULTIPART_TWO_HYPHENS + MULTIPART_BOUNDARY
                             + MULTIPART_TWO_HYPHENS + MULTIPART_CARRIAGE_RETURN_AND_NEWLINE).getBytes(ENCODING_CHARSET));
                 }
-            } else
+            }
+            else
             {
                 outputStream.write(parameters.getBytes(ENCODING_CHARSET));
             }
@@ -208,14 +208,16 @@ public class DefaultWebRequestor implements WebRequestor
                 inputStream =
                         httpUrlConnection.getResponseCode() != HTTP_OK ? httpUrlConnection.getErrorStream() : httpUrlConnection
                                 .getInputStream();
-            } catch (IOException e)
+            }
+            catch (IOException e)
             {
                 if (logger.isLoggable(WARNING))
                     logger.warning("An error occurred while POSTing to " + url + ": " + e);
             }
 
             return new Response(httpUrlConnection.getResponseCode(), fromInputStream(inputStream));
-        } finally
+        }
+        finally
         {
             if (binaryAttachments.length > 0)
                 for (BinaryAttachment binaryAttachment : binaryAttachments)
@@ -241,7 +243,7 @@ public class DefaultWebRequestor implements WebRequestor
      */
     protected HttpURLConnection openConnection(URL url) throws IOException
     {
-        return (HttpURLConnection) url.openConnection();
+        return (HttpURLConnection)url.openConnection();
     }
 
     /**
@@ -255,8 +257,7 @@ public class DefaultWebRequestor implements WebRequestor
      * @param connection The connection to customize.
      */
     protected void customizeConnection(HttpURLConnection connection)
-    {
-    }
+    {}
 
     /**
      * Attempts to cleanly close a resource, swallowing any exceptions that might
@@ -273,7 +274,8 @@ public class DefaultWebRequestor implements WebRequestor
         try
         {
             closeable.close();
-        } catch (Throwable t)
+        }
+        catch (Throwable t)
         {
             if (logger.isLoggable(WARNING))
                 logger.warning("Unable to close " + closeable + ": " + t);
@@ -295,7 +297,8 @@ public class DefaultWebRequestor implements WebRequestor
         try
         {
             httpUrlConnection.disconnect();
-        } catch (Throwable t)
+        }
+        catch (Throwable t)
         {
             if (logger.isLoggable(WARNING))
                 logger.warning("Unable to disconnect " + httpUrlConnection + ": " + t);

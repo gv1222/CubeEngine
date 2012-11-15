@@ -1,16 +1,13 @@
 /*
  * Copyright (c) 2010-2012 Mark Allen.
- * 
  * Permission is hereby granted, free of charge, to any person obtaining a copy
  * of this software and associated documentation files (the "Software"), to deal
  * in the Software without restriction, including without limitation the rights
  * to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
  * copies of the Software, and to permit persons to whom the Software is
  * furnished to do so, subject to the following conditions:
- * 
  * The above copyright notice and this permission notice shall be included in
  * all copies or substantial portions of the Software.
- * 
  * THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
  * IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
  * FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
@@ -40,13 +37,13 @@ import static com.restfb.util.StringUtils.isBlank;
 public class FacebookType implements Serializable
 {
     @Facebook
-    private String id;
+    private String            id;
 
     @Facebook
-    private Metadata metadata;
+    private Metadata          metadata;
 
     @Facebook
-    private String type;
+    private String            type;
 
     private static final long serialVersionUID = 1L;
 
@@ -123,7 +120,7 @@ public class FacebookType implements Serializable
     public static class Metadata implements Serializable
     {
         @Facebook
-        private Connections connections;
+        private Connections       connections;
 
         private static final long serialVersionUID = 1L;
 
@@ -166,79 +163,79 @@ public class FacebookType implements Serializable
         public static class Connections implements Serializable
         {
             @Facebook
-            private String home;
+            private String            home;
 
             @Facebook
-            private String feed;
+            private String            feed;
 
             @Facebook
-            private String friends;
+            private String            friends;
 
             @Facebook
-            private String family;
+            private String            family;
 
             @Facebook
-            private String activities;
+            private String            activities;
 
             @Facebook
-            private String interests;
+            private String            interests;
 
             @Facebook
-            private String music;
+            private String            music;
 
             @Facebook
-            private String books;
+            private String            books;
 
             @Facebook
-            private String movies;
+            private String            movies;
 
             @Facebook
-            private String television;
+            private String            television;
 
             @Facebook
-            private String likes;
+            private String            likes;
 
             @Facebook
-            private String posts;
+            private String            posts;
 
             @Facebook
-            private String tagged;
+            private String            tagged;
 
             @Facebook
-            private String statuses;
+            private String            statuses;
 
             @Facebook
-            private String links;
+            private String            links;
 
             @Facebook
-            private String notes;
+            private String            notes;
 
             @Facebook
-            private String photos;
+            private String            photos;
 
             @Facebook
-            private String albums;
+            private String            albums;
 
             @Facebook
-            private String events;
+            private String            events;
 
             @Facebook
-            private String groups;
+            private String            groups;
 
             @Facebook
-            private String videos;
+            private String            videos;
 
             @Facebook
-            private String picture;
+            private String            picture;
 
             @Facebook
-            private String inbox;
+            private String            inbox;
 
             @Facebook
-            private String outbox;
+            private String            outbox;
 
             @Facebook
-            private String updates;
+            private String            updates;
 
             private static final long serialVersionUID = 1L;
 

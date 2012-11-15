@@ -9,7 +9,7 @@ import com.restfb.types.User;
 
 public class FacebookUser
 {
-    private final String authToken;
+    private final String         authToken;
     private final FacebookClient client;
 
     public FacebookUser(String authToken)
@@ -30,7 +30,7 @@ public class FacebookUser
 
     public Boolean likeObject(String object) throws FacebookException
     {
-        return client.publish(object+"/likes",Boolean.class);
+        return client.publish(object + "/likes", Boolean.class);
     }
 
     public User getUserInfo() throws FacebookException

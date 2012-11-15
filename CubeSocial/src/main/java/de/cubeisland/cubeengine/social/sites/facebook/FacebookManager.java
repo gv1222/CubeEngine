@@ -11,11 +11,11 @@ import java.util.Map;
 
 public class FacebookManager
 {
-    private static final String APP_KEY = "";   //
-    private static final String APP_SECRET = "";// This is used for getting access tokens for users using OAuth
+    private static final String           APP_KEY    = ""; //
+    private static final String           APP_SECRET = ""; // This is used for getting access tokens for users using OAuth
     private final Map<User, FacebookUser> users;
-    private final Map<Location, String> posts; //This should be saved to the database
-    private FacebookClient publicClient;
+    private final Map<Location, String>   posts;          //This should be saved to the database
+    private FacebookClient                publicClient;
 
     public FacebookManager()
     {
