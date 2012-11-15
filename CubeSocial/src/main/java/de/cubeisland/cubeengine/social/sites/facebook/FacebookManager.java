@@ -5,23 +5,35 @@ import com.restfb.FacebookClient;
 import com.restfb.exception.FacebookException;
 import de.cubeisland.cubeengine.core.user.User;
 import org.bukkit.Location;
+import org.scribe.builder.ServiceBuilder;
+import org.scribe.builder.api.FacebookApi;
+import org.scribe.model.Token;
+import org.scribe.model.Verifier;
+import org.scribe.oauth.OAuthService;
 
 import java.util.HashMap;
 import java.util.Map;
 
 public class FacebookManager
 {
-    private static final String           APP_KEY    = ""; //
-    private static final String           APP_SECRET = ""; // This is used for getting access tokens for users using OAuth
-    private final Map<User, FacebookUser> users;
-    private final Map<Location, String>   posts;          //This should be saved to the database
+    private static final String           APP_KEY    = "462939110414739";
+    private static final String           APP_SECRET = "c7ed1858459881a2988c45187c1e8963";
+    private final Map<User, FacebookUser> users; // @Quick_Wango you need to put the codes into here. new FacebookUser(service.getAccesToken(null, new Verifier("the code"))
+    private final Map<Location, String>   posts; //This should be saved to the database
     private FacebookClient                publicClient;
+    private final OAuthService            service;
 
     public FacebookManager()
     {
         this.users = new HashMap<User, FacebookUser>();
         this.posts = new HashMap<Location, String>();
         this.publicClient = new DefaultFacebookClient();
+        this.service = new ServiceBuilder()
+            .provider(FacebookApi.class)
+            .apiKey(APP_KEY)
+            .apiSecret(APP_SECRET)
+            .callback("http://www.google.com/")
+            .build();
     }
 
     public boolean hasUser(User user)
@@ -34,22 +46,9 @@ public class FacebookManager
         return users.get(user);
     }
 
-    public boolean initializeUser(User user, String accessToken)
+    public String getAuthURL()
     {
-        try
-        {
-            FacebookUser facebookUser = new FacebookUser(accessToken);
-            if (facebookUser.getUserInfo() != null)
-            {
-                users.put(user, facebookUser);
-                return true;
-            }
-            return false;
-        }
-        catch (FacebookException ex)
-        {
-            return false;
-        }
+        return service.getAuthorizationUrl(null);
     }
 
     public boolean hasPost(Location loc)

@@ -18,54 +18,32 @@ public class SocialCommand
     }
 
     @Command(names = {
-    "facebook", "fb"
+        "facebook", "fb"
     }, desc = "Facebook", params = {
                             @Param(names = {
-                            "Token", "t"
-                            }, types = String.class), //This token can be generated for use at: http://developers.facebook.com/tools/explorer
-                            @Param(names = {
-                            "User", "u"
+                                "User", "u"
                             }, types = User.class)
     })
     public void facebook(CommandContext context)
     {
-        if (context.hasNamed("Token"))
+        if (context.getSenderAsUser() == null && !context.hasNamed("User"))
         {
-            if (context.hasNamed("User"))
-            {
-                if (module.getFacebookManager().hasUser(context.getNamed("User", User.class)) || module.getFacebookManager().initializeUser(context.getNamed("User", User.class), context.getString("Token")))
-                {
-                    FacebookUser facebook = module.getFacebookManager().getUser(context.getNamed("User", User.class));
-                    context.sendMessage("social", "Your name is: %s", facebook.getUserInfo().getName());
-                    context.sendMessage("social", "Your nickname on facebook is: %s", facebook.getUserInfo().getUsername());
-                }
-                else
-                {
-                    context.sendMessage("social", "You could not be initialized, maybe your token is invalid?");
-                }
-            }
-            else if (context.getSender() instanceof Player)
-            {
-                if (module.getFacebookManager().hasUser(context.getSenderAsUser()) || module.getFacebookManager().initializeUser(context.getSenderAsUser(), context.getString("Token")))
-                {
-                    FacebookUser facebook = module.getFacebookManager().getUser(context.getSenderAsUser());
-                    context.sendMessage("social", "Your name is: %s", facebook.getUserInfo().getName());
-                    context.sendMessage("social", "Your nickname on facebook is: %s", facebook.getUserInfo().getUsername());
-                }
-                else
-                {
-                    context.sendMessage("social", "You could not be initialized, maybe your token is invalid?");
-                }
-            }
-            else
-            {
-                context.sendMessage("social", "You have to include the User parameter when you are console");
-            }
+            context.sendMessage("Social", "You have to include a player to log in");
+        }
 
+        User user;
+        if (context.hasNamed("User"))
+        {
+            user = context.getNamed("User", User.class);
         }
         else
         {
-            context.sendMessage("social", "You have to include the token parameter");
+            user = context.getSenderAsUser();
         }
+
+        context.sendMessage("social", "Here is your auth address: %s", module.getFacebookManager().getAuthURL());
+        context.sendMessage("social", "Please follow the link and do this command after: /facebook Code <Your auth code>");
+
+        // @Quick_Wango This is where you need to get the response
     }
 }
