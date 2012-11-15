@@ -28,9 +28,9 @@ public class FacebookUser
         return this.publishMessage(message, "me");
     }
 
-    public String likeObject(String object) throws FacebookException
+    public Boolean likeObject(String object) throws FacebookException
     {
-        return null; // TODO
+        return client.publish(object+"/likes",Boolean.class);
     }
 
     public User getUserInfo() throws FacebookException

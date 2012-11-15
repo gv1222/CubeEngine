@@ -1,8 +1,12 @@
 package de.cubeisland.cubeengine.social.interactions;
 
+import com.restfb.exception.FacebookException;
+import de.cubeisland.cubeengine.core.user.User;
+import de.cubeisland.cubeengine.core.user.UserManager;
 import de.cubeisland.cubeengine.social.Social;
 import org.bukkit.Location;
 import org.bukkit.Material;
+import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
 import org.bukkit.event.block.Action;
 import org.bukkit.event.player.PlayerInteractEvent;
@@ -12,20 +16,39 @@ import java.util.HashMap;
 public class SocialListener implements Listener
 {
     private final Social module;
-    private HashMap<Location, String> pages;
+    private final UserManager userManager;
 
     public SocialListener(Social module)
     {
         this.module = module;
-        this.pages = new HashMap<Location, String>();
+        this.userManager = module.getUserManager();
     }
 
+    @EventHandler
     public void signInteract(PlayerInteractEvent event)
     {
-        if (event.getAction() == Action.RIGHT_CLICK_BLOCK && (event.getClickedBlock().getType() == Material.SIGN || event.getClickedBlock().getType() == Material.WALL_SIGN))
+        if (module.getFacebookManager().hasPost(event.getClickedBlock().getLocation()))
         {
-            // TODO like the post associated with the sign
+            User user = userManager.getExactUser(event.getPlayer());
+            if (!module.getFacebookManager().hasUser(user))
+            {
+                user.sendMessage("Social", "You are not logged into facebook");
+                return;
+            }
+            String postId = module.getFacebookManager().fetchPost(event.getClickedBlock().getLocation());
+            try
+            {
+                module.getFacebookManager().getUser(user).likeObject(postId);
+                user.sendMessage("social", "You have liked the post");
+
+            }
+            catch (FacebookException ex)
+            {
+                user.sendMessage("social", "The post could not be liked.");
+                user.sendMessage("social", "The error was: %s", ex.getLocalizedMessage());
+            }
         }
+        module.getLogger().info("fail");
 
     }
 
