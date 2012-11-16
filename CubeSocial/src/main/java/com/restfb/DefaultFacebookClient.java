@@ -174,7 +174,7 @@ public class DefaultFacebookClient extends BaseFacebookClient implements Faceboo
 
         illegalParamNames.addAll(Arrays
                 .asList(new String[] {
-                ACCESS_TOKEN_PARAM_NAME, METHOD_PARAM_NAME, FORMAT_PARAM_NAME
+                    ACCESS_TOKEN_PARAM_NAME, METHOD_PARAM_NAME, FORMAT_PARAM_NAME
                 }));
     }
 

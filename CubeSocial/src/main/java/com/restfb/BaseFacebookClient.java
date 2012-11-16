@@ -158,7 +158,7 @@ abstract class BaseFacebookClient
     protected void initializeReadOnlyApiCalls()
     {
         readOnlyApiCalls.addAll(asList(new String[] {
-        "admin.getallocation", "admin.getappproperties",
+            "admin.getallocation", "admin.getappproperties",
                 "admin.getbannedusers", "admin.getlivestreamvialink", "admin.getmetrics", "admin.getrestrictioninfo",
                 "application.getpublicinfo", "auth.getapppublickey", "auth.getsession", "auth.getsignedpublicsessiondata",
                 "comments.get", "connect.getunconnectedfriendscount", "dashboard.getactivity", "dashboard.getcount",

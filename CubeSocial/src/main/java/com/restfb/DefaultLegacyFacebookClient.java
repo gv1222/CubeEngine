@@ -479,7 +479,7 @@ public class DefaultLegacyFacebookClient extends BaseFacebookClient implements L
     protected void initializeIllegalParamNames()
     {
         illegalParamNames.addAll(Arrays.asList(new String[] {
-        API_KEY_PARAM_NAME, CALL_ID_PARAM_NAME, SIG_PARAM_NAME,
+            API_KEY_PARAM_NAME, CALL_ID_PARAM_NAME, SIG_PARAM_NAME,
                 METHOD_PARAM_NAME, SESSION_KEY_PARAM_NAME, FORMAT_PARAM_NAME, VERSION_PARAM_NAME, ACCESS_TOKEN_PARAM_NAME
         }));
     }

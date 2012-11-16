@@ -9,11 +9,11 @@ import org.scribe.model.*;
  */
 public interface RequestTokenExtractor
 {
-  /**
-   * Extracts the request token from the contents of an Http Response
-   *  
-   * @param response the contents of the response
-   * @return OAuth access token
-   */
-  public Token extract(String response);
+    /**
+     * Extracts the request token from the contents of an Http Response
+     *  
+     * @param response the contents of the response
+     * @return OAuth access token
+     */
+    public Token extract(String response);
 }

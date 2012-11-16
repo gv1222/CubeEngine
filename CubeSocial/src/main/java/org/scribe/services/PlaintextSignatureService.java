@@ -11,30 +11,29 @@ import org.scribe.utils.*;
  */
 public class PlaintextSignatureService implements SignatureService
 {
-  private static final String METHOD = "PLAINTEXT";
+    private static final String METHOD = "PLAINTEXT";
 
-  /**
-   * {@inheritDoc}
-   */
-  public String getSignature(String baseString, String apiSecret, String tokenSecret)
-  {
-    try
+    /**
+     * {@inheritDoc}
+     */
+    public String getSignature(String baseString, String apiSecret, String tokenSecret)
     {
-      Preconditions.checkEmptyString(apiSecret, "Api secret cant be null or empty string");
-      return OAuthEncoder.encode(apiSecret) + '&' + OAuthEncoder.encode(tokenSecret);
+        try
+        {
+            Preconditions.checkEmptyString(apiSecret, "Api secret cant be null or empty string");
+            return OAuthEncoder.encode(apiSecret) + '&' + OAuthEncoder.encode(tokenSecret);
+        }
+        catch (Exception e)
+        {
+            throw new OAuthSignatureException(baseString, e);
+        }
     }
-    catch (Exception e)
-    {
-      throw new OAuthSignatureException(baseString, e);
-    }
-  }
 
-  /**
-   * {@inheritDoc}
-   */
-  public String getSignatureMethod()
-  {
-    return METHOD;
-  }
+    /**
+     * {@inheritDoc}
+     */
+    public String getSignatureMethod()
+    {
+        return METHOD;
+    }
 }
-

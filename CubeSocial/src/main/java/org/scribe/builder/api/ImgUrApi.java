@@ -11,22 +11,21 @@ import org.scribe.model.*;
 public class ImgUrApi extends DefaultApi10a
 {
 
-  @Override
-  public String getRequestTokenEndpoint()
-  {
-    return "https://api.imgur.com/oauth/request_token";
-  }
+    @Override
+    public String getRequestTokenEndpoint()
+    {
+        return "https://api.imgur.com/oauth/request_token";
+    }
 
-  @Override
-  public String getAccessTokenEndpoint()
-  {
-    return "https://api.imgur.com/oauth/access_token";
-  }
+    @Override
+    public String getAccessTokenEndpoint()
+    {
+        return "https://api.imgur.com/oauth/access_token";
+    }
 
-  @Override
-  public String getAuthorizationUrl(Token requestToken)
-  {
-    return String.format("https://api.imgur.com/oauth/authorize?oauth_token=%s", requestToken.getToken());
-  }
+    @Override
+    public String getAuthorizationUrl(Token requestToken)
+    {
+        return String.format("https://api.imgur.com/oauth/authorize?oauth_token=%s", requestToken.getToken());
+    }
 }
-
