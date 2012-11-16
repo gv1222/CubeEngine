@@ -12,19 +12,15 @@ public class SocialConfig extends Configuration
 {
     @Option("facebook.key")
     @Comment("The application key for your facebook application")
-    public String facebookAppKey       = "";
+    public String facebookAppKey = "";
 
     @Option("facebook.secret")
     @Comment("The application secret for your facebook application")
-    public String facebookAppSecret    = "";
+    public String facebookAppSecret = "";
 
-    @Option("facebook.callback.url")
+    @Option("facebook.callback-uri")
     @Comment("This should be the same as the server address + /callback")
-    public String facebookCallbackURL  = "";
-
-    @Option("facebook.callback.port")
-    @Comment("This port should be one that isn't in use, preferably 80, but may be something different")
-    public int    facebookCallbackPort = 80;
+    public String facebookCallbackURL = "";
 
     @Override
     public String[] head()

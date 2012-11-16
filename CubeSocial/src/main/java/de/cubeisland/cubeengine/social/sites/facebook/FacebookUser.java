@@ -9,7 +9,7 @@ import com.restfb.types.User;
 
 public class FacebookUser
 {
-    private final String         authToken;
+    private final String authToken;
     private final FacebookClient client;
 
     public FacebookUser(String authToken)

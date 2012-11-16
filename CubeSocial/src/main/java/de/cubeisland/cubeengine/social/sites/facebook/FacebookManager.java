@@ -21,12 +21,12 @@ import java.util.logging.Logger;
 
 public class FacebookManager
 {
-    private final String                  APP_KEY;
-    private final String                  APP_SECRET;
-    private final Map<User, FacebookUser> users;     // @Quick_Wango you need to put the codes into here. new FacebookUser(service.getAccesToken(null, new Verifier("the code"))
-    private final Map<Location, String>   posts;     //This should be saved to the database
-    private final SocialConfig            config;
-    private OAuthService                  service;
+    private final String APP_KEY;
+    private final String APP_SECRET;
+    private final Map<User, FacebookUser> users; // @Quick_Wango you need to put the codes into here. new FacebookUser(service.getAccesToken(null, new Verifier("the code"))
+    private final Map<Location, String> posts; //This should be saved to the database
+    private final SocialConfig config;
+    private OAuthService service;
 
     public FacebookManager(SocialConfig config)
     {
@@ -48,7 +48,7 @@ public class FacebookManager
                     .provider(FacebookApi.class)
                     .apiKey(APP_KEY)
                     .apiSecret(APP_SECRET)
-                    .callback(this.config.facebookCallbackURL + ":" + this.config.facebookCallbackPort)
+                    .callback(this.config.facebookCallbackURL)
                     .build();
 
             //Validate APP_KEY and APP_SECRET
