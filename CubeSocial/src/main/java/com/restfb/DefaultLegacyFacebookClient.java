@@ -46,7 +46,8 @@ import static java.net.HttpURLConnection.HTTP_OK;
  *
  * @author <a href="http://restfb.com">Mark Allen</a>
  */
-public class DefaultLegacyFacebookClient extends BaseFacebookClient implements LegacyFacebookClient
+public class DefaultLegacyFacebookClient extends BaseFacebookClient implements
+    LegacyFacebookClient
 {
     /**
      * Facebook API key.

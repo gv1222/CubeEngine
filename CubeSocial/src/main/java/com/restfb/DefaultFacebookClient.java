@@ -46,7 +46,8 @@ import static java.util.Collections.emptyList;
  *
  * @author <a href="http://restfb.com">Mark Allen</a>
  */
-public class DefaultFacebookClient extends BaseFacebookClient implements FacebookClient
+public class DefaultFacebookClient extends BaseFacebookClient implements
+    FacebookClient
 {
     /**
      * Graph API access token.
@@ -708,7 +709,8 @@ public class DefaultFacebookClient extends BaseFacebookClient implements Faceboo
      * @author <a href="http://restfb.com">Mark Allen</a>
      * @since 1.6.3
      */
-    protected static class DefaultGraphFacebookExceptionMapper implements FacebookExceptionMapper
+    protected static class DefaultGraphFacebookExceptionMapper implements
+        FacebookExceptionMapper
     {
         /**
          * @see com.restfb.exception.FacebookExceptionMapper#exceptionForTypeAndMessage(java.lang.Integer,

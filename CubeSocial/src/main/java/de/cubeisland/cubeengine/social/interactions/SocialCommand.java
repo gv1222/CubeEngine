@@ -22,7 +22,7 @@ public class SocialCommand
     }, desc = "Facebook", params = {
         @Param(names = {
                                 "User", "u"
-        }, types = User.class)
+        }, type = User.class)
     })
     public void facebook(CommandContext context)
     {

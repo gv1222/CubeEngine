@@ -121,7 +121,8 @@ abstract class BaseFacebookClient
      * @author <a href="http://restfb.com">Mark Allen</a>
      * @since 1.6.3
      */
-    protected static class DefaultLegacyFacebookExceptionMapper implements FacebookExceptionMapper
+    protected static class DefaultLegacyFacebookExceptionMapper implements
+        FacebookExceptionMapper
     {
         /**
          * Invalid OAuth 2.0 Access Token error code.
