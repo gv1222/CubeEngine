@@ -22,13 +22,17 @@ public class SocialCommand
     }, desc = "Facebook", params = {
         @Param(names = {
                                 "User", "u"
-        }, type = User.class)
+        }, type = User.class),
+            @Param(names = {
+                "Code", "c"
+            }, type = String.class)
     })
     public void facebook(CommandContext context)
     {
         if (context.getSenderAsUser() == null && !context.hasNamed("User"))
         {
             context.sendMessage("Social", "You have to include a player to log in");
+            return;
         }
 
         User user;
@@ -41,8 +45,14 @@ public class SocialCommand
             user = context.getSenderAsUser();
         }
 
+        if (context.hasNamed("Code"))
+        {
+            String verifyCode = context.getString("Code");
+            module.getFacebookManager().initializeUser(user, verifyCode);
+            return;
+        }
+
         context.sendMessage("social", "Here is your auth address: %s", module.getFacebookManager().getAuthURL());
-        context.sendMessage("social", "Please follow the link and do this command after: /facebook Code <Your auth code>");
 
         // @Quick_Wango This is where you need to get the response
     }

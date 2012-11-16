@@ -3,6 +3,9 @@ package de.cubeisland.cubeengine.social.sites.facebook;
 import com.restfb.DefaultFacebookClient;
 import com.restfb.FacebookClient;
 import com.restfb.exception.FacebookException;
+import de.cubeisland.cubeengine.core.Core;
+import de.cubeisland.cubeengine.core.CubeEngine;
+import de.cubeisland.cubeengine.core.bukkit.BukkitCore;
 import de.cubeisland.cubeengine.core.user.User;
 import de.cubeisland.cubeengine.social.SocialConfig;
 import org.bukkit.Location;
@@ -14,6 +17,7 @@ import org.scribe.oauth.OAuthService;
 
 import java.util.HashMap;
 import java.util.Map;
+import java.util.logging.Logger;
 
 public class FacebookManager
 {
@@ -36,17 +40,24 @@ public class FacebookManager
 
     public boolean initialize()
     {
-        // TODO Listen for callbacks
+        try
+        {
+            // TODO Listen for callbacks
 
-        this.service = new ServiceBuilder()
-                .provider(FacebookApi.class)
-                .apiKey(APP_KEY)
-                .apiSecret(APP_SECRET)
-                .callback(this.config.facebookCallbackURL + ":" + this.config.facebookCallbackPort)
-                .build();
+            this.service = new ServiceBuilder()
+                    .provider(FacebookApi.class)
+                    .apiKey(APP_KEY)
+                    .apiSecret(APP_SECRET)
+                    .callback(this.config.facebookCallbackURL + ":" + this.config.facebookCallbackPort)
+                    .build();
 
-        //Validate APP_KEY and APP_SECRET
-        return true;
+            //Validate APP_KEY and APP_SECRET
+            return true;
+        }
+        catch (Exception ex)
+        {
+            return false;
+        }
     }
 
     public boolean hasUser(User user)
@@ -77,5 +88,14 @@ public class FacebookManager
     public String fetchPost(Location loc)
     {
         return this.posts.get(loc);
+    }
+
+    public void initializeUser(User user, String code)
+    {
+        CubeEngine.getLogger().info("Code: " + code);
+        Verifier verifier = new Verifier(code);
+        Token token = service.getAccessToken(null, verifier);
+        CubeEngine.getLogger().info("AuthToken: " + token.getToken());
+        users.put(user, new FacebookUser(token.getToken()));
     }
 }

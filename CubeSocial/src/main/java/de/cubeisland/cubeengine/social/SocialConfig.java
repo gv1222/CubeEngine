@@ -6,7 +6,7 @@ import de.cubeisland.cubeengine.core.config.annotations.Comment;
 import de.cubeisland.cubeengine.core.config.annotations.Option;
 import de.cubeisland.cubeengine.core.config.annotations.Revision;
 
-@Codec("yaml")
+@Codec("yml")
 @Revision(1)
 public class SocialConfig extends Configuration
 {
