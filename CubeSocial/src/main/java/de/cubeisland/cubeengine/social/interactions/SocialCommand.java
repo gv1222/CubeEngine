@@ -20,9 +20,9 @@ public class SocialCommand
     @Command(names = {
         "facebook", "fb"
     }, desc = "Facebook", params = {
-                            @Param(names = {
+        @Param(names = {
                                 "User", "u"
-                            }, types = User.class)
+        }, types = User.class)
     })
     public void facebook(CommandContext context)
     {

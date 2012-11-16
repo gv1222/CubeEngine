@@ -4,6 +4,7 @@ import com.restfb.DefaultFacebookClient;
 import com.restfb.FacebookClient;
 import com.restfb.exception.FacebookException;
 import de.cubeisland.cubeengine.core.user.User;
+import de.cubeisland.cubeengine.social.SocialConfig;
 import org.bukkit.Location;
 import org.scribe.builder.ServiceBuilder;
 import org.scribe.builder.api.FacebookApi;
@@ -16,24 +17,36 @@ import java.util.Map;
 
 public class FacebookManager
 {
-    private static final String           APP_KEY    = "462939110414739";
-    private static final String           APP_SECRET = "c7ed1858459881a2988c45187c1e8963";
-    private final Map<User, FacebookUser> users; // @Quick_Wango you need to put the codes into here. new FacebookUser(service.getAccesToken(null, new Verifier("the code"))
-    private final Map<Location, String>   posts; //This should be saved to the database
-    private FacebookClient                publicClient;
-    private final OAuthService            service;
+    private final String                  APP_KEY;
+    private final String                  APP_SECRET;
+    private final Map<User, FacebookUser> users;     // @Quick_Wango you need to put the codes into here. new FacebookUser(service.getAccesToken(null, new Verifier("the code"))
+    private final Map<Location, String>   posts;     //This should be saved to the database
+    private final SocialConfig            config;
+    private OAuthService                  service;
 
-    public FacebookManager()
+    public FacebookManager(SocialConfig config)
     {
+        this.APP_KEY = config.facebookAppKey;
+        this.APP_SECRET = config.facebookAppSecret;
+
+        this.config = config;
         this.users = new HashMap<User, FacebookUser>();
         this.posts = new HashMap<Location, String>();
-        this.publicClient = new DefaultFacebookClient();
+    }
+
+    public boolean initialize()
+    {
+        // TODO Listen for callbacks
+
         this.service = new ServiceBuilder()
-            .provider(FacebookApi.class)
-            .apiKey(APP_KEY)
-            .apiSecret(APP_SECRET)
-            .callback("http://www.google.com/")
-            .build();
+                .provider(FacebookApi.class)
+                .apiKey(APP_KEY)
+                .apiSecret(APP_SECRET)
+                .callback(this.config.facebookCallbackURL + ":" + this.config.facebookCallbackPort)
+                .build();
+
+        //Validate APP_KEY and APP_SECRET
+        return true;
     }
 
     public boolean hasUser(User user)
