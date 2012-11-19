@@ -65,28 +65,28 @@ public class JsonWriter
      * The comma flag determines if a comma should be output before the next
      * value.
      */
-    private boolean          comma;
+    private boolean comma;
 
     /**
      * The current mode. Values: 'a' (array), 'd' (done), 'i' (initial), 'k'
      * (key), 'o' (object).
      */
-    protected char           mode;
+    protected char mode;
 
     /**
      * The object/array stack.
      */
-    private JsonObject       stack[];
+    private JsonObject stack[];
 
     /**
      * The stack top index. A value of 0 indicates that the stack is empty.
      */
-    private int              top;
+    private int top;
 
     /**
      * The writer that will receive the output.
      */
-    protected Writer         writer;
+    protected Writer writer;
 
     /**
      * Make a fresh JsonWriter. It can be used to build one JSON text.

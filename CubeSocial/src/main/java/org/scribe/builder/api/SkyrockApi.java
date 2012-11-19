@@ -10,10 +10,10 @@ import org.scribe.model.*;
  */
 public class SkyrockApi extends DefaultApi10a
 {
-    private static final String API_ENDPOINT           = "https://api.skyrock.com/v2";
+    private static final String API_ENDPOINT = "https://api.skyrock.com/v2";
     private static final String REQUEST_TOKEN_RESOURCE = "/oauth/initiate";
-    private static final String AUTHORIZE_URL          = "/oauth/authorize?oauth_token=%s";
-    private static final String ACCESS_TOKEN_RESOURCE  = "/oauth/token";
+    private static final String AUTHORIZE_URL = "/oauth/authorize?oauth_token=%s";
+    private static final String ACCESS_TOKEN_RESOURCE = "/oauth/token";
 
     @Override
     public String getAccessTokenEndpoint()

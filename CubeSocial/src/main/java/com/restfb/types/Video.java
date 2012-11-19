@@ -43,39 +43,39 @@ public class Video extends NamedFacebookType
 
     @Facebook
     @Deprecated
-    private String                  message;
+    private String message;
 
     @Facebook
-    private String                  description;
+    private String description;
 
     @Facebook
-    private String                  picture;
+    private String picture;
 
     @Facebook
-    private String                  icon;
+    private String icon;
 
     @Facebook
-    private String                  source;
+    private String source;
 
     @Facebook("embed_html")
-    private String                  embedHtml;
+    private String embedHtml;
 
     @Facebook
-    private Integer                 length;
+    private Integer length;
 
     @Facebook("created_time")
-    private String                  createdTime;
+    private String createdTime;
 
     @Facebook("updated_time")
-    private String                  updatedTime;
+    private String updatedTime;
 
     @Facebook
-    private List<NamedFacebookType> tags             = new ArrayList<NamedFacebookType>();
+    private List<NamedFacebookType> tags = new ArrayList<NamedFacebookType>();
 
     @Facebook
-    private List<Comment>           comments         = new ArrayList<Comment>();
+    private List<Comment> comments = new ArrayList<Comment>();
 
-    private static final long       serialVersionUID = 1L;
+    private static final long serialVersionUID = 1L;
 
     /**
      * An object containing the name and ID of the user who posted the video.

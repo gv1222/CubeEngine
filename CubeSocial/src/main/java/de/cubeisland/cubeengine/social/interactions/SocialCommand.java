@@ -52,7 +52,7 @@ public class SocialCommand
             return;
         }
 
-        context.sendMessage("social", "Here is your auth address: %s", module.getFacebookManager().getAuthURL());
+        context.sendMessage("social", "Here is your auth address: %s", module.getFacebookManager().getAuthURL(user));
 
         // @Quick_Wango This is where you need to get the response
     }

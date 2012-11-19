@@ -70,8 +70,8 @@ public class InsightUtils
         }
     }
 
-    private static final TimeZone PST_TIMEZONE   = TimeZone.getTimeZone("PST");
-    private static final long     SECONDS_IN_DAY = 60 * 60 * 24;
+    private static final TimeZone PST_TIMEZONE = TimeZone.getTimeZone("PST");
+    private static final long SECONDS_IN_DAY = 60 * 60 * 24;
 
     /**
      * Queries Facebook via FQL for several Insights at different date points.

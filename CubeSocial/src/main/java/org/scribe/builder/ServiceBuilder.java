@@ -16,13 +16,13 @@ import org.scribe.utils.*;
  */
 public class ServiceBuilder
 {
-    private String        apiKey;
-    private String        apiSecret;
-    private String        callback;
-    private Api           api;
-    private String        scope;
+    private String apiKey;
+    private String apiSecret;
+    private String callback;
+    private Api api;
+    private String scope;
     private SignatureType signatureType;
-    private OutputStream  debugStream;
+    private OutputStream debugStream;
 
     /**
      * Default constructor

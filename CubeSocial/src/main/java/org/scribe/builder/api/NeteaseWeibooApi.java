@@ -5,9 +5,9 @@ import org.scribe.model.*;
 public class NeteaseWeibooApi extends DefaultApi10a
 {
     private static final String REQUEST_TOKEN_URL = "http://api.t.163.com/oauth/request_token";
-    private static final String ACCESS_TOKEN_URL  = "http://api.t.163.com/oauth/access_token";
-    private static final String AUTHORIZE_URL     = "http://api.t.163.com/oauth/authorize?oauth_token=%s";
-    private static final String AUTHENTICATE_URL  = "http://api.t.163.com/oauth/authenticate?oauth_token=%s";
+    private static final String ACCESS_TOKEN_URL = "http://api.t.163.com/oauth/access_token";
+    private static final String AUTHORIZE_URL = "http://api.t.163.com/oauth/authorize?oauth_token=%s";
+    private static final String AUTHENTICATE_URL = "http://api.t.163.com/oauth/authenticate?oauth_token=%s";
 
     @Override
     public String getRequestTokenEndpoint()

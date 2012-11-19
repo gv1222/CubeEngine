@@ -33,7 +33,7 @@ import com.restfb.Facebook;
 public class FriendList extends NamedFacebookType
 {
     @Facebook("list_type")
-    private String            listType;
+    private String listType;
 
     private static final long serialVersionUID = 1L;
 

@@ -36,7 +36,7 @@ import static com.restfb.util.DateUtils.toDateFromLongFormat;
 public class PageConnection extends CategorizedFacebookType
 {
     @Facebook("created_time")
-    private String            createdTime;
+    private String createdTime;
 
     private static final long serialVersionUID = 1L;
 

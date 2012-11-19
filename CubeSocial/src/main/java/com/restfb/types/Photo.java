@@ -44,48 +44,48 @@ public class Photo extends NamedFacebookType
     private CategorizedFacebookType from;
 
     @Facebook
-    private String                  picture;
+    private String picture;
 
     @Facebook
-    private String                  source;
+    private String source;
 
     @Facebook
-    private Integer                 height;
+    private Integer height;
 
     @Facebook
-    private Integer                 width;
+    private Integer width;
 
     @Facebook
-    private String                  link;
+    private String link;
 
     @Facebook
-    private String                  icon;
+    private String icon;
 
     @Facebook
-    private Integer                 position;
+    private Integer position;
 
     @Facebook("created_time")
-    private String                  createdTime;
+    private String createdTime;
 
     @Facebook("updated_time")
-    private String                  updatedTime;
+    private String updatedTime;
 
     @Facebook
-    private List<Tag>               tags             = new ArrayList<Tag>();
+    private List<Tag> tags = new ArrayList<Tag>();
 
     @Facebook
-    private List<Comment>           comments         = new ArrayList<Comment>();
+    private List<Comment> comments = new ArrayList<Comment>();
 
     @Facebook
-    private List<NamedFacebookType> likes            = new ArrayList<NamedFacebookType>();
+    private List<NamedFacebookType> likes = new ArrayList<NamedFacebookType>();
 
     @Facebook
-    private List<Image>             images           = new ArrayList<Image>();
+    private List<Image> images = new ArrayList<Image>();
 
     @Facebook
-    private Place                   place;
+    private Place place;
 
-    private static final long       serialVersionUID = 1L;
+    private static final long serialVersionUID = 1L;
 
     /**
      * Represents the <a
@@ -98,13 +98,13 @@ public class Photo extends NamedFacebookType
     public static class Tag extends NamedFacebookType
     {
         @Facebook
-        private Integer           x;
+        private Integer x;
 
         @Facebook
-        private Integer           y;
+        private Integer y;
 
         @Facebook("created_time")
-        private String            createdTime;
+        private String createdTime;
 
         private static final long serialVersionUID = 1L;
 
@@ -150,13 +150,13 @@ public class Photo extends NamedFacebookType
     public static class Image implements Serializable
     {
         @Facebook
-        private Integer           height;
+        private Integer height;
 
         @Facebook
-        private Integer           width;
+        private Integer width;
 
         @Facebook
-        private String            source;
+        private String source;
 
         private static final long serialVersionUID = 1L;
 

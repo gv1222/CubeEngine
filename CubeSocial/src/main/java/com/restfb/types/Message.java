@@ -37,18 +37,18 @@ import static com.restfb.util.DateUtils.toDateFromLongFormat;
 public class Message extends FacebookType
 {
     @Facebook("created_time")
-    private String                  createdTime;
+    private String createdTime;
 
     @Facebook
-    private NamedFacebookType       from;
+    private NamedFacebookType from;
 
     @Facebook
     private List<NamedFacebookType> to;
 
     @Facebook
-    private String                  message;
+    private String message;
 
-    private static final long       serialVersionUID = 1L;
+    private static final long serialVersionUID = 1L;
 
     /**
      * The time the message was initially created.

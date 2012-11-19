@@ -12,7 +12,7 @@ import org.scribe.utils.*;
  */
 public class TokenExtractor20Impl implements AccessTokenExtractor
 {
-    private static final String TOKEN_REGEX  = "access_token=([^&]+)";
+    private static final String TOKEN_REGEX = "access_token=([^&]+)";
     private static final String EMPTY_SECRET = "";
 
     /**

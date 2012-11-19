@@ -39,33 +39,33 @@ public class Album extends NamedFacebookType
     private CategorizedFacebookType from;
 
     @Facebook
-    private String                  description;
+    private String description;
 
     @Facebook
-    private String                  location;
+    private String location;
 
     @Facebook
-    private String                  link;
+    private String link;
 
     @Facebook
-    private Long                    count;
+    private Long count;
 
     @Facebook("cover_photo")
-    private String                  coverPhoto;
+    private String coverPhoto;
 
     @Facebook
-    private String                  privacy;
+    private String privacy;
 
     @Facebook("can_upload")
-    private Boolean                 canUpload;
+    private Boolean canUpload;
 
     @Facebook("created_time")
-    private String                  createdTime;
+    private String createdTime;
 
     @Facebook("updated_time")
-    private String                  updatedTime;
+    private String updatedTime;
 
-    private static final long       serialVersionUID = 1L;
+    private static final long serialVersionUID = 1L;
 
     /**
      * An object containing the ID and name of the profile who posted this album.

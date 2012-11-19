@@ -32,7 +32,7 @@ import com.restfb.Facebook;
 public class CategorizedFacebookType extends NamedFacebookType
 {
     @Facebook
-    private String            category;
+    private String category;
 
     private static final long serialVersionUID = 1L;
 

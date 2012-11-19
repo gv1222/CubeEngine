@@ -35,61 +35,61 @@ import java.io.Serializable;
 public class Page extends CategorizedFacebookType
 {
     @Facebook
-    private String            picture;
+    private String picture;
 
     @Facebook
-    private String            link;
+    private String link;
 
     @Facebook
-    private String            username;
+    private String username;
 
     @Facebook
-    private String            founded;
+    private String founded;
 
     @Facebook("company_overview")
-    private String            companyOverview;
+    private String companyOverview;
 
     @Facebook
-    private String            mission;
+    private String mission;
 
     @Facebook
-    private String            products;
+    private String products;
 
     @Facebook
-    private Long              likes;
+    private Long likes;
 
     @Facebook("is_community_page")
-    private Boolean           isCommunityPage;
+    private Boolean isCommunityPage;
 
     @Facebook
-    private String            description;
+    private String description;
 
     @Facebook
-    private Integer           checkins;
+    private Integer checkins;
 
     @Facebook
-    private String            phone;
+    private String phone;
 
     @Facebook("access_token")
-    private String            accessToken;
+    private String accessToken;
 
     @Facebook
-    private String            about;
+    private String about;
 
     @Facebook("talking_about_count")
-    private Long              talkingAboutCount;
+    private Long talkingAboutCount;
 
     @Facebook("can_post")
-    private Boolean           canPost;
+    private Boolean canPost;
 
     @Facebook("is_published")
-    private Boolean           isPublished;
+    private Boolean isPublished;
 
     @Facebook
-    private Location          location;
+    private Location location;
 
     @Facebook
-    private Cover             cover;
+    private Cover cover;
 
     private static final long serialVersionUID = 2L;
 
@@ -104,13 +104,13 @@ public class Page extends CategorizedFacebookType
     public static class Cover implements Serializable
     {
         @Facebook("cover_id")
-        private String            coverId;
+        private String coverId;
 
         @Facebook
-        private String            source;
+        private String source;
 
         @Facebook("offset_y")
-        private Integer           offsetY;
+        private Integer offsetY;
 
         private static final long serialVersionUID = 1L;
 

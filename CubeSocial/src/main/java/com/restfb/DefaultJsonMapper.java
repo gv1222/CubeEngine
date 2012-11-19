@@ -62,7 +62,7 @@ public class DefaultJsonMapper implements JsonMapper
     /**
      * Logger.
      */
-    private static final Logger       logger = Logger.getLogger(DefaultJsonMapper.class.getName());
+    private static final Logger logger = Logger.getLogger(DefaultJsonMapper.class.getName());
 
     /**
      * Creates a JSON mapper which will throw

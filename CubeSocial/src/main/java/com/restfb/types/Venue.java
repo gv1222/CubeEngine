@@ -35,25 +35,25 @@ import java.io.Serializable;
 public class Venue implements Serializable
 {
     @Facebook
-    private String            street;
+    private String street;
 
     @Facebook
-    private String            city;
+    private String city;
 
     @Facebook
-    private String            state;
+    private String state;
 
     @Facebook
-    private String            zip;
+    private String zip;
 
     @Facebook
-    private String            country;
+    private String country;
 
     @Facebook
-    private Double            latitude;
+    private Double latitude;
 
     @Facebook
-    private Double            longitude;
+    private Double longitude;
 
     private static final long serialVersionUID = 1L;
 

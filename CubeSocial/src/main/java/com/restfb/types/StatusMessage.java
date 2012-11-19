@@ -40,19 +40,19 @@ import static java.util.Collections.unmodifiableList;
 public class StatusMessage extends NamedFacebookType
 {
     @Facebook
-    private NamedFacebookType       from;
+    private NamedFacebookType from;
 
     @Facebook
-    private String                  message;
+    private String message;
 
     @Facebook
-    private String                  type;
+    private String type;
 
     @Facebook("updated_time")
-    private String                  updatedTime;
+    private String updatedTime;
 
     @Facebook
-    private List<NamedFacebookType> likes            = new ArrayList<NamedFacebookType>();
+    private List<NamedFacebookType> likes = new ArrayList<NamedFacebookType>();
 
     /**
      * Hack so JSON mapping won't fail when FB returns inconsistent JSON when
@@ -60,10 +60,10 @@ public class StatusMessage extends NamedFacebookType
      */
     @Facebook("likes")
     @SuppressWarnings("unused")
-    private EmptyLikes              emptyLikes;
+    private EmptyLikes emptyLikes;
 
     @Facebook
-    private List<Comment>           comments         = new ArrayList<Comment>();
+    private List<Comment> comments = new ArrayList<Comment>();
 
     /**
      * Hack so JSON mapping won't fail when FB returns inconsistent JSON when
@@ -71,9 +71,9 @@ public class StatusMessage extends NamedFacebookType
      */
     @Facebook("comments")
     @SuppressWarnings("unused")
-    private EmptyComments           emptyComments;
+    private EmptyComments emptyComments;
 
-    private static final long       serialVersionUID = 2L;
+    private static final long serialVersionUID = 2L;
 
     /**
      * Sometimes Facebook will return <tt>"likes":{"count":0}</tt> instead of the
@@ -87,7 +87,7 @@ public class StatusMessage extends NamedFacebookType
     {
         @Facebook
         @SuppressWarnings("unused")
-        private Long              count;
+        private Long count;
 
         private static final long serialVersionUID = 1L;
     }
@@ -104,7 +104,7 @@ public class StatusMessage extends NamedFacebookType
     {
         @Facebook
         @SuppressWarnings("unused")
-        private Long              count;
+        private Long count;
 
         private static final long serialVersionUID = 1L;
     }

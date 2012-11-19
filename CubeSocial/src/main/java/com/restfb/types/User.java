@@ -43,110 +43,110 @@ import static java.util.Collections.unmodifiableList;
 public class User extends NamedFacebookType
 {
     @Facebook("first_name")
-    private String                  firstName;
+    private String firstName;
 
     @Facebook("middle_name")
-    private String                  middleName;
+    private String middleName;
 
     @Facebook("last_name")
-    private String                  lastName;
+    private String lastName;
 
     @Facebook
-    private String                  link;
+    private String link;
 
     @Facebook
-    private String                  bio;
+    private String bio;
 
     @Facebook
-    private String                  quotes;
+    private String quotes;
 
     @Facebook
-    private String                  about;
+    private String about;
 
     @Facebook("relationship_status")
-    private String                  relationshipStatus;
+    private String relationshipStatus;
 
     @Facebook
-    private String                  religion;
+    private String religion;
 
     @Facebook
-    private String                  website;
+    private String website;
 
     @Facebook
-    private String                  birthday;
+    private String birthday;
 
     @Facebook
-    private String                  email;
+    private String email;
 
     @Facebook
-    private Double                  timezone;
+    private Double timezone;
 
     @Facebook
-    private Boolean                 verified;
+    private Boolean verified;
 
     @Facebook
-    private String                  gender;
+    private String gender;
 
     @Facebook
-    private String                  political;
+    private String political;
 
     @Facebook
-    private String                  locale;
+    private String locale;
 
     @Facebook
-    private String                  username;
+    private String username;
 
     /**
      * Duplicate mapping for "hometown" since FB can return it differently in
      * different situations.
      */
     @Facebook
-    private NamedFacebookType       hometown;
+    private NamedFacebookType hometown;
 
     /**
      * Duplicate mapping for "hometown" since FB can return it differently in
      * different situations.
      */
     @Facebook("hometown")
-    private String                  hometownAsString;
+    private String hometownAsString;
 
     @Facebook
-    private NamedFacebookType       location;
+    private NamedFacebookType location;
 
     @Facebook("significant_other")
-    private NamedFacebookType       significantOther;
+    private NamedFacebookType significantOther;
 
     @Facebook("updated_time")
-    private String                  updatedTime;
+    private String updatedTime;
 
     @Facebook("third_party_id")
-    private String                  thirdPartyId;
+    private String thirdPartyId;
 
     @Facebook("interested_in")
-    private List<String>            interestedIn     = new ArrayList<String>();
+    private List<String> interestedIn = new ArrayList<String>();
 
     @Facebook("meeting_for")
-    private List<String>            meetingFor       = new ArrayList<String>();
+    private List<String> meetingFor = new ArrayList<String>();
 
     @Facebook
-    private List<Work>              work             = new ArrayList<Work>();
+    private List<Work> work = new ArrayList<Work>();
 
     @Facebook
-    private List<Education>         education        = new ArrayList<Education>();
+    private List<Education> education = new ArrayList<Education>();
 
     @Facebook
-    private List<Sport>             sports           = new ArrayList<Sport>();
+    private List<Sport> sports = new ArrayList<Sport>();
 
     @Facebook("favorite_teams")
-    private List<NamedFacebookType> favoriteTeams    = new ArrayList<NamedFacebookType>();
+    private List<NamedFacebookType> favoriteTeams = new ArrayList<NamedFacebookType>();
 
     @Facebook("favorite_athletes")
     private List<NamedFacebookType> favoriteAthletes = new ArrayList<NamedFacebookType>();
 
     @Facebook
-    private List<NamedFacebookType> languages        = new ArrayList<NamedFacebookType>();
+    private List<NamedFacebookType> languages = new ArrayList<NamedFacebookType>();
 
-    private static final long       serialVersionUID = 1L;
+    private static final long serialVersionUID = 1L;
 
     /**
      * Represents the <a
@@ -159,27 +159,27 @@ public class User extends NamedFacebookType
     public static class Work implements Serializable
     {
         @Facebook
-        private NamedFacebookType       employer;
+        private NamedFacebookType employer;
 
         @Facebook
-        private NamedFacebookType       location;
+        private NamedFacebookType location;
 
         @Facebook
-        private NamedFacebookType       position;
+        private NamedFacebookType position;
 
         @Facebook
-        private String                  description;
+        private String description;
 
         @Facebook("start_date")
-        private String                  startDate;
+        private String startDate;
 
         @Facebook("end_date")
-        private String                  endDate;
+        private String endDate;
 
         @Facebook
-        private List<NamedFacebookType> with             = new ArrayList<NamedFacebookType>();
+        private List<NamedFacebookType> with = new ArrayList<NamedFacebookType>();
 
-        private static final long       serialVersionUID = 1L;
+        private static final long serialVersionUID = 1L;
 
         /**
          * @see java.lang.Object#hashCode()
@@ -294,27 +294,27 @@ public class User extends NamedFacebookType
     public static class Education implements Serializable
     {
         @Facebook
-        private NamedFacebookType       school;
+        private NamedFacebookType school;
 
         @Facebook
-        private NamedFacebookType       year;
+        private NamedFacebookType year;
 
         @Facebook
-        private NamedFacebookType       degree;
+        private NamedFacebookType degree;
 
         @Facebook
-        private String                  type;
+        private String type;
 
         @Facebook
-        private List<NamedFacebookType> concentration    = new ArrayList<NamedFacebookType>();
+        private List<NamedFacebookType> concentration = new ArrayList<NamedFacebookType>();
 
         @Facebook
-        private List<NamedFacebookType> with             = new ArrayList<NamedFacebookType>();
+        private List<NamedFacebookType> with = new ArrayList<NamedFacebookType>();
 
         @Facebook
-        private List<EducationClass>    classes          = new ArrayList<EducationClass>();
+        private List<EducationClass> classes = new ArrayList<EducationClass>();
 
-        private static final long       serialVersionUID = 2L;
+        private static final long serialVersionUID = 2L;
 
         /**
          * @see java.lang.Object#hashCode()
@@ -429,12 +429,12 @@ public class User extends NamedFacebookType
     public static class EducationClass extends NamedFacebookType
     {
         @Facebook
-        private List<NamedFacebookType> with             = new ArrayList<NamedFacebookType>();
+        private List<NamedFacebookType> with = new ArrayList<NamedFacebookType>();
 
         @Facebook
-        private String                  description;
+        private String description;
 
-        private static final long       serialVersionUID = 1L;
+        private static final long serialVersionUID = 1L;
 
         /**
          * Friends associated with this class.
@@ -468,9 +468,9 @@ public class User extends NamedFacebookType
     public static class Sport extends NamedFacebookType
     {
         @Facebook
-        private List<NamedFacebookType> with             = new ArrayList<NamedFacebookType>();
+        private List<NamedFacebookType> with = new ArrayList<NamedFacebookType>();
 
-        private static final long       serialVersionUID = 1L;
+        private static final long serialVersionUID = 1L;
 
         /**
          * Friends associated with this sport.

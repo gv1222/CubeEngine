@@ -15,7 +15,7 @@ import org.scribe.utils.*;
 public class HeaderExtractorImpl implements HeaderExtractor
 {
     private static final String PARAM_SEPARATOR = ", ";
-    private static final String PREAMBLE        = "OAuth ";
+    private static final String PREAMBLE = "OAuth ";
 
     /**
      * {@inheritDoc}

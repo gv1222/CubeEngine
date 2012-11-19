@@ -40,28 +40,28 @@ public class Event extends NamedFacebookType
     private NamedFacebookType owner;
 
     @Facebook
-    private String            description;
+    private String description;
 
     @Facebook("start_time")
-    private String            startTime;
+    private String startTime;
 
     @Facebook("end_time")
-    private String            endTime;
+    private String endTime;
 
     @Facebook
-    private String            location;
+    private String location;
 
     @Facebook("rsvp_status")
-    private String            rsvpStatus;
+    private String rsvpStatus;
 
     @Facebook
-    private Venue             venue;
+    private Venue venue;
 
     @Facebook
-    private String            privacy;
+    private String privacy;
 
     @Facebook("updated_time")
-    private String            updatedTime;
+    private String updatedTime;
 
     private static final long serialVersionUID = 1L;
 

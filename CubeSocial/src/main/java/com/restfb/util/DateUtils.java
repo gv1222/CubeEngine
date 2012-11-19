@@ -39,33 +39,33 @@ public final class DateUtils
      * Facebook "long" date format (IETF RFC 3339). Example:
      * {@code 2010-02-28T16:11:08+0000}
      */
-    public static final String  FACEBOOK_LONG_DATE_FORMAT                  = "yyyy-MM-dd'T'HH:mm:ssZ";
+    public static final String FACEBOOK_LONG_DATE_FORMAT = "yyyy-MM-dd'T'HH:mm:ssZ";
 
     /**
      * Facebook "long" date format (IETF RFC 3339) without a timezone component.
      * Example: {@code 2010-02-28T16:11:08}
      */
-    public static final String  FACEBOOK_LONG_DATE_FORMAT_WITHOUT_TIMEZONE = "yyyy-MM-dd'T'HH:mm:ss";
+    public static final String FACEBOOK_LONG_DATE_FORMAT_WITHOUT_TIMEZONE = "yyyy-MM-dd'T'HH:mm:ss";
 
     /**
      * Facebook short date format. Example: {@code 04/15/1984}
      */
-    public static final String  FACEBOOK_SHORT_DATE_FORMAT                 = "MM/dd/yyyy";
+    public static final String FACEBOOK_SHORT_DATE_FORMAT = "MM/dd/yyyy";
 
     /**
      * Facebook alternate short date format. Example: {@code 2012-09-15}
      */
-    public static final String  FACEBOOK_ALTERNATE_SHORT_DATE_FORMAT       = "yyyy-MM-dd";
+    public static final String FACEBOOK_ALTERNATE_SHORT_DATE_FORMAT = "yyyy-MM-dd";
 
     /**
      * Facebook month-year only date format. Example: {@code Example: 2007-03}
      */
-    public static final String  FACEBOOK_MONTH_YEAR_DATE_FORMAT            = "yyyy-MM";
+    public static final String FACEBOOK_MONTH_YEAR_DATE_FORMAT = "yyyy-MM";
 
     /**
      * Logger.
      */
-    private static final Logger logger                                     = Logger.getLogger(DateUtils.class.getName());
+    private static final Logger logger = Logger.getLogger(DateUtils.class.getName());
 
     /**
      * Prevents instantiation.

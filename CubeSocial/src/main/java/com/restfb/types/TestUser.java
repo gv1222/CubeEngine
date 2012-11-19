@@ -32,16 +32,16 @@ import com.restfb.Facebook;
 public class TestUser extends FacebookType
 {
     @Facebook("access_token")
-    private String            accessToken;
+    private String accessToken;
 
     @Facebook("login_url")
-    private String            loginUrl;
+    private String loginUrl;
 
     @Facebook
-    private String            email;
+    private String email;
 
     @Facebook
-    private String            password;
+    private String password;
 
     private static final long serialVersionUID = 1L;
 

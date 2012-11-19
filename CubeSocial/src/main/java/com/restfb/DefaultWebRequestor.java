@@ -45,7 +45,7 @@ public class DefaultWebRequestor implements WebRequestor
     /**
      * Arbitrary unique boundary marker for multipart {@code POST}s.
      */
-    private static final String MULTIPART_BOUNDARY                    = "**boundarystringwhichwill**neverbeencounteredinthewild**";
+    private static final String MULTIPART_BOUNDARY = "**boundarystringwhichwill**neverbeencounteredinthewild**";
 
     /**
      * Line separator for multipart {@code POST}s.
@@ -55,22 +55,22 @@ public class DefaultWebRequestor implements WebRequestor
     /**
      * Hyphens for multipart {@code POST}s.
      */
-    private static final String MULTIPART_TWO_HYPHENS                 = "--";
+    private static final String MULTIPART_TWO_HYPHENS = "--";
 
     /**
      * Default buffer size for multipart {@code POST}s.
      */
-    private static final int    MULTIPART_DEFAULT_BUFFER_SIZE         = 8192;
+    private static final int MULTIPART_DEFAULT_BUFFER_SIZE = 8192;
 
     /**
      * By default, how long should we wait for a response (in ms)?
      */
-    private static final int    DEFAULT_READ_TIMEOUT_IN_MS            = 180000;
+    private static final int DEFAULT_READ_TIMEOUT_IN_MS = 180000;
 
     /**
      * Logger.
      */
-    private static final Logger logger                                = Logger.getLogger("com.restfb.HTTP");
+    private static final Logger logger = Logger.getLogger("com.restfb.HTTP");
 
     /**
      * @see com.restfb.WebRequestor#executeGet(java.lang.String)

@@ -9,10 +9,10 @@ import java.security.*;
  */
 public class RSASha1SignatureService implements SignatureService
 {
-    private static final String METHOD   = "RSA-SHA1";
+    private static final String METHOD = "RSA-SHA1";
     private static final String RSA_SHA1 = "SHA1withRSA";
 
-    private PrivateKey          privateKey;
+    private PrivateKey privateKey;
 
     public RSASha1SignatureService(PrivateKey privateKey)
     {

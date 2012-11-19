@@ -52,7 +52,7 @@ public class DefaultFacebookClient extends BaseFacebookClient implements
     /**
      * Graph API access token.
      */
-    protected String                  accessToken;
+    protected String accessToken;
 
     /**
      * Knows how to map Graph API exceptions to formal Java exception types.
@@ -62,74 +62,74 @@ public class DefaultFacebookClient extends BaseFacebookClient implements
     /**
      * API endpoint URL.
      */
-    protected static final String     FACEBOOK_GRAPH_ENDPOINT_URL            = "https://graph.facebook.com";
+    protected static final String FACEBOOK_GRAPH_ENDPOINT_URL = "https://graph.facebook.com";
 
     /**
      * Read-only API endpoint URL.
      */
-    protected static final String     FACEBOOK_READ_ONLY_ENDPOINT_URL        = "https://api-read.facebook.com/method";
+    protected static final String FACEBOOK_READ_ONLY_ENDPOINT_URL = "https://api-read.facebook.com/method";
 
     /**
      * Video Upload API endpoint URL.
      *
      * @since 1.6.5
      */
-    protected static final String     FACEBOOK_GRAPH_VIDEO_ENDPOINT_URL      = "https://graph-video.facebook.com";
+    protected static final String FACEBOOK_GRAPH_VIDEO_ENDPOINT_URL = "https://graph-video.facebook.com";
 
     /**
      * Reserved method override parameter name.
      */
-    protected static final String     METHOD_PARAM_NAME                      = "method";
+    protected static final String METHOD_PARAM_NAME = "method";
 
     /**
      * Reserved "multiple IDs" parameter name.
      */
-    protected static final String     IDS_PARAM_NAME                         = "ids";
+    protected static final String IDS_PARAM_NAME = "ids";
 
     /**
      * Reserved FQL query parameter name.
      */
-    protected static final String     QUERY_PARAM_NAME                       = "query";
+    protected static final String QUERY_PARAM_NAME = "query";
 
     /**
      * Reserved FQL multiquery parameter name.
      */
-    protected static final String     QUERIES_PARAM_NAME                     = "queries";
+    protected static final String QUERIES_PARAM_NAME = "queries";
 
     /**
      * Reserved "result format" parameter name.
      */
-    protected static final String     FORMAT_PARAM_NAME                      = "format";
+    protected static final String FORMAT_PARAM_NAME = "format";
 
     /**
      * API error response 'error' attribute name.
      */
-    protected static final String     ERROR_ATTRIBUTE_NAME                   = "error";
+    protected static final String ERROR_ATTRIBUTE_NAME = "error";
 
     /**
      * API error response 'type' attribute name.
      */
-    protected static final String     ERROR_TYPE_ATTRIBUTE_NAME              = "type";
+    protected static final String ERROR_TYPE_ATTRIBUTE_NAME = "type";
 
     /**
      * API error response 'message' attribute name.
      */
-    protected static final String     ERROR_MESSAGE_ATTRIBUTE_NAME           = "message";
+    protected static final String ERROR_MESSAGE_ATTRIBUTE_NAME = "message";
 
     /**
      * API error response 'code' attribute name.
      */
-    protected static final String     ERROR_CODE_ATTRIBUTE_NAME              = "code";
+    protected static final String ERROR_CODE_ATTRIBUTE_NAME = "code";
 
     /**
      * Batch API error response 'error' attribute name.
      */
-    protected static final String     BATCH_ERROR_ATTRIBUTE_NAME             = "error";
+    protected static final String BATCH_ERROR_ATTRIBUTE_NAME = "error";
 
     /**
      * Batch API error response 'error_description' attribute name.
      */
-    protected static final String     BATCH_ERROR_DESCRIPTION_ATTRIBUTE_NAME = "error_description";
+    protected static final String BATCH_ERROR_DESCRIPTION_ATTRIBUTE_NAME = "error_description";
 
     /**
      * Creates a Facebook Graph API client with no access token.

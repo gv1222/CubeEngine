@@ -34,7 +34,7 @@ public class FacebookNetworkException extends FacebookException
     /**
      * The HTTP response status code.
      */
-    private Integer           httpStatusCode;
+    private Integer httpStatusCode;
 
     private static final long serialVersionUID = 1L;
 

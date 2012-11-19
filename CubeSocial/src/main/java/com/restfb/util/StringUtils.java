@@ -42,12 +42,12 @@ public final class StringUtils
     /**
      * Default charset to use for encoding/decoding strings.
      */
-    public static final String  ENCODING_CHARSET = "UTF-8";
+    public static final String ENCODING_CHARSET = "UTF-8";
 
     /**
      * Logger.
      */
-    private static final Logger logger           = Logger.getLogger(StringUtils.class.getName());
+    private static final Logger logger = Logger.getLogger(StringUtils.class.getName());
 
     /**
      * Prevents instantiation.

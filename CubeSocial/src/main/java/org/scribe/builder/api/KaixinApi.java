@@ -5,8 +5,8 @@ import org.scribe.model.*;
 public class KaixinApi extends DefaultApi10a
 {
     private static final String REQUEST_TOKEN_URL = "http://api.kaixin001.com/oauth/request_token";
-    private static final String ACCESS_TOKEN_URL  = "http://api.kaixin001.com/oauth/access_token";
-    private static final String AUTHORIZE_URL     = "http://api.kaixin001.com/oauth/authorize?oauth_token=%s";
+    private static final String ACCESS_TOKEN_URL = "http://api.kaixin001.com/oauth/access_token";
+    private static final String AUTHORIZE_URL = "http://api.kaixin001.com/oauth/authorize?oauth_token=%s";
 
     @Override
     public String getRequestTokenEndpoint()

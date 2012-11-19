@@ -52,22 +52,22 @@ public class DefaultLegacyFacebookClient extends BaseFacebookClient implements
     /**
      * Facebook API key.
      */
-    protected String              apiKey;
+    protected String apiKey;
 
     /**
      * Facebook application secret key.
      */
-    protected String              secretKey;
+    protected String secretKey;
 
     /**
      * OAuth Access token.
      */
-    protected String              accessToken;
+    protected String accessToken;
 
     /**
      * API endpoint URL.
      */
-    protected static final String FACEBOOK_REST_ENDPOINT_URL      = "https://api.facebook.com/restserver.php";
+    protected static final String FACEBOOK_REST_ENDPOINT_URL = "https://api.facebook.com/restserver.php";
 
     /**
      * Read-only API endpoint URL.
@@ -75,18 +75,18 @@ public class DefaultLegacyFacebookClient extends BaseFacebookClient implements
     protected static final String FACEBOOK_READ_ONLY_ENDPOINT_URL = "https://api-read.facebook.com/restserver.php";
 
     // Common parameter names/values that must be included in all API requests
-    protected static final String METHOD_PARAM_NAME               = "method";
-    protected static final String FORMAT_PARAM_NAME               = "format";
-    protected static final String FORMAT_PARAM_VALUE              = "json";
+    protected static final String METHOD_PARAM_NAME = "method";
+    protected static final String FORMAT_PARAM_NAME = "format";
+    protected static final String FORMAT_PARAM_VALUE = "json";
 
     // Common parameter names/values that must be included in all API requests
     // that do not use the new OAuth scheme.
-    protected static final String API_KEY_PARAM_NAME              = "api_key";
-    protected static final String CALL_ID_PARAM_NAME              = "call_id";
-    protected static final String SIG_PARAM_NAME                  = "sig";
-    protected static final String SESSION_KEY_PARAM_NAME          = "session_key";
-    protected static final String VERSION_PARAM_NAME              = "v";
-    protected static final String VERSION_PARAM_VALUE             = "1.0";
+    protected static final String API_KEY_PARAM_NAME = "api_key";
+    protected static final String CALL_ID_PARAM_NAME = "call_id";
+    protected static final String SIG_PARAM_NAME = "sig";
+    protected static final String SESSION_KEY_PARAM_NAME = "session_key";
+    protected static final String VERSION_PARAM_NAME = "v";
+    protected static final String VERSION_PARAM_VALUE = "1.0";
 
     /**
      * Creates a Facebook API client with the given <a

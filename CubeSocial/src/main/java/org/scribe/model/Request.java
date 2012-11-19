@@ -15,27 +15,27 @@ import org.scribe.exceptions.*;
  */
 public class Request
 {
-    private static final String CONTENT_LENGTH       = "Content-Length";
-    private static final String CONTENT_TYPE         = "Content-Type";
-    private static RequestTuner NOOP                 = new RequestTuner() {
-                                                         @Override
-                                                         public void tune(Request _)
+    private static final String CONTENT_LENGTH = "Content-Length";
+    private static final String CONTENT_TYPE = "Content-Type";
+    private static RequestTuner NOOP = new RequestTuner() {
+        @Override
+        public void tune(Request _)
                                                          {}
-                                                     };
-    public static final String  DEFAULT_CONTENT_TYPE = "application/x-www-form-urlencoded";
+    };
+    public static final String DEFAULT_CONTENT_TYPE = "application/x-www-form-urlencoded";
 
-    private String              url;
-    private Verb                verb;
-    private ParameterList       querystringParams;
-    private ParameterList       bodyParams;
+    private String url;
+    private Verb verb;
+    private ParameterList querystringParams;
+    private ParameterList bodyParams;
     private Map<String, String> headers;
-    private String              payload              = null;
-    private HttpURLConnection   connection;
-    private String              charset;
-    private byte[]              bytePayload          = null;
-    private boolean             connectionKeepAlive  = false;
-    private Long                connectTimeout       = null;
-    private Long                readTimeout          = null;
+    private String payload = null;
+    private HttpURLConnection connection;
+    private String charset;
+    private byte[] bytePayload = null;
+    private boolean connectionKeepAlive = false;
+    private Long connectTimeout = null;
+    private Long readTimeout = null;
 
     /**
      * Creates a new Http Request

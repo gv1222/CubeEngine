@@ -372,7 +372,7 @@ public interface FacebookClient
         private String accessToken;
 
         @Facebook
-        private Long   expires;
+        private Long expires;
 
         /**
          * Given a query string of the form {@code access_token=XXX} or

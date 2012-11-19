@@ -10,7 +10,7 @@ import org.scribe.utils.*;
 public class KaixinApi20 extends DefaultApi20
 {
 
-    private static final String AUTHORIZE_URL        = "http://api.kaixin001.com/oauth2/authorize?client_id=%s&redirect_uri=%s&response_type=code";
+    private static final String AUTHORIZE_URL = "http://api.kaixin001.com/oauth2/authorize?client_id=%s&redirect_uri=%s&response_type=code";
     private static final String SCOPED_AUTHORIZE_URL = AUTHORIZE_URL + "&scope=%s";
 
     @Override

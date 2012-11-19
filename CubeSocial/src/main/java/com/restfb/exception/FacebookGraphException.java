@@ -41,17 +41,17 @@ public class FacebookGraphException extends FacebookException
     /**
      * The Facebook Graph API error type.
      */
-    private String            errorType;
+    private String errorType;
 
     /**
      * The Facebook API error message.
      */
-    private String            errorMessage;
+    private String errorMessage;
 
     /**
      * The HTTP status code returned by the server.
      */
-    private Integer           httpStatusCode;
+    private Integer httpStatusCode;
 
     private static final long serialVersionUID = 1L;
 

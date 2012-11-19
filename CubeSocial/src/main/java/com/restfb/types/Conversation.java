@@ -40,13 +40,13 @@ import static com.restfb.util.DateUtils.toDateFromLongFormat;
 public class Conversation extends FacebookType
 {
     @Facebook
-    private String                  snippet;
+    private String snippet;
 
     @Facebook("updated_time")
-    private String                  updatedTime;
+    private String updatedTime;
 
     @Facebook("message_count")
-    private Long                    messageCount;
+    private Long messageCount;
 
     /**
      * Facebook does not send the unread count if there aren't any new messages.
@@ -54,27 +54,27 @@ public class Conversation extends FacebookType
      * this value is sent, the {@link com.restfb.JsonMapper} will override it.
      */
     @Facebook("unread_count")
-    private Long                    unreadCount      = 0L;
+    private Long unreadCount = 0L;
 
     @Facebook
-    private List<Tag>               tags             = new ArrayList<Tag>();
+    private List<Tag> tags = new ArrayList<Tag>();
 
     @Facebook
-    private List<NamedFacebookType> participants     = new ArrayList<NamedFacebookType>();
+    private List<NamedFacebookType> participants = new ArrayList<NamedFacebookType>();
 
     @Facebook
-    private List<NamedFacebookType> senders          = new ArrayList<NamedFacebookType>();
+    private List<NamedFacebookType> senders = new ArrayList<NamedFacebookType>();
 
     @Facebook("can_reply")
-    private Boolean                 canReply;
+    private Boolean canReply;
 
     @Facebook("is_subscribed")
-    private Boolean                 isSubscribed;
+    private Boolean isSubscribed;
 
     @Facebook
-    private List<Message>           messages;
+    private List<Message> messages;
 
-    private static final long       serialVersionUID = 1L;
+    private static final long serialVersionUID = 1L;
 
     /**
      * Represents the <a
@@ -88,7 +88,7 @@ public class Conversation extends FacebookType
     {
 
         @Facebook
-        private String            name;
+        private String name;
 
         private static final long serialVersionUID = 1L;
 

@@ -5,8 +5,8 @@ import org.scribe.model.*;
 public class SapoApi extends DefaultApi10a
 {
     private static final String AUTHORIZE_URL = "https://id.sapo.pt/oauth/authorize?oauth_token=%s";
-    private static final String ACCESS_URL    = "https://id.sapo.pt/oauth/access_token";
-    private static final String REQUEST_URL   = "https://id.sapo.pt/oauth/request_token";
+    private static final String ACCESS_URL = "https://id.sapo.pt/oauth/access_token";
+    private static final String REQUEST_URL = "https://id.sapo.pt/oauth/request_token";
 
     @Override
     public String getAccessTokenEndpoint()

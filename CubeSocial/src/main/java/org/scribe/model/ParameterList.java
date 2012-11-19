@@ -12,10 +12,10 @@ import org.scribe.utils.Preconditions;
  */
 public class ParameterList
 {
-    private static final char     QUERY_STRING_SEPARATOR = '?';
-    private static final String   PARAM_SEPARATOR        = "&";
-    private static final String   PAIR_SEPARATOR         = "=";
-    private static final String   EMPTY_STRING           = "";
+    private static final char QUERY_STRING_SEPARATOR = '?';
+    private static final String PARAM_SEPARATOR = "&";
+    private static final String PAIR_SEPARATOR = "=";
+    private static final String EMPTY_STRING = "";
 
     private final List<Parameter> params;
 

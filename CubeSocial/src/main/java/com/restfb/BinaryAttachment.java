@@ -36,7 +36,7 @@ import static java.lang.String.format;
  */
 public class BinaryAttachment
 {
-    private String      filename;
+    private String filename;
     private InputStream data;
 
     /**

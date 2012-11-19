@@ -32,10 +32,10 @@ import com.restfb.Facebook;
 public class Application extends CategorizedFacebookType
 {
     @Facebook
-    private String            description;
+    private String description;
 
     @Facebook
-    private String            link;
+    private String link;
 
     private static final long serialVersionUID = 1L;
 

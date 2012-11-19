@@ -31,7 +31,7 @@ import com.restfb.Facebook;
 public class Account extends CategorizedFacebookType
 {
     @Facebook("access_token")
-    private String            accessToken;
+    private String accessToken;
 
     private static final long serialVersionUID = 1L;
 

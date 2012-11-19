@@ -36,7 +36,7 @@ import static com.restfb.util.DateUtils.toDateFromLongFormat;
 public class AppRequest extends FacebookType
 {
     @Facebook
-    private Application       application;
+    private Application application;
 
     @Facebook
     private NamedFacebookType to;
@@ -45,10 +45,10 @@ public class AppRequest extends FacebookType
     private NamedFacebookType from;
 
     @Facebook
-    private String            message;
+    private String message;
 
     @Facebook("created_time")
-    private String            createdTime;
+    private String createdTime;
 
     private static final long serialVersionUID = 1L;
 
@@ -63,10 +63,10 @@ public class AppRequest extends FacebookType
     public static class Application extends NamedFacebookType
     {
         @Facebook("canvas_name")
-        private String            canvasName;
+        private String canvasName;
 
         @Facebook
-        private String            namespace;
+        private String namespace;
 
         private static final long serialVersionUID = 1L;
 

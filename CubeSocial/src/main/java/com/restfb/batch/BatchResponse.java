@@ -38,10 +38,10 @@ import static java.util.Collections.unmodifiableList;
 public class BatchResponse
 {
     @Facebook
-    private Integer           code;
+    private Integer code;
 
     @Facebook
-    private String            body;
+    private String body;
 
     @Facebook
     private List<BatchHeader> headers = new ArrayList<BatchHeader>();

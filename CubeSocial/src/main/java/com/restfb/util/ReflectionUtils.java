@@ -43,7 +43,7 @@ public final class ReflectionUtils
      * In-memory shared cache of reflection data for
      * {@link #findFieldsWithAnnotation(Class, Class)}.
      */
-    private static final Map<ClassAnnotationCacheKey, List<?>>      FIELDS_WITH_ANNOTATION_CACHE  =
+    private static final Map<ClassAnnotationCacheKey, List<?>> FIELDS_WITH_ANNOTATION_CACHE =
                                                                                                       synchronizedMap(new HashMap<ClassAnnotationCacheKey, List<?>>());
 
     /**
@@ -377,7 +377,7 @@ public final class ReflectionUtils
         /**
          * An annotation on the field.
          */
-        private T     annotation;
+        private T annotation;
 
         /**
          * Creates a field/annotation pair.
@@ -433,7 +433,7 @@ public final class ReflectionUtils
         /**
          * Class component of this cache key.
          */
-        private final Class<?>                    clazz;
+        private final Class<?> clazz;
 
         /**
          * Annotation component of this cache key.

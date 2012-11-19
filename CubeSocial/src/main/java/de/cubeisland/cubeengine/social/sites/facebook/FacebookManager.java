@@ -23,16 +23,19 @@ public class FacebookManager
 {
     private final String APP_KEY;
     private final String APP_SECRET;
+    private final String CALLBACK;
+    private final Map<User, OAuthService> services;
     private final Map<User, FacebookUser> users; // @Quick_Wango you need to put the codes into here. new FacebookUser(service.getAccesToken(null, new Verifier("the code"))
     private final Map<Location, String> posts; //This should be saved to the database
     private final SocialConfig config;
-    private OAuthService service;
 
     public FacebookManager(SocialConfig config)
     {
         this.APP_KEY = config.facebookAppKey;
         this.APP_SECRET = config.facebookAppSecret;
+        this.CALLBACK = config.facebookCallbackURL;
 
+        this.services = new HashMap<User, OAuthService>();
         this.config = config;
         this.users = new HashMap<User, FacebookUser>();
         this.posts = new HashMap<Location, String>();
@@ -43,14 +46,6 @@ public class FacebookManager
         try
         {
             // TODO Listen for callbacks
-
-            this.service = new ServiceBuilder()
-                    .provider(FacebookApi.class)
-                    .apiKey(APP_KEY)
-                    .apiSecret(APP_SECRET)
-                    .callback(this.config.facebookCallbackURL)
-                    .build();
-
             //Validate APP_KEY and APP_SECRET
             return true;
         }
@@ -70,9 +65,15 @@ public class FacebookManager
         return users.get(user);
     }
 
-    public String getAuthURL()
+    public String getAuthURL(User user)
     {
-        return service.getAuthorizationUrl(null);
+        services.put(user, new ServiceBuilder()
+            .provider(FacebookApi.class)
+            .apiKey(APP_KEY)
+            .apiSecret(APP_SECRET)
+            .callback(CALLBACK)
+            .build());
+        return services.get(user).getAuthorizationUrl(null) + "&state=" + user.getName();
     }
 
     public boolean hasPost(Location loc)
@@ -94,7 +95,7 @@ public class FacebookManager
     {
         CubeEngine.getLogger().info("Code: " + code);
         Verifier verifier = new Verifier(code);
-        Token token = service.getAccessToken(null, verifier);
+        Token token = services.get(user).getAccessToken(null, verifier);
         CubeEngine.getLogger().info("AuthToken: " + token.getToken());
         users.put(user, new FacebookUser(token.getToken()));
     }

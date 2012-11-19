@@ -32,7 +32,7 @@ import com.restfb.Facebook;
 public class Place extends NamedFacebookType
 {
     @Facebook
-    private Location          location;
+    private Location location;
 
     private static final long serialVersionUID = 1L;
 

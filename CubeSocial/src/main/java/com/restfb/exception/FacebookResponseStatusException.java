@@ -38,12 +38,12 @@ public class FacebookResponseStatusException extends FacebookException
     /**
      * The Facebook API error code.
      */
-    private Integer           errorCode;
+    private Integer errorCode;
 
     /**
      * The Facebook API error message.
      */
-    private String            errorMessage;
+    private String errorMessage;
 
     private static final long serialVersionUID = 1L;
 

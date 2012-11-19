@@ -42,22 +42,22 @@ public class Note extends FacebookType
     private NamedFacebookType from;
 
     @Facebook
-    private String            subject;
+    private String subject;
 
     @Facebook
-    private String            message;
+    private String message;
 
     @Facebook
-    private String            icon;
+    private String icon;
 
     @Facebook("created_time")
-    private String            createdTime;
+    private String createdTime;
 
     @Facebook("updated_time")
-    private String            updatedTime;
+    private String updatedTime;
 
     @Facebook("comments")
-    private List<Comment>     comments         = new ArrayList<Comment>();
+    private List<Comment> comments = new ArrayList<Comment>();
 
     private static final long serialVersionUID = 1L;
 

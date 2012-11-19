@@ -37,9 +37,9 @@ import java.io.StringReader;
 public class JsonTokener
 {
 
-    private int     index;
-    private Reader  reader;
-    private char    lastChar;
+    private int index;
+    private Reader reader;
+    private char lastChar;
     private boolean useLastChar;
 
     /**

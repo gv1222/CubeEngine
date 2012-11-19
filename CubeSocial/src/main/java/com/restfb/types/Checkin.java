@@ -41,27 +41,27 @@ import static java.util.Collections.unmodifiableList;
 public class Checkin extends FacebookType
 {
     @Facebook
-    private String                  message;
+    private String message;
 
     @Facebook
-    private NamedFacebookType       from;
+    private NamedFacebookType from;
 
     @Facebook
-    private NamedFacebookType       application;
+    private NamedFacebookType application;
 
     @Facebook
-    private com.restfb.types.Place  place;
+    private com.restfb.types.Place place;
 
     @Facebook("created_time")
-    private String                  createdTime;
+    private String createdTime;
 
     @Facebook
-    private List<Comment>           comments         = new ArrayList<Comment>();
+    private List<Comment> comments = new ArrayList<Comment>();
 
     @Facebook
-    private List<NamedFacebookType> tags             = new ArrayList<NamedFacebookType>();
+    private List<NamedFacebookType> tags = new ArrayList<NamedFacebookType>();
 
-    private static final long       serialVersionUID = 2L;
+    private static final long serialVersionUID = 2L;
 
     /**
      * Represents the <a
@@ -78,7 +78,7 @@ public class Checkin extends FacebookType
         @Facebook
         private com.restfb.types.Location location;
 
-        private static final long         serialVersionUID = 1L;
+        private static final long serialVersionUID = 1L;
 
         /**
          * Represents the <a
@@ -93,19 +93,19 @@ public class Checkin extends FacebookType
         public static class Location implements Serializable
         {
             @Facebook
-            private Double            latitude;
+            private Double latitude;
 
             @Facebook
-            private Double            longitude;
+            private Double longitude;
 
             @Facebook
-            private String            city;
+            private String city;
 
             @Facebook
-            private String            state;
+            private String state;
 
             @Facebook
-            private String            country;
+            private String country;
 
             private static final long serialVersionUID = 1L;
 

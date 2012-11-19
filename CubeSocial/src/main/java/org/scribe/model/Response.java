@@ -16,9 +16,9 @@ public class Response
 {
     private static final String EMPTY = "";
 
-    private int                 code;
-    private String              body;
-    private InputStream         stream;
+    private int code;
+    private String body;
+    private InputStream stream;
     private Map<String, String> headers;
 
     Response(HttpURLConnection connection) throws IOException

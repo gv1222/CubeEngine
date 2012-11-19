@@ -39,21 +39,21 @@ import static java.util.Collections.unmodifiableList;
 public class Question extends FacebookType
 {
     @Facebook
-    private NamedFacebookType    from;
+    private NamedFacebookType from;
 
     @Facebook
-    private String               question;
+    private String question;
 
     @Facebook("created_time")
-    private String               createdTime;
+    private String createdTime;
 
     @Facebook("updated_time")
-    private String               updatedTime;
+    private String updatedTime;
 
     @Facebook
-    private List<QuestionOption> options          = new ArrayList<QuestionOption>();
+    private List<QuestionOption> options = new ArrayList<QuestionOption>();
 
-    private static final long    serialVersionUID = 1L;
+    private static final long serialVersionUID = 1L;
 
     /**
      * User who asked the question.

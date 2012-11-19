@@ -32,19 +32,19 @@ import com.restfb.Facebook;
 public class Url extends NamedFacebookType
 {
     @Facebook
-    private Long              shares;
+    private Long shares;
 
     @Facebook
-    private String            picture;
+    private String picture;
 
     @Facebook
-    private String            link;
+    private String link;
 
     @Facebook
-    private String            category;
+    private String category;
 
     @Facebook("fan_count")
-    private Long              fanCount;
+    private Long fanCount;
 
     private static final long serialVersionUID = 1L;
 

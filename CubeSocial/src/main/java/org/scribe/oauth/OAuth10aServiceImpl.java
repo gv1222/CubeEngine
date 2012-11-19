@@ -16,8 +16,8 @@ public class OAuth10aServiceImpl implements OAuthService
 {
     private static final String VERSION = "1.0";
 
-    private OAuthConfig         config;
-    private DefaultApi10a       api;
+    private OAuthConfig config;
+    private DefaultApi10a api;
 
     /**
      * Default constructor
@@ -170,7 +170,7 @@ public class OAuth10aServiceImpl implements OAuthService
 
     private static class TimeoutTuner extends RequestTuner
     {
-        private final int      duration;
+        private final int duration;
         private final TimeUnit unit;
 
         public TimeoutTuner(int duration, TimeUnit unit)

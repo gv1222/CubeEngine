@@ -39,19 +39,19 @@ public class Group extends NamedFacebookType
     private NamedFacebookType owner;
 
     @Facebook
-    private String            description;
+    private String description;
 
     @Facebook
-    private String            link;
+    private String link;
 
     @Facebook
-    private Venue             venue;
+    private Venue venue;
 
     @Facebook
-    private String            privacy;
+    private String privacy;
 
     @Facebook("updated_time")
-    private String            updatedTime;
+    private String updatedTime;
 
     private static final long serialVersionUID = 1L;
 

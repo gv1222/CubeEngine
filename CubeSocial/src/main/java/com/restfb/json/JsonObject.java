@@ -144,7 +144,7 @@ public class JsonObject
      * <code>JsonObject.NULL.equals(null)</code> returns <code>true</code>.
      * <code>JsonObject.NULL.toString()</code> returns <code>"null"</code>.
      */
-    public static final Object  NULL = new Null();
+    public static final Object NULL = new Null();
 
     /**
      * Construct an empty JsonObject.

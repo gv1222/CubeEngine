@@ -50,12 +50,12 @@ abstract class BaseFacebookClient
     /**
      * Handles {@code GET}s and {@code POST}s to the Facebook API endpoint.
      */
-    protected WebRequestor            webRequestor;
+    protected WebRequestor webRequestor;
 
     /**
      * Handles mapping Facebook response JSON to Java objects.
      */
-    protected JsonMapper              jsonMapper;
+    protected JsonMapper jsonMapper;
 
     /**
      * Knows how to map Old REST API exceptions to formal Java exception types.
@@ -65,32 +65,32 @@ abstract class BaseFacebookClient
     /**
      * Set of parameter names that user must not specify themselves, since we use these parameters internally.
      */
-    protected final Set<String>       illegalParamNames                = new HashSet<String>();
+    protected final Set<String> illegalParamNames = new HashSet<String>();
 
     /**
      * Set of API calls that can use the read-only endpoint for a performance boost.
      */
-    protected final Set<String>       readOnlyApiCalls                 = new HashSet<String>();
+    protected final Set<String> readOnlyApiCalls = new HashSet<String>();
 
     /**
      * Legacy API error response 'error_code' attribute name.
      */
-    protected static final String     LEGACY_ERROR_CODE_ATTRIBUTE_NAME = "error_code";
+    protected static final String LEGACY_ERROR_CODE_ATTRIBUTE_NAME = "error_code";
 
     /**
      * Legacy API error response 'error_msg' attribute name.
      */
-    protected static final String     LEGACY_ERROR_MSG_ATTRIBUTE_NAME  = "error_msg";
+    protected static final String LEGACY_ERROR_MSG_ATTRIBUTE_NAME = "error_msg";
 
     /**
      * Reserved access token parameter name.
      */
-    protected static final String     ACCESS_TOKEN_PARAM_NAME          = "access_token";
+    protected static final String ACCESS_TOKEN_PARAM_NAME = "access_token";
 
     /**
      * Logger.
      */
-    protected final Logger            logger                           = Logger.getLogger(getClass().getName());
+    protected final Logger logger = Logger.getLogger(getClass().getName());
 
     /**
      * Initializes this Facebook client.

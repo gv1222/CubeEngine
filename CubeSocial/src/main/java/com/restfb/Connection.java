@@ -42,10 +42,10 @@ import static java.util.Collections.unmodifiableList;
 public class Connection<T> implements Iterable<List<T>>
 {
     private FacebookClient facebookClient;
-    private Class<T>       connectionType;
-    private List<T>        data;
-    private String         previousPageUrl;
-    private String         nextPageUrl;
+    private Class<T> connectionType;
+    private List<T> data;
+    private String previousPageUrl;
+    private String nextPageUrl;
 
     /**
      * @see java.lang.Iterable#iterator()
@@ -65,7 +65,7 @@ public class Connection<T> implements Iterable<List<T>>
     protected static class ConnectionIterator<T> implements Iterator<List<T>>
     {
         private Connection<T> connection;
-        private boolean       initialPage = true;
+        private boolean initialPage = true;
 
         /**
          * Creates a new iterator over the given {@code connection}.

@@ -45,25 +45,25 @@ import static java.util.Collections.unmodifiableList;
 public class BatchRequest
 {
     @Facebook
-    private String            method;
+    private String method;
 
     @Facebook("relative_url")
-    private String            relativeUrl;
+    private String relativeUrl;
 
     @Facebook
-    private String            body;
+    private String body;
 
     @Facebook("attached_files")
-    private String            attachedFiles;
+    private String attachedFiles;
 
     @Facebook("depends_on")
-    private String            dependsOn;
+    private String dependsOn;
 
     @Facebook
-    private String            name;
+    private String name;
 
     @Facebook("omit_response_on_success")
-    private boolean           omitResponseOnSuccess;
+    private boolean omitResponseOnSuccess;
 
     @Facebook
     private List<BatchHeader> headers = new ArrayList<BatchHeader>();
@@ -118,15 +118,15 @@ public class BatchRequest
      */
     public static class BatchRequestBuilder
     {
-        private String            method         = "GET";
-        private String            relativeUrl;
-        private List<Parameter>   parameters     = new ArrayList<Parameter>();
-        private List<BatchHeader> headers        = new ArrayList<BatchHeader>();
-        private List<Parameter>   bodyParameters = new ArrayList<Parameter>();
-        private String            attachedFiles;
-        private String            dependsOn;
-        private String            name;
-        private boolean           omitResponseOnSuccess;
+        private String method = "GET";
+        private String relativeUrl;
+        private List<Parameter> parameters = new ArrayList<Parameter>();
+        private List<BatchHeader> headers = new ArrayList<BatchHeader>();
+        private List<Parameter> bodyParameters = new ArrayList<Parameter>();
+        private String attachedFiles;
+        private String dependsOn;
+        private String name;
+        private boolean omitResponseOnSuccess;
 
         /**
          * Creates a batch request builder using the provided FB endpoint.

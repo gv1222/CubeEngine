@@ -39,24 +39,24 @@ public class Comment extends FacebookType
     private CategorizedFacebookType from;
 
     @Facebook
-    private String                  message;
+    private String message;
 
     @Facebook("created_time")
-    private String                  createdTime;
+    private String createdTime;
 
     @Facebook
-    private Long                    likes;
+    private Long likes;
 
     @Facebook("like_count")
-    private Long                    likeCount;
+    private Long likeCount;
 
     @Facebook("can_remove")
-    private Boolean                 canRemove;
+    private Boolean canRemove;
 
     @Facebook("user_likes")
-    private Boolean                 userLikes;
+    private Boolean userLikes;
 
-    private static final long       serialVersionUID = 2L;
+    private static final long serialVersionUID = 2L;
 
     /**
      * User who posted the comment.

@@ -40,7 +40,7 @@ public class FacebookOAuthException extends FacebookGraphException
     /**
      * The Facebook API error code.
      */
-    private Integer           errorCode;
+    private Integer errorCode;
 
     private static final long serialVersionUID = 1L;
 

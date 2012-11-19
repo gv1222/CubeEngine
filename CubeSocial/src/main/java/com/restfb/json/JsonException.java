@@ -8,7 +8,7 @@ package com.restfb.json;
  */
 public class JsonException extends RuntimeException
 {
-    private Throwable         cause;
+    private Throwable cause;
 
     private static final long serialVersionUID = 1L;
 

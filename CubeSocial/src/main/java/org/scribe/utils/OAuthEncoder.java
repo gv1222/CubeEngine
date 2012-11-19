@@ -11,7 +11,7 @@ import org.scribe.exceptions.*;
  */
 public class OAuthEncoder
 {
-    private static String                    CHARSET = "UTF-8";
+    private static String CHARSET = "UTF-8";
     private static final Map<String, String> ENCODING_RULES;
 
     static

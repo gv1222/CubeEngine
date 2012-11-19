@@ -40,22 +40,22 @@ public class Link extends NamedFacebookType
     private NamedFacebookType from;
 
     @Facebook
-    private String            message;
+    private String message;
 
     @Facebook
-    private String            picture;
+    private String picture;
 
     @Facebook
-    private String            link;
+    private String link;
 
     @Facebook
-    private String            description;
+    private String description;
 
     @Facebook
-    private String            icon;
+    private String icon;
 
     @Facebook("created_time")
-    private String            createdTime;
+    private String createdTime;
 
     private static final long serialVersionUID = 1L;
 

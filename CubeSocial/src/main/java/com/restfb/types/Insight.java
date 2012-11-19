@@ -36,13 +36,13 @@ import java.util.List;
 public class Insight extends NamedFacebookType
 {
     @Facebook
-    private String            period;
+    private String period;
 
     @Facebook
-    private String            description;
+    private String description;
 
     @Facebook
-    private List<JsonObject>  values           = new ArrayList<JsonObject>();
+    private List<JsonObject> values = new ArrayList<JsonObject>();
 
     private static final long serialVersionUID = 1L;
 

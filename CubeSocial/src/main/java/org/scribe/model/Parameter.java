@@ -12,8 +12,8 @@ public class Parameter implements Comparable<Parameter>
 {
     private static final String UTF = "UTF8";
 
-    private final String        key;
-    private final String        value;
+    private final String key;
+    private final String value;
 
     public Parameter(String key, String value)
     {

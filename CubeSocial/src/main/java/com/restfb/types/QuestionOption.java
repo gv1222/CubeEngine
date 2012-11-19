@@ -36,18 +36,18 @@ import static com.restfb.util.DateUtils.toDateFromLongFormat;
 public class QuestionOption extends NamedFacebookType
 {
     @Facebook
-    private NamedFacebookType       from;
+    private NamedFacebookType from;
 
     @Facebook
-    private Integer                 votes;
+    private Integer votes;
 
     @Facebook
     private CategorizedFacebookType object;
 
     @Facebook("created_time")
-    private String                  createdTime;
+    private String createdTime;
 
-    private static final long       serialVersionUID = 1L;
+    private static final long serialVersionUID = 1L;
 
     /**
      * User who asked the question.
