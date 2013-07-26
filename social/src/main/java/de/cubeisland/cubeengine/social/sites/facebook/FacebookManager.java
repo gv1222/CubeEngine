@@ -1,31 +1,27 @@
 package de.cubeisland.cubeengine.social.sites.facebook;
 
-import com.restfb.DefaultFacebookClient;
-import com.restfb.FacebookClient;
-import com.restfb.exception.FacebookException;
-import de.cubeisland.cubeengine.core.Core;
-import de.cubeisland.cubeengine.core.CubeEngine;
-import de.cubeisland.cubeengine.core.bukkit.BukkitCore;
-import de.cubeisland.cubeengine.core.user.User;
-import de.cubeisland.cubeengine.social.SocialConfig;
+import java.util.HashMap;
+import java.util.Map;
+
 import org.bukkit.Location;
+
+import de.cubeisland.cubeengine.social.SocialConfig;
+
+import de.cubeisland.engine.core.CubeEngine;
+import de.cubeisland.engine.core.user.User;
 import org.scribe.builder.ServiceBuilder;
 import org.scribe.builder.api.FacebookApi;
 import org.scribe.model.Token;
 import org.scribe.model.Verifier;
 import org.scribe.oauth.OAuthService;
 
-import java.util.HashMap;
-import java.util.Map;
-import java.util.logging.Logger;
-
 public class FacebookManager
 {
     private final String APP_KEY;
     private final String APP_SECRET;
     private final String CALLBACK;
-    private final Map<User, OAuthService> services;
-    private final Map<User, FacebookUser> users; // @Quick_Wango you need to put the codes into here. new FacebookUser(service.getAccesToken(null, new Verifier("the code"))
+    private final Map<String, OAuthService> services;
+    private final Map<String, FacebookUser> users; // @Quick_Wango you need to put the codes into here. new FacebookUser(service.getAccesToken(null, new Verifier("the code"))
     private final Map<Location, String> posts; //This should be saved to the database
     private final SocialConfig config;
 
@@ -35,9 +31,9 @@ public class FacebookManager
         this.APP_SECRET = config.facebookAppSecret;
         this.CALLBACK = config.facebookCallbackURL;
 
-        this.services = new HashMap<User, OAuthService>();
+        this.services = new HashMap<String, OAuthService>();
         this.config = config;
-        this.users = new HashMap<User, FacebookUser>();
+        this.users = new HashMap<String, FacebookUser>();
         this.posts = new HashMap<Location, String>();
     }
 
@@ -57,23 +53,23 @@ public class FacebookManager
 
     public boolean hasUser(User user)
     {
-        return users.containsKey(user);
+        return users.containsKey(user.getName());
     }
 
     public FacebookUser getUser(User user)
     {
-        return users.get(user);
+        return users.get(user.getName());
     }
 
     public String getAuthURL(User user)
     {
-        services.put(user, new ServiceBuilder()
+        services.put(user.getName(), new ServiceBuilder()
             .provider(FacebookApi.class)
             .apiKey(APP_KEY)
             .apiSecret(APP_SECRET)
             .callback(CALLBACK)
             .build());
-        return services.get(user).getAuthorizationUrl(null) + "&state=" + user.getName();
+        return services.get(user.getName()).getAuthorizationUrl(null) + "&state=" + user.getName();
     }
 
     public boolean hasPost(Location loc)
@@ -93,10 +89,10 @@ public class FacebookManager
 
     public void initializeUser(User user, String code)
     {
-        CubeEngine.getLogger().info("Code: " + code);
+        CubeEngine.getLog().info("Code: {}", code);
         Verifier verifier = new Verifier(code);
-        Token token = services.get(user).getAccessToken(null, verifier);
-        CubeEngine.getLogger().info("AuthToken: " + token.getToken());
-        users.put(user, new FacebookUser(token.getToken()));
+        Token token = services.get(user.getName()).getAccessToken(null, verifier);
+        CubeEngine.getLog().info("AuthToken: {}", token.getToken());
+        users.put(user.getName(), new FacebookUser(token.getToken()));
     }
 }

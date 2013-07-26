@@ -1,10 +1,10 @@
 package de.cubeisland.cubeengine.social;
 
-import de.cubeisland.cubeengine.core.config.Configuration;
-import de.cubeisland.cubeengine.core.config.annotations.Codec;
-import de.cubeisland.cubeengine.core.config.annotations.Comment;
-import de.cubeisland.cubeengine.core.config.annotations.Option;
-import de.cubeisland.cubeengine.core.config.annotations.Revision;
+import de.cubeisland.engine.core.config.Configuration;
+import de.cubeisland.engine.core.config.annotations.Codec;
+import de.cubeisland.engine.core.config.annotations.Comment;
+import de.cubeisland.engine.core.config.annotations.Option;
+import de.cubeisland.engine.core.config.annotations.Revision;
 
 @Codec("yml")
 @Revision(1)

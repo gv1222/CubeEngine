@@ -1,8 +1,10 @@
 package org.scribe.services;
 
-import org.apache.commons.codec.binary.*;
-import org.scribe.exceptions.*;
-import java.security.*;
+import java.security.PrivateKey;
+import java.security.Signature;
+
+import com.sun.xml.internal.messaging.saaj.util.Base64; // TODO move to different encoder
+import org.scribe.exceptions.OAuthSignatureException;
 
 /**
  * A signature service that uses the RSA-SHA1 algorithm.
@@ -29,7 +31,7 @@ public class RSASha1SignatureService implements SignatureService
             Signature signature = Signature.getInstance(RSA_SHA1);
             signature.initSign(privateKey);
             signature.update(baseString.getBytes());
-            return new String(Base64.encodeBase64(signature.sign(), false));
+            return new String(Base64.encode(signature.sign()));
         }
         catch (Exception e)
         {

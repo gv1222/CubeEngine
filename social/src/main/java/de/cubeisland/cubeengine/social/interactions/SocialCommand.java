@@ -1,12 +1,11 @@
 package de.cubeisland.cubeengine.social.interactions;
 
-import de.cubeisland.cubeengine.core.command.CommandContext;
-import de.cubeisland.cubeengine.core.command.annotation.Command;
-import de.cubeisland.cubeengine.core.command.annotation.Param;
-import de.cubeisland.cubeengine.core.user.User;
 import de.cubeisland.cubeengine.social.Social;
-import de.cubeisland.cubeengine.social.sites.facebook.FacebookUser;
-import org.bukkit.entity.Player;
+
+import de.cubeisland.engine.core.command.parameterized.Param;
+import de.cubeisland.engine.core.command.parameterized.ParameterizedContext;
+import de.cubeisland.engine.core.command.reflected.Command;
+import de.cubeisland.engine.core.user.User;
 
 public class SocialCommand
 {
@@ -27,32 +26,32 @@ public class SocialCommand
                 "Code", "c"
             }, type = String.class)
     })
-    public void facebook(CommandContext context)
+    public void facebook(ParameterizedContext context)
     {
-        if (context.getSenderAsUser() == null && !context.hasNamed("User"))
+        if (!context.isSender(User.class) && !context.hasParam("User"))
         {
-            context.sendMessage("Social", "You have to include a player to log in");
+            context.sendTranslated("You have to include a player to log in");
             return;
         }
 
         User user;
-        if (context.hasNamed("User"))
+        if (context.hasParam("User"))
         {
-            user = context.getNamed("User", User.class);
+            user = context.getParam("User");
         }
         else
         {
-            user = context.getSenderAsUser();
+            user = (User)context.getSender();
         }
 
-        if (context.hasNamed("Code"))
+        if (context.hasParam("Code"))
         {
             String verifyCode = context.getString("Code");
             module.getFacebookManager().initializeUser(user, verifyCode);
             return;
         }
 
-        context.sendMessage("social", "Here is your auth address: %s", module.getFacebookManager().getAuthURL(user));
+        context.sendTranslated("Here is your auth address: %s", module.getFacebookManager().getAuthURL(user));
 
         // @Quick_Wango This is where you need to get the response
     }

@@ -1,17 +1,14 @@
 package de.cubeisland.cubeengine.social.interactions;
 
-import com.restfb.exception.FacebookException;
-import de.cubeisland.cubeengine.core.user.User;
-import de.cubeisland.cubeengine.core.user.UserManager;
-import de.cubeisland.cubeengine.social.Social;
-import org.bukkit.Location;
-import org.bukkit.Material;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
-import org.bukkit.event.block.Action;
 import org.bukkit.event.player.PlayerInteractEvent;
 
-import java.util.HashMap;
+import de.cubeisland.cubeengine.social.Social;
+
+import com.restfb.exception.FacebookException;
+import de.cubeisland.engine.core.user.User;
+import de.cubeisland.engine.core.user.UserManager;
 
 public class SocialListener implements Listener
 {
@@ -21,7 +18,7 @@ public class SocialListener implements Listener
     public SocialListener(Social module)
     {
         this.module = module;
-        this.userManager = module.getUserManager();
+        this.userManager = module.getCore().getUserManager();
     }
 
     @EventHandler
@@ -29,26 +26,26 @@ public class SocialListener implements Listener
     {
         if (module.getFacebookManager().hasPost(event.getClickedBlock().getLocation()))
         {
-            User user = userManager.getExactUser(event.getPlayer());
+            User user = userManager.getExactUser(event.getPlayer().getName());
             if (!module.getFacebookManager().hasUser(user))
             {
-                user.sendMessage("Social", "You are not logged into facebook");
+                user.sendTranslated("You are not logged into facebook");
                 return;
             }
             String postId = module.getFacebookManager().fetchPost(event.getClickedBlock().getLocation());
             try
             {
                 module.getFacebookManager().getUser(user).likeObject(postId);
-                user.sendMessage("social", "You have liked the post");
+                user.sendTranslated("You have liked the post");
 
             }
             catch (FacebookException ex)
             {
-                user.sendMessage("social", "The post could not be liked.");
-                user.sendMessage("social", "The error was: %s", ex.getLocalizedMessage());
+                user.sendTranslated("The post could not be liked.");
+                user.sendTranslated("The error was: %s", ex.getLocalizedMessage());
             }
         }
-        module.getLogger().info("fail");
+        module.getLog().info("fail");
 
     }
 
