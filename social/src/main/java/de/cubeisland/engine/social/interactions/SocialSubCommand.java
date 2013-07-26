@@ -1,10 +1,10 @@
-package de.cubeisland.cubeengine.social.interactions;
+package de.cubeisland.engine.social.interactions;
 
 import org.bukkit.Material;
 import org.bukkit.block.Block;
 import org.bukkit.block.Sign;
 
-import de.cubeisland.cubeengine.social.Social;
+import de.cubeisland.engine.social.Social;
 
 import com.restfb.exception.FacebookException;
 import de.cubeisland.engine.core.command.CommandContext;
@@ -37,11 +37,9 @@ public class SocialSubCommand
 
             try
             {
-                context.sendTranslated("Your message has been posted, id: %s", module.getFacebookManager()
-                                                                                            .getUser(user)
-                                                                                            .publishMessage(message
-                                                                                                                .toString())
-                                                                                            .getId());
+                context.sendTranslated("Your message has been posted, id: %s", module.getFacebookManager().getUser(user)
+                                                                                     .publishMessage(message.toString())
+                                                                                     .getId());
             }
             catch (FacebookException ex)
             {

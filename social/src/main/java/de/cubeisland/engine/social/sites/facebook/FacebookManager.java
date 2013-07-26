@@ -1,11 +1,11 @@
-package de.cubeisland.cubeengine.social.sites.facebook;
+package de.cubeisland.engine.social.sites.facebook;
 
 import java.util.HashMap;
 import java.util.Map;
 
 import org.bukkit.Location;
 
-import de.cubeisland.cubeengine.social.SocialConfig;
+import de.cubeisland.engine.social.SocialConfig;
 
 import de.cubeisland.engine.core.CubeEngine;
 import de.cubeisland.engine.core.user.User;

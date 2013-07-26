@@ -1,10 +1,10 @@
-package de.cubeisland.cubeengine.social.interactions;
+package de.cubeisland.engine.social.interactions;
 
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
 import org.bukkit.event.player.PlayerInteractEvent;
 
-import de.cubeisland.cubeengine.social.Social;
+import de.cubeisland.engine.social.Social;
 
 import com.restfb.exception.FacebookException;
 import de.cubeisland.engine.core.user.User;

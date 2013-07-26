@@ -1,9 +1,9 @@
-package de.cubeisland.cubeengine.social;
+package de.cubeisland.engine.social;
 
-import de.cubeisland.cubeengine.social.interactions.SocialCommand;
-import de.cubeisland.cubeengine.social.interactions.SocialListener;
-import de.cubeisland.cubeengine.social.interactions.SocialSubCommand;
-import de.cubeisland.cubeengine.social.sites.facebook.FacebookManager;
+import de.cubeisland.engine.social.interactions.SocialCommand;
+import de.cubeisland.engine.social.interactions.SocialListener;
+import de.cubeisland.engine.social.interactions.SocialSubCommand;
+import de.cubeisland.engine.social.sites.facebook.FacebookManager;
 
 import de.cubeisland.engine.core.command.CommandManager;
 import de.cubeisland.engine.core.command.reflected.ReflectedCommand;

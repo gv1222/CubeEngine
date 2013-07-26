@@ -1,6 +1,6 @@
-package de.cubeisland.cubeengine.social.interactions;
+package de.cubeisland.engine.social.interactions;
 
-import de.cubeisland.cubeengine.social.Social;
+import de.cubeisland.engine.social.Social;
 
 import de.cubeisland.engine.core.command.parameterized.Param;
 import de.cubeisland.engine.core.command.parameterized.ParameterizedContext;

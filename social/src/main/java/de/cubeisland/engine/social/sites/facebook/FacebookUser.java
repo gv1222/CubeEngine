@@ -1,4 +1,4 @@
-package de.cubeisland.cubeengine.social.sites.facebook;
+package de.cubeisland.engine.social.sites.facebook;
 
 import com.restfb.DefaultFacebookClient;
 import com.restfb.FacebookClient;

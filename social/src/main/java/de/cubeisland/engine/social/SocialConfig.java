@@ -1,4 +1,4 @@
-package de.cubeisland.cubeengine.social;
+package de.cubeisland.engine.social;
 
 import de.cubeisland.engine.core.config.Configuration;
 import de.cubeisland.engine.core.config.annotations.Codec;
