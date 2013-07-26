@@ -1,3 +1,4 @@
-name: Social
-revision: 1
-description: Link Minecraft to all social networks!
+name: ${project.name}
+description: ${project.description}
+version: ${project.version}
+source-version: ${githead.branch}-${githead.commit}
