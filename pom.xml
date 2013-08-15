@@ -50,6 +50,7 @@
     <module>hideme</module>
     <module>horselocker</module>
     <module>social</module>
+    <module>cguard</module>
   </modules>
 
   <build>

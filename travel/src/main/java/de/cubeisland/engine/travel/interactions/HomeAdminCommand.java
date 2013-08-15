@@ -19,6 +19,9 @@ package de.cubeisland.engine.travel.interactions;
 
 import java.util.Set;
 
+import org.bukkit.Location;
+import org.bukkit.event.player.PlayerTeleportEvent.TeleportCause;
+
 import de.cubeisland.engine.core.command.ArgBounds;
 import de.cubeisland.engine.core.command.CommandContext;
 import de.cubeisland.engine.core.command.CommandResult;
@@ -33,7 +36,7 @@ import de.cubeisland.engine.core.user.User;
 import de.cubeisland.engine.travel.Travel;
 import de.cubeisland.engine.travel.storage.Home;
 import de.cubeisland.engine.travel.storage.TelePointManager;
-import de.cubeisland.engine.travel.storage.TeleportPoint;
+import de.cubeisland.engine.travel.storage.TeleportPointModel;
 
 public class HomeAdminCommand extends ContainerCommand
 {
@@ -82,8 +85,13 @@ public class HomeAdminCommand extends ContainerCommand
                     return null;
                 }
             }
-
-            sender.teleport(home.getLocation());
+            Location location = home.getLocation();
+            if (location == null)
+            {
+                context.sendTranslated("&cThis home is in a world that no longer exists!");
+                return null;
+            }
+            sender.teleport(location, TeleportCause.COMMAND);
             if (home.getWelcomeMsg() != null)
             {
                 sender.sendMessage(home.getWelcomeMsg());
@@ -268,7 +276,7 @@ public class HomeAdminCommand extends ContainerCommand
             context.sendTranslated("&6%s&c is already private!", context.getString(0));
             return;
         }
-        home.setVisibility(TeleportPoint.Visibility.PRIVATE);
+        home.setVisibility(TeleportPointModel.VISIBILITY_PRIVATE);
         context.sendTranslated("&6%s&a is now private", context.getString(0));
     }
 
@@ -291,7 +299,7 @@ public class HomeAdminCommand extends ContainerCommand
             context.sendTranslated("&6%s &cis already public!", context.getString(0));
             return;
         }
-        home.setVisibility(TeleportPoint.Visibility.PUBLIC);
+        home.setVisibility(TeleportPointModel.VISIBILITY_PUBLIC);
         context.sendTranslated("&6%s&a is now public", context.getString(0));
     }
 }

@@ -26,6 +26,7 @@ import org.bukkit.World;
 import org.bukkit.entity.EntityType;
 
 import de.cubeisland.engine.core.command.CommandContext;
+import de.cubeisland.engine.core.command.HelpContext;
 import de.cubeisland.engine.core.command.parameterized.Flag;
 import de.cubeisland.engine.core.command.parameterized.Param;
 import de.cubeisland.engine.core.command.parameterized.ParameterizedContext;
@@ -62,7 +63,7 @@ public class LookupCommands
         context.sendMessage("");
         context.sendTranslated("&6Lookup&f/&6Rollback&f/&6Restore&f-&6Parameters:");
         context.sendMessage("");
-        context.sendTranslated(" &f-&6 action &7<actionType> &flike &3block-break &f(See full list below)");
+        context.sendTranslated(" &f-&6 action &7<actionType> &flike &3a block-break &f(See full list above)");
         context.sendTranslated(" &f-&6 radius &7<radius>&f or &3sel&f, &3global&f, &3player:<radius>");
         context.sendTranslated(" &f-&6 player &7<users>&f like &3p Faithcaio ");
         context.sendTranslated(" &f-&6 entity &7<entities>&f like &3e sheep");
@@ -113,17 +114,29 @@ public class LookupCommands
         @Param(names = {"limit","pagelimit"},type = Integer.class),
         @Param(names = {"page"},type = Integer.class),
     }, min = 0, max = 1)
-    // TODO param to limit query results (default ~10k) ?
     // TODO param for filter / chat / command / signtexts
     public void lookup(ParameterizedContext context)
     {
-        // TODO show all selected params of last lookup
         if (context.hasArg(0) && context.getString(0).equalsIgnoreCase("params"))
         {
             this.params(context);
         }
         else if (context.getSender() instanceof User)
         {
+            // TODO /lookup show
+            if (context.getParams().isEmpty())
+            {
+                try
+                {
+                    // TODO show all selected params of last lookup
+                    context.getCommand().help(new HelpContext(context));
+                }
+                catch (Exception e)
+                {
+                    throw new IllegalStateException(e);
+                }
+                return;
+            }
             User user = (User)context.getSender();
             LogAttachment attachment = user.attachOrGet(LogAttachment.class,this.module);
             ShowParameter show = attachment.getLastShowParameter(); // gets last OR new Showparameter
@@ -385,7 +398,7 @@ public class LookupCommands
         return true;
     }
 
-    private boolean readUser(QueryParameter params, String userString, User user)
+    private boolean readUser(QueryParameter params, String userString, User sender)
     {
         if (userString == null) return true;
         String[] users = StringUtils.explode(",", userString);
@@ -396,19 +409,19 @@ public class LookupCommands
             {
                 name = name.substring(1);
             }
-            User u = this.module.getCore().getUserManager().getUser(name, false);
-            if (u == null)
+            User user = this.module.getCore().getUserManager().getUser(name, false);
+            if (user == null)
             {
-                user.sendTranslated("&cUser &2%s&c not found!", name);
+                sender.sendTranslated("&cUser &2%s&c not found!", name);
                 return false;
             }
             if (negate)
             {
-                params.excludeUser(u.key);
+                params.excludeUser(user.getId());
             }
             else
             {
-                params.includeUser(u.key);
+                params.includeUser(user.getId());
             }
         }
         return true;

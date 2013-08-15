@@ -5,11 +5,6 @@ import de.cubeisland.engine.social.interactions.SocialListener;
 import de.cubeisland.engine.social.interactions.SocialSubCommand;
 import de.cubeisland.engine.social.sites.facebook.FacebookManager;
 
-import de.cubeisland.engine.core.command.CommandManager;
-import de.cubeisland.engine.core.command.reflected.ReflectedCommand;
-import de.cubeisland.engine.core.config.Configuration;
-import de.cubeisland.engine.core.module.Module;
-
 public class Social extends Module
 {
     public FacebookManager facebookManager;

@@ -19,17 +19,17 @@ package de.cubeisland.engine.shout.announce;
 
 import java.io.BufferedWriter;
 import java.io.File;
-import java.io.FileInputStream;
-import java.io.FileNotFoundException;
-import java.io.FileWriter;
-import java.io.FilenameFilter;
 import java.io.IOException;
-import java.nio.charset.Charset;
+import java.nio.channels.FileChannel;
+import java.nio.file.DirectoryStream;
+import java.nio.file.Files;
+import java.nio.file.Path;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collection;
 import java.util.HashMap;
 import java.util.HashSet;
+import java.util.Iterator;
 import java.util.LinkedHashMap;
 import java.util.LinkedList;
 import java.util.List;
@@ -39,8 +39,8 @@ import java.util.Queue;
 import java.util.Set;
 import java.util.concurrent.ConcurrentHashMap;
 
+import de.cubeisland.engine.core.Core;
 import de.cubeisland.engine.core.config.Configuration;
-import de.cubeisland.engine.core.filesystem.FileExtentionFilter;
 import de.cubeisland.engine.core.filesystem.FileUtil;
 import de.cubeisland.engine.core.i18n.I18n;
 import de.cubeisland.engine.core.i18n.Language;
@@ -54,14 +54,15 @@ import de.cubeisland.engine.shout.announce.announcer.FixedCycleTask;
 import de.cubeisland.engine.shout.announce.announcer.MessageTask;
 import de.cubeisland.engine.shout.announce.receiver.Receiver;
 import de.cubeisland.engine.shout.announce.receiver.UserReceiver;
-
 import org.apache.commons.lang.Validate;
 import org.slf4j.Logger;
+import sun.swing.BakedArrayList;
 
-import static de.cubeisland.engine.core.filesystem.FileExtentionFilter.TXT;
+import static de.cubeisland.engine.core.filesystem.FileExtensionFilter.TXT;
+import static de.cubeisland.engine.core.filesystem.FileExtensionFilter.YAML;
 
 /**
- * Class to manage all the dynamicAnnouncements and their receivers
+ * Class to manage all the announcements and their receivers
  */
 public class AnnouncementManager
 {
@@ -71,22 +72,22 @@ public class AnnouncementManager
     private final Logger logger;
     private final Shout module;
     private final Announcer announcer;
-    private final File announcementFolder;
+    private final Path announcementFolder;
     private Map<String, Receiver> receivers;
     private Map<String, Announcement> dynamicAnnouncements;
     private Map<String, Announcement> fixedCycleAnnouncements;
     private final I18n i18n;
     private MessageOfTheDay motd;
 
-    public AnnouncementManager(Shout module, File announcementFolder)
+    public AnnouncementManager(Shout module, Path announcementFolder)
     {
         this.module = module;
         this.logger = module.getLog();
         this.i18n = module.getCore().getI18n();
         this.announcer = module.getAnnouncer();
-        this.receivers = new ConcurrentHashMap<String, Receiver>();
-        this.dynamicAnnouncements = new HashMap<String, Announcement>();
-        this.fixedCycleAnnouncements = new LinkedHashMap<String, Announcement>();
+        this.receivers = new ConcurrentHashMap<>();
+        this.dynamicAnnouncements = new HashMap<>();
+        this.fixedCycleAnnouncements = new LinkedHashMap<>();
         this.announcementFolder = announcementFolder;
     }
 
@@ -99,17 +100,17 @@ public class AnnouncementManager
      */
     public List<Announcement> getAnnouncements(String receiver)
     {
-        return new ArrayList<Announcement>(this.receivers.get(receiver).getAllAnnouncements());
+        return new ArrayList<>(this.receivers.get(receiver).getAllAnnouncements());
     }
 
     /**
-     * Get all the dynamicAnnouncements
+     * Get all the announcements registered
      *
-     * @return All dynamicAnnouncements
+     * @return All announcements currently registered
      */
-    public Collection<Announcement> getDynamicAnnouncements()
+    public Collection<Announcement> getAllAnnouncements()
     {
-        Collection<Announcement> announcements = new HashSet<Announcement>();
+        Collection<Announcement> announcements = new HashSet<>();
         announcements.addAll(this.dynamicAnnouncements.values());
         announcements.addAll(this.fixedCycleAnnouncements.values());
         return announcements;
@@ -119,11 +120,11 @@ public class AnnouncementManager
      * Get announcement by name
      *
      * @param   name    Name of the announcement
-     * @return The announcement with this name, or null if not exist
+     * @return  The announcement with this name, or null if not exist
      */
     public Announcement getAnnouncement(String name)
     {
-        Map<String, Announcement> announcements = new HashMap<String, Announcement>();
+        Map<String, Announcement> announcements = new HashMap<>();
         announcements.putAll(this.dynamicAnnouncements);
         announcements.putAll(this.fixedCycleAnnouncements);
         name = name.toLowerCase(Locale.ENGLISH);
@@ -132,7 +133,7 @@ public class AnnouncementManager
         {
             Set<String> matches = Match.string().getBestMatches(name, announcements.keySet(), 3);
 
-            if (matches.size() == 1)
+            if (matches.size() > 0)
             {
                 announcement = announcements.get(matches.iterator().next());
             }
@@ -148,7 +149,8 @@ public class AnnouncementManager
      */
     public boolean hasAnnouncement(String name)
     {
-        return this.dynamicAnnouncements.containsKey(name.toLowerCase(Locale.ENGLISH)) || this.fixedCycleAnnouncements.containsKey(name.toLowerCase(Locale.ENGLISH));
+        return this.dynamicAnnouncements.containsKey(name.toLowerCase(Locale.ENGLISH))
+            || this.fixedCycleAnnouncements.containsKey(name.toLowerCase(Locale.ENGLISH));
     }
 
     /**
@@ -158,7 +160,7 @@ public class AnnouncementManager
      * @param   receiver	The user to get the gcd of their dynamicAnnouncements.
      * @return	The gcd of the users dynamicAnnouncements.
      */
-    public long getGreatestCommonDivisor(Receiver receiver)
+    public long getGCD(Receiver receiver)
     {
         List<Announcement> tmpAnnouncements = this.getAnnouncements(receiver.getName());
         long[] delays;
@@ -175,16 +177,16 @@ public class AnnouncementManager
         {
             delays[x] = tmpAnnouncements.get(x).getDelay();
         }
-        return this.greatestCommonDivisor(delays);
+        return this.gcd(delays);
     }
 
     /**
-     * Get the greatest common divisor of a list of integers.
+     * Calculate the greatest common divisor of a list of integers.
      *
      * @param	integers	The list to get the gcd from.
      * @return	gcd of all the integers in the list.
      */
-    private long greatestCommonDivisor(long[] integers)
+    private long gcd(long[] integers)
     {
         long result = integers[0];
 
@@ -218,14 +220,14 @@ public class AnnouncementManager
      */
     public void initializeReceiver(Receiver receiver)
     {
-        Queue<Announcement> messages = new LinkedList<Announcement>();
+        Queue<Announcement> messages = new LinkedList<>();
 
         if (this.motd != null)
         {
             receiver.setMOTD(this.motd);
         }
 
-        // Load what dynamicAnnouncements should be displayed to the user
+        // Load what dynamic time announcements should be displayed to the user
         for (Announcement announcement : this.dynamicAnnouncements.values())
         {
             if (receiver.couldReceive(announcement))
@@ -235,13 +237,15 @@ public class AnnouncementManager
         }
 
         if (messages.isEmpty())
+        {
             return;
+        }
 
         receiver.setAllAnnouncements(messages);
 
         this.receivers.put(receiver.getName(), receiver);
         this.announcer.scheduleDynamicTask(receiver.getName(),
-            new MessageTask(this.module.getCore().getTaskManager(), receiver), this.getGreatestCommonDivisor(receiver));
+            new MessageTask(this.module.getCore().getTaskManager(), receiver), this.getGCD(receiver));
     }
 
     /**
@@ -300,106 +304,124 @@ public class AnnouncementManager
         if (announcement.hasFixedCycle())
         {
             this.fixedCycleAnnouncements.put(announcement.getName().toLowerCase(Locale.ENGLISH), announcement);
-            this.announcer.scheduleFixedTask(announcement.getName().toLowerCase(Locale.ENGLISH), new FixedCycleTask(this.module, announcement), announcement.getDelay());
+            this.announcer.scheduleFixedTask(announcement.getName().toLowerCase(Locale.ENGLISH),
+                                             new FixedCycleTask(this.module.getCore().getUserManager(),
+                                                                this.module.getCore().getTaskManager(), announcement),
+                                             announcement.getDelay());
         }
         else
         {
             this.dynamicAnnouncements.put(announcement.getName().toLowerCase(Locale.ENGLISH), announcement);
+            for (Receiver receiver : this.receivers.values())
+            {
+                if (receiver.couldReceive(announcement))
+                {
+                    this.announcer.cancelDynamicTask(receiver.getName());
+                    receiver.addAnnouncement(announcement);
+                    this.announcer.scheduleDynamicTask(receiver.getName(),
+                                                       new MessageTask(this.module.getCore().getTaskManager(), receiver),
+                                                       this.getGCD(receiver));
+                }
+            }
         }
     }
 
     /**
-     * Load dynamicAnnouncements
+     * Load announcements
      *
-     * @param	announcementFolder	The folder to load the dynamicAnnouncements from
+     * @param	announcementFolder	The folder to load the announcements from
      */
-    public void loadAnnouncements(File announcementFolder)
+    public void loadAnnouncements(Path announcementFolder)
     {
-        File[] files = announcementFolder.listFiles();
-        if (files == null)
+        try (DirectoryStream<Path> directory = Files.newDirectoryStream(announcementFolder))
         {
-            this.logger.error("Reading the announcement folder failed! No dynamicAnnouncements will be loaded");
-            return;
-        }
-
-        List<File> announcementFolders = new ArrayList<File>();
-        // filter out files
-        for (File file : files)
-        {
-            if (file.isDirectory())
+            boolean motdLoaded = false;
+            for (Path path : directory)
             {
-                announcementFolders.add(file);
-            }
-        }
-
-        boolean motdLoaded = false;
-        for (File folder : announcementFolders)
-        {
-            if (!motdLoaded && folder.getName().equalsIgnoreCase(MOTD_FOLDER_NAME))
-            {
-                // this might be the message of the day
+                if (!Files.isDirectory(path))
+                {
+                    continue;
+                }
+                if (!motdLoaded && path.getFileName().toString().equalsIgnoreCase(MOTD_FOLDER_NAME))
+                {
+                    // this might be the message of the day
+                    try
+                    {
+                        this.logger.debug("Loading the MOTD");
+                        this.motd = this.loadMotd(path);
+                        motdLoaded = true;
+                        continue;
+                    }
+                    catch (ShoutException e)
+                    {
+                        this.logger.debug("An announcement that looked like the MOTD failed to load.", e);
+                    }
+                }
+                this.logger.debug("Loading announcement {}", path);
                 try
                 {
-                    this.motd = this.loadMotd(folder);
-                    motdLoaded = true;
-                    continue;
+                    this.addAnnouncement(this.loadAnnouncement(path));
                 }
                 catch (ShoutException e)
                 {
-                    this.logger.debug("An announcement that looked like the MOTD failed to load.", e);
-                }
-            }
-            if (folder.isDirectory())
-            {
-                this.logger.debug("Loading announcement {}", folder.getName());
-                try
-                {
-                    this.addAnnouncement(this.loadAnnouncement(folder));
-                }
-                catch (ShoutException ex)
-                {
-                    this.logger.warn("There was an error loading the announcement: {}", folder.getName());
-                    this.logger.debug("The error message was: ", ex);
+                    this.logger.warn("There was an error loading the announcement: {}", path);
+                    this.logger.debug(e.getLocalizedMessage(), e);
                 }
             }
         }
-
+        catch (IOException e)
+        {
+            this.logger.warn("Reading the announcement folder failed! No dynamic announcements will be loaded!", e);
+        }
     }
 
-    public MessageOfTheDay loadMotd(File announcementFolder) throws ShoutException
+    public MessageOfTheDay loadMotd(Path announcementFolder) throws ShoutException
     {
-        Announcement motd = this.loadAnnouncement(announcementFolder);
-        return new MessageOfTheDay(motd);
+        return new MessageOfTheDay(this.loadAnnouncement(announcementFolder));
     }
 
     /**
-     * Load an specific announcement
+     * Load a specific announcement
      *
      * @param announcementFolder the folder to load the announcement from
      * @throws ShoutException if folder is not an folder or don't contain
      *                        required information
      */
-    public Announcement loadAnnouncement(File announcementFolder) throws ShoutException
+    public Announcement loadAnnouncement(Path announcementFolder) throws ShoutException
     {
-        if (announcementFolder.isFile())
+        if (Files.isRegularFile(announcementFolder))
         {
             throw new ShoutException("Tried to load an announcement that was a file!");
         }
 
-        File metaFile = new File(announcementFolder, META_FILE_NAME);
-        if (!metaFile.exists())
+        Path metaFile = announcementFolder.resolve(META_FILE_NAME);
+        if (!Files.exists(metaFile))
         {
-            File[] potentialMetaFiles = announcementFolder.listFiles((FilenameFilter)FileExtentionFilter.YAML);
-            if (potentialMetaFiles.length > 0)
+            try (DirectoryStream<Path> directory = Files.newDirectoryStream(announcementFolder, YAML))
             {
-                if (!potentialMetaFiles[0].renameTo(metaFile))
+                Iterator<Path> directoryIterator = directory.iterator();
+                if (directoryIterator.hasNext())
                 {
-                    throw new ShoutException("No meta file to announcement: " + announcementFolder.getName());
+                    Path alternative = directoryIterator.next();
+                    try
+                    {
+                        Files.move(alternative, metaFile);
+                    }
+                    catch (IOException e)
+                    {
+                        this.module.getLog().info("Failed to rename the meta file, using it anyway: {}", alternative.getFileName());
+                        this.module.getLog().debug(e.getLocalizedMessage(), e);
+                        metaFile = alternative;
+                    }
+                }
+                else
+                {
+                    throw new ShoutException("No meta file to announcement: " + announcementFolder);
                 }
             }
-            else
+            catch (IOException e)
             {
-                throw new ShoutException("No meta file to announcement: " + announcementFolder.getName());
+                throw new ShoutException("Failed to search for alternative meta files in the the announcement folder " + announcementFolder, e);
             }
         }
 
@@ -415,51 +437,59 @@ public class AnnouncementManager
             throw new ShoutException("The delay was not valid", e);
         }
 
-        Map<Locale, String[]> messages = new HashMap<Locale, String[]>();
+        Map<Locale, String[]> messages = new HashMap<>();
 
-        File[] messageFiles = announcementFolder.listFiles((FilenameFilter)TXT);
-        if (messageFiles != null)
+        try (DirectoryStream<Path> directory = Files.newDirectoryStream(announcementFolder, TXT))
         {
-            for (File langFile : messageFiles)
+            for (Path langFile : directory)
             {
-                String name = StringUtils.stripFileExtension(langFile.getName());
+                String name = StringUtils.stripFileExtension(langFile.getFileName().toString());
                 if (name.isEmpty())
                 {
                     continue;
                 }
                 Language language;
                 Set<Language> langs = this.i18n.searchLanguages(name);
-                if (langs.size() != 1)
+                if (langs.size() < 1)
                 {
+                    this.module.getLog().info("Tried to load a lang-file with an invalid locale: {}", name);
                     continue;
                 }
 
                 language = langs.iterator().next();
-                try
+                try (FileChannel in = FileChannel.open(langFile))
                 {
-                    String content = FileUtil.readToString(new FileInputStream(langFile), Charset.forName("UTF-8"));
+                    String content = FileUtil.readToString(in, Core.CHARSET);
                     if (content != null)
                     {
                         content = content.replace("\r\n", "\n").replace('\r', '\n').trim();
                         messages.put(language.getLocale(), StringUtils.explode("\n", content));
                     }
                 }
-                catch (FileNotFoundException ignore)
-                {}
+                catch (IOException e)
+                {
+                    this.module.getLog().info("Failed to load an announcement file: {}", langFile);
+                    this.module.getLog().debug(e.getLocalizedMessage(), e);
+                }
             }
         }
+        catch (IOException e)
+        {
+            this.module.getLog().warn("Failed to read an announcement folder: {}", announcementFolder);
+            this.module.getLog().debug(e.getLocalizedMessage(), e);
+        }
+
 
         this.logger.trace("Languages: {}", messages.keySet().toString());
         this.logger.trace("Worlds: {}", config.worlds);
         this.logger.trace("Delay(in milliseconds): {}", delay);
         this.logger.trace("Permission: {}", config.permNode);
-        this.logger.trace("Group: {}", config.group);
         this.logger.trace("FixedCycle: {}", config.fixedCycle);
 
         try
         {
             return new Announcement(
-                announcementFolder.getName().toLowerCase(Locale.US),
+                announcementFolder.getFileName().toString().toLowerCase(Locale.US),
                 config.permNode,
                 config.worlds,
                 messages,
@@ -515,49 +545,33 @@ public class AnnouncementManager
      * This will not load the announcement into the plugin
      *
      */
-    public void createAnnouncement(String name, Locale locale, String message, String delay, String world, String group, String permNode, boolean fc) throws IOException, IllegalArgumentException
+    public Announcement createAnnouncement(String name, Locale locale, String message, String delay, String world, String permNode, boolean fc) throws IOException, IllegalArgumentException
     {
         Validate.notEmpty(name);
         Validate.notNull(locale);
         Validate.notEmpty(message);
         Validate.notEmpty(delay);
         Validate.notEmpty(world);
-        Validate.notEmpty(group);
         Validate.notEmpty(permNode);
 
-        File folder = new File(this.announcementFolder, name);
-        if (!folder.mkdirs())
-        {
-            throw new IOException("Failed to create the announcement folder for '" + name + "'");
-        }
+        Path folder = this.announcementFolder.resolve(name);
+
+        Files.createDirectories(folder);
 
         AnnouncementConfig config = Configuration.createInstance(AnnouncementConfig.class);
-        config.setFile(new File(folder, META_FILE_NAME));
+        config.setPath(folder.resolve(META_FILE_NAME));
         config.delay = delay;
         config.worlds = Arrays.asList(world);
         config.permNode = permNode;
-        config.group = group;
         config.fixedCycle = fc;
         config.save();
 
-        BufferedWriter bw = new BufferedWriter(new FileWriter(new File(folder, locale.toString() + ".txt")));
-        try
+        try (BufferedWriter writer = Files.newBufferedWriter(folder.resolve(locale.toString() + ".txt"), Core.CHARSET))
         {
-            bw.write(message);
+            writer.write(message);
         }
-        catch (IOException e)
-        {
-            bw.close();
-            throw e;
-        }
-        finally
-        {
-            bw.close();
-        }
-    }
-
-    public Shout getModule()
-    {
-        return module;
+        Map<Locale, String[]> messages = new HashMap<>();
+        messages.put(locale, StringUtils.explode("\n", message));
+        return new Announcement(name,permNode, Arrays.asList(world), messages, parseDelay(delay), fc);
     }
 }
