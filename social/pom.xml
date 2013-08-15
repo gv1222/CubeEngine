@@ -29,41 +29,4 @@
       <version>1.6.12</version>
   </dependency>
   </dependencies>
-
-  <build>
-    <plugins>
-      <plugin>
-        <groupId>org.apache.maven.plugins</groupId>
-        <artifactId>maven-shade-plugin</artifactId>
-        <configuration>
-          <minimizeJar>false</minimizeJar>
-          <artifactSet>
-            <includes>
-              <include>org.scribe:scribe</include>
-              <include>com.restfb:restfb</include>
-            </includes>
-          </artifactSet>
-          <relocations>
-            <relocation>
-              <pattern>org.scribe</pattern>
-              <shadedPattern>${externalPackage}.scribe</shadedPattern>
-            </relocation>
-            <relocation>
-              <pattern>com.restfb</pattern>
-              <shadedPattern>${externalPackage}.restfb</shadedPattern>
-            </relocation>
-          </relocations>
-          <minimizeJar>true</minimizeJar>
-        </configuration>
-        <executions>
-          <execution>
-            <phase>package</phase>
-            <goals>
-              <goal>shade</goal>
-            </goals>
-          </execution>
-        </executions>
-      </plugin>
-    </plugins>
-  </build>
 </project>
