@@ -15,7 +15,7 @@
  * You should have received a copy of the GNU General Public License
  * along with CubeEngine.  If not, see <http://www.gnu.org/licenses/>.
  */
-package de.cubeisland.engine.core.recipe.ingredients;
+package de.cubeisland.engine.core.recipe.ingredient.condition;
 
 
 import org.bukkit.inventory.ItemStack;
@@ -28,6 +28,7 @@ public class AndCondition extends IngredientCondition
 
     public AndCondition(IngredientCondition left, IngredientCondition right)
     {
+        // TODO handle impossible e.g. search for MaterialConditions combined with and
         this.left = left;
         this.right = right;
     }

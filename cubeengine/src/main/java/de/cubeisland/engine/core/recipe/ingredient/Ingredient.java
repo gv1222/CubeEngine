@@ -15,7 +15,7 @@
  * You should have received a copy of the GNU General Public License
  * along with CubeEngine.  If not, see <http://www.gnu.org/licenses/>.
  */
-package de.cubeisland.engine.core.recipe.ingredients;
+package de.cubeisland.engine.core.recipe.ingredient;
 
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.permissions.Permissible;
@@ -45,9 +45,6 @@ public class Ingredient
 
 
     // Ingredient Conditions
-    // - data ranges
-    // - data bit set (potions)
-    // - amount
     // - itemname / itemlore
     // - leathercolor rgb
     // - bookitem title / author / pages

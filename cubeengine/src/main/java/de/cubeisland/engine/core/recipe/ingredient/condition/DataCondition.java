@@ -15,12 +15,14 @@
  * You should have received a copy of the GNU General Public License
  * along with CubeEngine.  If not, see <http://www.gnu.org/licenses/>.
  */
-package de.cubeisland.engine.core.recipe.ingredients;
+package de.cubeisland.engine.core.recipe.ingredient.condition;
 
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.permissions.Permissible;
 
-// TODO changes with 1.7? MaterialData?
+/**
+ * Actually checks the durability (which is the materialData somehow)
+ */
 public class DataCondition extends IngredientCondition
 {
     private enum Type
@@ -73,13 +75,13 @@ public class DataCondition extends IngredientCondition
         switch (this.type)
         {
             case EXACT:
-                return itemStack.getData().getData() == data;
+                return itemStack.getDurability() == data;
             case MORE:
-                return itemStack.getData().getData() > data;
+                return itemStack.getDurability() > data;
             case LESS:
-                return itemStack.getData().getData() < data;
+                return itemStack.getDurability() < data;
             case BIT:
-                return (itemStack.getData().getData() & data) == data;
+                return (itemStack.getDurability() & data) == data;
         }
         throw new IllegalStateException();
     }

@@ -15,35 +15,23 @@
  * You should have received a copy of the GNU General Public License
  * along with CubeEngine.  If not, see <http://www.gnu.org/licenses/>.
  */
-package de.cubeisland.engine.core.recipe.ingredients;
+package de.cubeisland.engine.core.recipe.ingredient.condition;
 
-import org.bukkit.Material;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.permissions.Permissible;
 
-public class MaterialCondition extends IngredientCondition
+public class NotCondition extends IngredientCondition
 {
-    private Material material;
+    private IngredientCondition not;
 
-    public MaterialCondition(Material material)
+    public NotCondition(IngredientCondition not)
     {
-        super(); // MaterialCondition is needed
-        this.material = material;
-    }
-
-    public static IngredientCondition of(Material... materials)
-    {
-        IngredientCondition condition = new MaterialCondition(materials[0]);
-        for (int i = 1; i < materials.length; i++)
-        {
-            condition = condition.or(new MaterialCondition(materials[i]));
-        }
-        return condition;
+        this.not = not;
     }
 
     @Override
     protected boolean process(Permissible permissible, ItemStack itemStack)
     {
-        return itemStack.getType() == this.material;
+        return !not.check(permissible, itemStack);
     }
 }
