@@ -15,12 +15,13 @@
  * You should have received a copy of the GNU General Public License
  * along with CubeEngine.  If not, see <http://www.gnu.org/licenses/>.
  */
-package de.cubeisland.engine.core.recipe.condition.ingredients;
+package de.cubeisland.engine.core.recipe.ingredients;
 
 import java.util.HashMap;
 import java.util.Map;
 
 import org.bukkit.inventory.ItemStack;
+import org.bukkit.permissions.Permissible;
 
 import de.cubeisland.engine.core.util.math.BlockVector2;
 
@@ -65,7 +66,7 @@ public class ShapedIngredients
         return this;
     }
 
-    protected final boolean check(BlockVector2 size, ItemStack[] matrix)
+    protected final boolean check(Permissible permissible, BlockVector2 size, ItemStack[] matrix)
     {
         if (size.equals(this.size))
         {
@@ -73,7 +74,7 @@ public class ShapedIngredients
             {
                 for (int z = 0; z <= 3 - size.z; x++)
                 {
-                    if (this.checkShape(x,z,matrix))
+                    if (this.checkShape(permissible, x, z, matrix))
                     {
                         return true;
                     }
@@ -84,7 +85,7 @@ public class ShapedIngredients
         return false;
     }
 
-    private boolean checkShape(int xOffset, int zOffset, ItemStack[] matrix)
+    private boolean checkShape(Permissible permissible, int xOffset, int zOffset, ItemStack[] matrix)
     {
         for (int x = 0; x < this.size.x - 1; x++)
         {
@@ -92,7 +93,7 @@ public class ShapedIngredients
             {
                 ItemStack item = matrix[3 * (xOffset + x) + zOffset + z];
                 Ingredient ingredient = this.getIngredientAt(xOffset, zOffset);
-                if (item == null && ingredient != null || ingredient == null || !ingredient.check(item))
+                if (item == null && ingredient != null || ingredient == null || !ingredient.check(permissible, item))
                 {
                     return false;
                 }

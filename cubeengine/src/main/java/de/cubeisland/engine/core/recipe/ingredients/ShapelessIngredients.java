@@ -15,11 +15,12 @@
  * You should have received a copy of the GNU General Public License
  * along with CubeEngine.  If not, see <http://www.gnu.org/licenses/>.
  */
-package de.cubeisland.engine.core.recipe.condition.ingredients;
+package de.cubeisland.engine.core.recipe.ingredients;
 
 import java.util.List;
 
 import org.bukkit.inventory.ItemStack;
+import org.bukkit.permissions.Permissible;
 
 import org.apache.commons.lang.Validate;
 
@@ -30,13 +31,17 @@ public class ShapelessIngredients
     protected ShapelessIngredients(Ingredient... ingredients)
     {
         super(); // No perm. allowed. Ingredients are ABSOLUTELY NEEDED!
+        for (Ingredient ingredient : ingredients)
+        {
+            this.addIngredient(ingredient);
+        }
     }
 
-    protected final boolean check(ItemStack[] matrix)
+    protected final boolean check(Permissible permissible, ItemStack[] matrix)
     {
         for (Ingredient ingredient : ingredients)
         {
-            int index = ingredient.find(matrix);
+            int index = ingredient.find(permissible, matrix);
             if (index == -1)
             {
                 return false;

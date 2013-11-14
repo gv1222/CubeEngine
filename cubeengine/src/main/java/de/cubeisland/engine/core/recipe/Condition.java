@@ -15,25 +15,23 @@
  * You should have received a copy of the GNU General Public License
  * along with CubeEngine.  If not, see <http://www.gnu.org/licenses/>.
  */
-package de.cubeisland.engine.core.recipe.condition;
+package de.cubeisland.engine.core.recipe;
 
 import org.bukkit.entity.HumanEntity;
 import org.bukkit.event.inventory.PrepareItemCraftEvent;
 
-import de.cubeisland.engine.core.recipe.Recipe;
-
-public abstract class RecipeCondition
+public abstract class Condition
 {
     private final String conditionPermission;
     private final boolean permIgnoreCondition;
 
-    protected RecipeCondition(String perm, boolean permIgnores)
+    protected Condition(String perm, boolean permIgnores)
     {
         this.conditionPermission = perm;
         this.permIgnoreCondition = permIgnores;
     }
 
-    protected RecipeCondition()
+    protected Condition()
     {
         this(null, false);
     }

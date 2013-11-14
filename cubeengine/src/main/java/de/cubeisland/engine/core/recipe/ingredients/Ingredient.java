@@ -15,28 +15,36 @@
  * You should have received a copy of the GNU General Public License
  * along with CubeEngine.  If not, see <http://www.gnu.org/licenses/>.
  */
-package de.cubeisland.engine.core.recipe.condition.ingredients;
+package de.cubeisland.engine.core.recipe.ingredients;
 
 import org.bukkit.inventory.ItemStack;
+import org.bukkit.permissions.Permissible;
 
 /**
  * A crafting ingredient
  */
 public class Ingredient
 {
-    public int find(ItemStack[] matrix)
+    public int find(Permissible permissible, ItemStack[] matrix)
     {
-        // TODO implement me
+        for (int i = 0; i < matrix.length; i++)
+        {
+            if (this.check(permissible, matrix[i]))
+            {
+                return i;
+            }
+        }
         return -1;
     }
 
-    public boolean check(ItemStack itemStack)
+    public boolean check(Permissible permissible, ItemStack itemStack)
     {
         // TODO implement me
         return false;
     }
+
+
     // Ingredient Conditions
-    // - material
     // - data ranges
     // - data bit set (potions)
     // - amount
