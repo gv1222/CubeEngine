@@ -22,9 +22,6 @@ import org.bukkit.permissions.Permissible;
 
 public abstract class IngredientCondition
 {
-    private final String conditionPermission;
-    private final boolean permIgnoreCondition;
-
     public AndCondition and(IngredientCondition condition)
     {
         return new AndCondition(this, condition);
@@ -40,41 +37,10 @@ public abstract class IngredientCondition
         return new NotCondition(this);
     }
 
-    protected IngredientCondition(String perm, boolean permIgnores)
+    public IngredientCondition perm(String perm, boolean need)
     {
-        this.conditionPermission = perm;
-        this.permIgnoreCondition = permIgnores;
+        return this.and(new PermissionCondition(perm, need));
     }
 
-    protected IngredientCondition()
-    {
-        this(null, false);
-    }
-
-    public final boolean check(Permissible permissible, ItemStack itemStack)
-    {
-        if (needsCheck(permissible))
-        {
-            return process(permissible, itemStack);
-        } // else condition is ignored
-        return true;
-    }
-
-    protected abstract boolean process(Permissible permissible, ItemStack itemStack);
-
-    private boolean needsCheck(Permissible permissible)
-    {
-        if (conditionPermission != null)
-        {
-            if (permissible.hasPermission(this.conditionPermission))
-            {
-                return !permIgnoreCondition;
-            }
-            else
-            {
-                return permIgnoreCondition;
-            }
-        }
-        return true;
-    }
+    protected abstract boolean check(Permissible permissible, ItemStack itemStack);
 }

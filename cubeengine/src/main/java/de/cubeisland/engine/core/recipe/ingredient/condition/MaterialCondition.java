@@ -19,6 +19,7 @@ package de.cubeisland.engine.core.recipe.ingredient.condition;
 
 import org.bukkit.Material;
 import org.bukkit.inventory.ItemStack;
+import org.bukkit.material.MaterialData;
 import org.bukkit.permissions.Permissible;
 
 public class MaterialCondition extends IngredientCondition
@@ -41,8 +42,19 @@ public class MaterialCondition extends IngredientCondition
         return condition;
     }
 
+    /**
+     * Exact Material & Data
+     *
+     * @param materialData
+     * @return
+     */
+    public static IngredientCondition of(MaterialData materialData)
+    {
+        return new MaterialCondition(materialData.getItemType()).and(DataCondition.exact(materialData.getData()));
+    }
+
     @Override
-    protected boolean process(Permissible permissible, ItemStack itemStack)
+    protected boolean check(Permissible permissible, ItemStack itemStack)
     {
         return itemStack.getType() == this.material;
     }

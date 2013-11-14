@@ -32,7 +32,7 @@ public class OrCondition extends IngredientCondition
     }
 
     @Override
-    protected boolean process(Permissible permissible, ItemStack itemStack)
+    protected boolean check(Permissible permissible, ItemStack itemStack)
     {
         return left.check(permissible, itemStack) || right.check(permissible, itemStack);
     }
