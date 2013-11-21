@@ -17,10 +17,15 @@
  */
 package de.cubeisland.engine.core.recipe.ingredient.result;
 
+import java.util.Set;
+
+import org.bukkit.Material;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.permissions.Permissible;
 
-public class ItemStackResult extends IngredientResult
+import de.cubeisland.engine.core.recipe.ingredient.condition.MaterialProvider;
+
+public class ItemStackResult extends IngredientResult implements MaterialProvider
 {
     private ItemStack result;
 
@@ -35,6 +40,15 @@ public class ItemStackResult extends IngredientResult
         return this.result.clone();
     }
 
+
     // TODO more options
     // - amount
+
+
+    @Override
+    public Set<Material> getMaterials(Set<Material> set)
+    {
+        set.add(result.getType());
+        return set;
+    }
 }

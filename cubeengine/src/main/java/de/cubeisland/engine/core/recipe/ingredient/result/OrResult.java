@@ -17,10 +17,15 @@
  */
 package de.cubeisland.engine.core.recipe.ingredient.result;
 
+import java.util.Set;
+
+import org.bukkit.Material;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.permissions.Permissible;
 
-public class OrResult extends IngredientResult
+import de.cubeisland.engine.core.recipe.ingredient.condition.MaterialProvider;
+
+public class OrResult extends IngredientResult implements MaterialProvider
 {
     private IngredientResult result1;
     private IngredientResult result2;
@@ -43,5 +48,19 @@ public class OrResult extends IngredientResult
             return result2.getResult(permissible, itemStack);
         }
         return null;
+    }
+
+    @Override
+    public Set<Material> getMaterials(Set<Material> set)
+    {
+        if (result1 instanceof MaterialProvider)
+        {
+            set = ((MaterialProvider)result1).getMaterials(set);
+        }
+        if (result2 instanceof MaterialProvider)
+        {
+            set = ((MaterialProvider)result2).getMaterials(set);
+        }
+        return set;
     }
 }

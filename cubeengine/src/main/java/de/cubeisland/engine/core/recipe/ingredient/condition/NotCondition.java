@@ -17,10 +17,13 @@
  */
 package de.cubeisland.engine.core.recipe.ingredient.condition;
 
+import java.util.Set;
+
+import org.bukkit.Material;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.permissions.Permissible;
 
-public class NotCondition extends IngredientCondition
+public class NotCondition extends IngredientCondition implements MaterialProvider
 {
     private IngredientCondition not;
 
@@ -33,5 +36,15 @@ public class NotCondition extends IngredientCondition
     public boolean check(Permissible permissible, ItemStack itemStack)
     {
         return !not.check(permissible, itemStack);
+    }
+
+    @Override
+    public Set<Material> getMaterials(Set<Material> set)
+    {
+        if (not instanceof MaterialProvider)
+        {
+            return ((MaterialProvider)not).getMaterials(set); // TODO is this correct? perhaps prevent using not on MaterialConditions
+        }
+        return set;
     }
 }

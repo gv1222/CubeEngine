@@ -17,12 +17,16 @@
  */
 package de.cubeisland.engine.core.recipe.ingredient;
 
+import java.util.HashSet;
+import java.util.Set;
+
 import org.bukkit.Material;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.permissions.Permissible;
 
 import de.cubeisland.engine.core.recipe.ingredient.condition.IngredientCondition;
 import de.cubeisland.engine.core.recipe.ingredient.condition.MaterialCondition;
+import de.cubeisland.engine.core.recipe.ingredient.condition.MaterialProvider;
 import de.cubeisland.engine.core.recipe.ingredient.result.IngredientResult;
 
 /**
@@ -38,7 +42,7 @@ public class Ingredient
         this.condition = condition;
     }
 
-    public int find(Permissible permissible, ItemStack[] matrix)
+    public final int find(Permissible permissible, ItemStack[] matrix)
     {
         for (int i = 0; i < matrix.length; i++)
         {
@@ -50,7 +54,7 @@ public class Ingredient
         return -1;
     }
 
-    public boolean check(Permissible permissible, ItemStack itemStack)
+    public final boolean check(Permissible permissible, ItemStack itemStack)
     {
         return condition.check(permissible, itemStack);
     }
@@ -63,8 +67,12 @@ public class Ingredient
      * @param itemStack
      * @return
      */
-    public ItemStack getResult(Permissible permissible, ItemStack itemStack)
+    public final ItemStack getResult(Permissible permissible, ItemStack itemStack)
     {
+        if (result == null)
+        {
+            return null;
+        }
         if (result.check(permissible, itemStack))
         {
             return result.getResult(permissible, itemStack);
@@ -72,7 +80,7 @@ public class Ingredient
         return null;
     }
 
-    public Ingredient setResult(IngredientResult result)
+    public final Ingredient setResult(IngredientResult result)
     {
         this.result = result;
         return this;
@@ -98,5 +106,14 @@ public class Ingredient
     public static Ingredient ofCondition(IngredientCondition condition)
     {
         return new Ingredient(condition);
+    }
+
+    public final Set<Material> getMaterials()
+    {
+        if (condition instanceof MaterialProvider)
+        {
+            return ((MaterialProvider)condition).getMaterials(new HashSet<Material>());
+        }
+        throw new IllegalStateException("No Material given for ingredient!");
     }
 }

@@ -17,18 +17,70 @@
  */
 package de.cubeisland.engine.core.recipe;
 
+import java.util.HashSet;
+import java.util.Map;
+import java.util.Set;
+
+import org.bukkit.Material;
+import org.bukkit.Server;
 import org.bukkit.inventory.ItemStack;
+import org.bukkit.permissions.Permissible;
+
+import de.cubeisland.engine.core.recipe.ingredient.Ingredients;
+import de.cubeisland.engine.core.recipe.ingredient.condition.MaterialProvider;
+import de.cubeisland.engine.core.recipe.ingredient.result.IngredientResult;
 
 /**
  * Represents some type of crafting recipe.
  */
-public interface Recipe
+public class Recipe
 {
+    private Ingredients ingredients;
+    private IngredientResult result;
+    private Map<Integer, ItemStack> ingredientResults;
 
-    /**
-     * Get the result of this recipe.
-     *
-     * @return The result stack
-     */
-    ItemStack getResult();
+    public Recipe(Ingredients ingredients, IngredientResult result)
+    {
+        this.ingredients = ingredients;
+        this.result = result;
+    }
+
+    private Set<org.bukkit.inventory.Recipe> bukkitRecipes;
+
+    public void registerBukkitRecipes(Server server)
+    {
+        bukkitRecipes = ingredients.getBukkitRecipes(this.getResultMaterial());
+        for (org.bukkit.inventory.Recipe recipe : bukkitRecipes)
+        {
+            server.addRecipe(recipe);
+        }
+    }
+
+    private Material getResultMaterial()
+    {
+        if (result instanceof MaterialProvider)
+        {
+            Set<Material> materials = ((MaterialProvider)result).getMaterials(new HashSet<Material>());
+            if (!materials.isEmpty())
+            {
+                return materials.iterator().next();
+            }
+        }
+        throw new IllegalStateException("Recipe has no Material as Result");
+    }
+
+    public boolean matchesConditions(Permissible permissible, ItemStack[] matrix)
+    {
+        return ingredients.check(permissible, matrix);
+    }
+
+    public ItemStack getResult(Permissible permissible)
+    {
+        return result.getResult(permissible, null);
+    }
+
+    public Map<Integer, ItemStack> getIngredientResults(Permissible permissible, ItemStack[] matrix)
+    {
+        return ingredients.getIngredientResults(permissible, matrix);
+    }
 }

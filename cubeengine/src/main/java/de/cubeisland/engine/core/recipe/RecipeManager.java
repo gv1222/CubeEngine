@@ -20,32 +20,53 @@ package de.cubeisland.engine.core.recipe;
 import java.util.HashMap;
 import java.util.HashSet;
 import java.util.Map;
+import java.util.Map.Entry;
 import java.util.Set;
 
+import org.bukkit.Bukkit;
+import org.bukkit.entity.HumanEntity;
+import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
+import org.bukkit.event.Listener;
+import org.bukkit.event.inventory.CraftItemEvent;
 import org.bukkit.event.inventory.PrepareItemCraftEvent;
+import org.bukkit.inventory.CraftingInventory;
+import org.bukkit.inventory.ItemStack;
 
+import de.cubeisland.engine.core.Core;
+import de.cubeisland.engine.core.CubeEngine;
 import de.cubeisland.engine.core.module.Module;
 
-public class RecipeManager
+public class RecipeManager implements Listener
 {
     private Map<Module, Set<Recipe>> recipes = new HashMap<>();
+    private Set<Recipe> allRecipes = new HashSet<>();
+    private Core core;
 
-    public boolean registerRecipe(Module module, Recipe recipe)
+    public RecipeManager(Core core)
     {
-        // TODO search for conflicts
-        // TODO regiter bukkit-recipes
-         return this.getRecipes(module).add(recipe);
+        this.core = core;
     }
 
-    public boolean unregisterRecipe(Module module, Recipe recipe)
+    public void registerRecipe(Module module, Recipe recipe)
     {
-        return this.getRecipes(module).remove(recipe);
+        recipe.registerBukkitRecipes(Bukkit.getServer());
+        this.getRecipes(module).add(recipe);
+        this.allRecipes.add(recipe);
+    }
+
+    public void unregisterRecipe(Module module, Recipe recipe)
+    {
+        // TODO remove bukkit recipes (saved recipes are in our Recipe object)
+        this.getRecipes(module).remove(recipe);
+        this.allRecipes.remove(recipe);
     }
 
     public void unregisterAllRecipes(Module module)
     {
-        this.recipes.remove(module);
+        // TODO remove bukkit recipes (saved recipes are in our Recipe object)
+        Set<Recipe> remove = this.recipes.remove(module);
+        this.allRecipes.removeAll(remove);
     }
 
     private Set<Recipe> getRecipes(Module module)
@@ -59,10 +80,71 @@ public class RecipeManager
         return recipeSet;
     }
 
-
     @EventHandler
     public void onPrepareItemCraft(PrepareItemCraftEvent event)
     {
-        //TODO match recipe & call their methods
+        ItemStack[] matrix = event.getInventory().getMatrix();
+        if (event.getViewers().size() > 1)
+        {
+            event.getInventory().setResult(null);
+            CubeEngine.getLog().warn("Aborted PrepareItemCraftEvent because {} players were looking into the same CraftingInventory!", event.getViewers().size());
+            return;
+        }
+        for (HumanEntity humanEntity : event.getViewers()) // only 1 humanEntity
+        {
+            for (Recipe recipe : allRecipes)
+            {
+                if (recipe.matchesConditions(humanEntity, matrix))
+                {
+                    event.getInventory().setResult(recipe.getResult(humanEntity));
+                    return;
+                }
+            }
+        }
+    }
+
+    @EventHandler
+    public void onItemCraft(CraftItemEvent event)
+    {
+        for (Recipe recipe : allRecipes)
+        {
+            if (recipe.matchesConditions(event.getWhoClicked(), event.getInventory().getMatrix()))
+            {
+                event.getInventory().setResult(recipe.getResult(event.getWhoClicked()));
+                final Map<Integer, ItemStack> ingredientResults = recipe.getIngredientResults(event.getWhoClicked(), event.getInventory().getMatrix());
+                if (!ingredientResults.isEmpty())
+                {
+                    final CraftingInventory inventory = event.getInventory();
+                    core.getTaskManager().runTaskDelayed(core.getModuleManager().getCoreModule(),
+                                 new Runnable()
+                                 {
+                                     @Override
+                                     public void run()
+                                     {
+                                         ItemStack[] matrix = inventory.getMatrix();
+                                         for (Entry<Integer, ItemStack> entry : ingredientResults.entrySet())
+                                         {
+                                             matrix[entry.getKey()] = entry.getValue();
+                                         }
+                                         inventory.setMatrix(matrix);
+                                     }
+                                 }, 0L);
+                }
+                if (event.getWhoClicked() instanceof Player)
+                {
+                    final Player whoClicked = (Player)event.getWhoClicked();
+                    core.getTaskManager().runTaskDelayed(core.getModuleManager().getCoreModule(),
+                                 new Runnable()
+                                 {
+                                     @Override
+                                     public void run()
+                                     {
+                                         whoClicked.updateInventory();
+                                     }
+                                 }, 2L);
+                }
+                return;
+            }
+        }
     }
 }

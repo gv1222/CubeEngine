@@ -15,16 +15,16 @@
  * You should have received a copy of the GNU General Public License
  * along with CubeEngine.  If not, see <http://www.gnu.org/licenses/>.
  */
-package de.cubeisland.engine.core.recipe.ingredient.result;
+package de.cubeisland.engine.core.recipe.ingredient.condition;
 
-import org.bukkit.inventory.ItemStack;
-import org.bukkit.permissions.Permissible;
+import java.util.Set;
 
-public class KeepResult extends IngredientResult
+import org.bukkit.Material;
+
+/**
+ * Represents a condition that could provide a MaterialCondition
+ */
+public interface MaterialProvider
 {
-    @Override
-    public ItemStack getResult(Permissible permissible, ItemStack itemStack)
-    {
-        return itemStack.clone();
-    }
+    public Set<Material> getMaterials(Set<Material> set);
 }

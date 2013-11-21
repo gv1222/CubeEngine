@@ -17,27 +17,42 @@
  */
 package de.cubeisland.engine.core.recipe.ingredient;
 
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.HashSet;
 import java.util.List;
+import java.util.Map;
+import java.util.Set;
 
+import org.bukkit.Material;
 import org.bukkit.inventory.ItemStack;
+import org.bukkit.inventory.Recipe;
+import org.bukkit.inventory.ShapelessRecipe;
 import org.bukkit.permissions.Permissible;
 
 import org.apache.commons.lang.Validate;
 
-public class ShapelessIngredients
+public class ShapelessIngredients implements Ingredients
 {
-    private List<Ingredient> ingredients;
+    private List<Ingredient> ingredients = new ArrayList<>();
 
-    protected ShapelessIngredients(Ingredient... ingredients)
+    public ShapelessIngredients(Ingredient... ingredients)
     {
-        super(); // No perm. allowed. Ingredients are ABSOLUTELY NEEDED!
         for (Ingredient ingredient : ingredients)
         {
             this.addIngredient(ingredient);
         }
     }
 
-    protected final boolean check(Permissible permissible, ItemStack[] matrix)
+    public final ShapelessIngredients addIngredient(Ingredient ingredient)
+    {
+        Validate.isTrue(ingredients.size() < 9, "Shapeless recipes cannot have more than 9 ingredients");
+        ingredients.add(ingredient);
+        return this;
+    }
+
+    @Override
+    public boolean check(Permissible permissible, ItemStack[] matrix)
     {
         for (Ingredient ingredient : ingredients)
         {
@@ -51,10 +66,57 @@ public class ShapelessIngredients
         return true;
     }
 
-    public final ShapelessIngredients addIngredient(Ingredient ingredient)
+    @Override
+    public Set<Recipe> getBukkitRecipes(Material resultMaterial)
     {
-        Validate.isTrue(ingredients.size() < 9, "Shapeless recipes cannot have more than 9 ingredients");
-        ingredients.add(ingredient);
-        return this;
+        Set<Recipe> recipes = new HashSet<>();
+        Set<Set<Material>> endSets = new HashSet<>();
+        endSets.add(new HashSet<Material>());
+        Set<Set<Material>> tempSets;
+        for (Ingredient ingredient : ingredients)
+        {
+            tempSets = new HashSet<>();
+            for (Material material : ingredient.getMaterials())
+            {
+                for (Set<Material> materials : endSets)
+                {
+                    Set<Material> mat = new HashSet<>(materials);
+                    mat.add(material);
+                    tempSets.add(mat);
+                }
+            }
+            endSets = tempSets;
+        }
+        for (Set<Material> materials : endSets)
+        {
+            ShapelessRecipe shapelessRecipe = new ShapelessRecipe(new ItemStack(resultMaterial));
+            for (Material material : materials)
+            {
+                shapelessRecipe.addIngredient(1, material);
+            }
+            recipes.add(shapelessRecipe);
+        }
+        return recipes;
+    }
+
+    @Override
+    public Map<Integer, ItemStack> getIngredientResults(Permissible permissible, ItemStack[] matrix)
+    {
+        Map<Integer, ItemStack> map = new HashMap<>();
+        for (Ingredient ingredient : ingredients)
+        {
+            int index = ingredient.find(permissible, matrix);
+            if (index == -1)
+            {
+                throw new IllegalStateException("Invalid Recipe!");
+            }
+            ItemStack result = ingredient.getResult(permissible, matrix[index]);
+            if (result != null)
+            {
+                map.put(index, result);
+            } // else ignore
+            matrix[index] = null;
+        }
+        return map;
     }
 }

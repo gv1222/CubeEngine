@@ -15,16 +15,20 @@
  * You should have received a copy of the GNU General Public License
  * along with CubeEngine.  If not, see <http://www.gnu.org/licenses/>.
  */
-package de.cubeisland.engine.core.recipe.ingredient.result;
+package de.cubeisland.engine.core.recipe.ingredient;
 
+import java.util.Map;
+import java.util.Set;
+
+import org.bukkit.Material;
 import org.bukkit.inventory.ItemStack;
+import org.bukkit.inventory.Recipe;
 import org.bukkit.permissions.Permissible;
 
-public class KeepResult extends IngredientResult
+public interface Ingredients
 {
-    @Override
-    public ItemStack getResult(Permissible permissible, ItemStack itemStack)
-    {
-        return itemStack.clone();
-    }
+    public Set<Recipe> getBukkitRecipes(Material resultMaterial);
+    public boolean check(Permissible permissible, ItemStack[] matrix);
+
+    public Map<Integer,ItemStack> getIngredientResults(Permissible permissible, ItemStack[] matrix);
 }

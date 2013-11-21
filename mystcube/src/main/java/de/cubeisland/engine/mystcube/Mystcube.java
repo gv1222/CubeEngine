@@ -47,6 +47,11 @@ import org.bukkit.inventory.ShapelessRecipe;
 import org.bukkit.inventory.meta.ItemMeta;
 
 import de.cubeisland.engine.core.module.Module;
+import de.cubeisland.engine.core.recipe.RecipeManager;
+import de.cubeisland.engine.core.recipe.ingredient.Ingredient;
+import de.cubeisland.engine.core.recipe.ingredient.ShapelessIngredients;
+import de.cubeisland.engine.core.recipe.ingredient.result.ItemStackResult;
+import de.cubeisland.engine.core.recipe.ingredient.result.KeepResult;
 import de.cubeisland.engine.core.util.ChatFormat;
 import de.cubeisland.engine.mystcube.blockpopulator.VillagePopulator;
 import de.cubeisland.engine.mystcube.chunkgenerator.FlatMapGenerator;
@@ -54,6 +59,8 @@ import de.cubeisland.engine.mystcube.chunkgenerator.FlatMapGenerator;
 public class Mystcube extends Module implements Listener
 {
     private MystcubeConfig config;
+
+    private RecipeManager recipeManager;
 
     @Override
     public void onStartupFinished()
@@ -126,6 +133,19 @@ public class Mystcube extends Module implements Listener
         BLANK_BOOK = item;
 
         this.getCore().getEventManager().registerListener(this, this);
+
+        // TODO remove RecipeManager TEST
+        this.recipeManager = new RecipeManager(this.getCore());
+        this.getCore().getEventManager().registerListener(this, this.recipeManager);
+        ItemStack foldedPaper = new ItemStack(Material.PAPER);
+        ItemMeta itemMeta = foldedPaper.getItemMeta();
+        itemMeta.setDisplayName("Folded Paper");
+        foldedPaper.setItemMeta(itemMeta);
+        de.cubeisland.engine.core.recipe.Recipe recipe = new de.cubeisland.engine.core.recipe.Recipe(
+            new ShapelessIngredients(Ingredient.ofMaterial(Material.PAPER),
+                                     Ingredient.ofMaterial(Material.REDSTONE_BLOCK).setResult(new KeepResult())),
+            new ItemStackResult(foldedPaper));
+        this.recipeManager.registerRecipe(this, recipe);
     }
 
     private Set<Recipe> myRecipes = new HashSet<>();

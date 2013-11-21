@@ -18,10 +18,13 @@
 package de.cubeisland.engine.core.recipe.ingredient.condition;
 
 
+import java.util.Set;
+
+import org.bukkit.Material;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.permissions.Permissible;
 
-public class AndCondition extends IngredientCondition
+public class AndCondition extends IngredientCondition implements MaterialProvider
 {
     private final IngredientCondition left;
     private final IngredientCondition right;
@@ -37,5 +40,27 @@ public class AndCondition extends IngredientCondition
     public boolean check(Permissible permissible, ItemStack itemStack)
     {
         return left.check(permissible, itemStack) && right.check(permissible, itemStack);
+    }
+
+    @Override
+    public Set<Material> getMaterials(Set<Material> set)
+    {
+
+        int size = set.size();
+        if (left instanceof MaterialProvider)
+        {
+            set = ((MaterialProvider)left).getMaterials(set);
+        }
+        boolean change = size != set.size();
+        size = set.size();
+        if (right instanceof MaterialProvider)
+        {
+            set = ((MaterialProvider)right).getMaterials(set);
+        }
+        if (change && size != set.size())
+        {
+            throw new IllegalStateException("Invalid condition! Cannot combine 2 MaterialConditions with AND");
+        }
+        return set;
     }
 }

@@ -17,10 +17,15 @@
  */
 package de.cubeisland.engine.core.recipe.ingredient.result;
 
+import java.util.Set;
+
+import org.bukkit.Material;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.permissions.Permissible;
 
-public class AndResult extends IngredientResult
+import de.cubeisland.engine.core.recipe.ingredient.condition.MaterialProvider;
+
+public class AndResult extends IngredientResult implements MaterialProvider
 {
     private final IngredientResult left;
     private final IngredientResult right;
@@ -43,5 +48,27 @@ public class AndResult extends IngredientResult
             itemStack = right.getResult(permissible, itemStack);
         }
         return itemStack;
+    }
+
+    @Override
+    public Set<Material> getMaterials(Set<Material> set)
+    {
+
+        int size = set.size();
+        if (left instanceof MaterialProvider)
+        {
+            set = ((MaterialProvider)left).getMaterials(set);
+        }
+        boolean change = size != set.size();
+        size = set.size();
+        if (right instanceof MaterialProvider)
+        {
+            set = ((MaterialProvider)right).getMaterials(set);
+        }
+        if (change && size != set.size())
+        {
+            throw new IllegalStateException("Invalid condition! Cannot combine 2 Materials with AND");
+        }
+        return set;
     }
 }

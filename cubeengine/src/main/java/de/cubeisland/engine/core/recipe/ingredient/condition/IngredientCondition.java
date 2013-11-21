@@ -22,22 +22,22 @@ import org.bukkit.permissions.Permissible;
 
 public abstract class IngredientCondition
 {
-    public AndCondition and(IngredientCondition condition)
+    public final AndCondition and(IngredientCondition condition)
     {
         return new AndCondition(this, condition);
     }
 
-    public OrCondition or(IngredientCondition condition)
+    public final OrCondition or(IngredientCondition condition)
     {
         return new OrCondition(this, condition);
     }
 
-    public NotCondition not()
+    public final NotCondition not()
     {
         return new NotCondition(this);
     }
 
-    public IngredientCondition perm(String perm, boolean need)
+    public final IngredientCondition perm(String perm, boolean need)
     {
         return this.and(new PermissionCondition(perm, need));
     }

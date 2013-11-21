@@ -17,12 +17,14 @@
  */
 package de.cubeisland.engine.core.recipe.ingredient.condition;
 
+import java.util.Set;
+
 import org.bukkit.Material;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.material.MaterialData;
 import org.bukkit.permissions.Permissible;
 
-public class MaterialCondition extends IngredientCondition
+public class MaterialCondition extends IngredientCondition implements MaterialProvider
 {
     private Material material;
 
@@ -56,6 +58,14 @@ public class MaterialCondition extends IngredientCondition
     @Override
     public boolean check(Permissible permissible, ItemStack itemStack)
     {
+        if (itemStack == null) return false;
         return itemStack.getType() == this.material;
+    }
+
+    @Override
+    public Set<Material> getMaterials(Set<Material> set)
+    {
+        set.add(this.material);
+        return set;
     }
 }
