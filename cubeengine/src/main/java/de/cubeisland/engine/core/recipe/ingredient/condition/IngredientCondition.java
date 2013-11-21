@@ -42,5 +42,13 @@ public abstract class IngredientCondition
         return this.and(new PermissionCondition(perm, need));
     }
 
-    protected abstract boolean check(Permissible permissible, ItemStack itemStack);
+    public abstract boolean check(Permissible permissible, ItemStack itemStack);
+
+    // Ingredient Conditions
+    // - itemname / itemlore
+    // - leathercolor rgb
+    // - bookitem title / author / pages
+    // - firework / firework charge item
+    // - skullowner
+
 }

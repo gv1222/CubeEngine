@@ -15,25 +15,16 @@
  * You should have received a copy of the GNU General Public License
  * along with CubeEngine.  If not, see <http://www.gnu.org/licenses/>.
  */
-package de.cubeisland.engine.core.recipe;
+package de.cubeisland.engine.core.recipe.ingredient.result;
 
-public class RecipeResult
+import org.bukkit.inventory.ItemStack;
+import org.bukkit.permissions.Permissible;
+
+public class KeepResult extends IngredientResult
 {
-    // Results:
-
-    // cloneingredient (data/amount/enchants/name/lore/special(leatherdye/firework/book/skull...)/allmeta(ench/name/lore/special)/all(allmeta/data/amount))
-    // itemname / itemlore
-    // leathercolor rgb
-    // bookitem title / author / pages
-    // firework / firework charge item
-    //  color rgb,...
-    //  fadecolor rgb,...
-    //  type ball ball_large star burst creeper
-    //  trail / flicker
-    // power 0-128
-    // skullowner
-    // potionitem type/lv/extended/splash  + moar custom effects (type,duration,amplify,ambient?)
-    // enchantitem / book
-
-    // /w percentage
+    @Override
+    public ItemStack getResult(Permissible permissible, ItemStack itemStack)
+    {
+        return itemStack;
+    }
 }

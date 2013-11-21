@@ -34,6 +34,7 @@ public class RecipeManager
     public boolean registerRecipe(Module module, Recipe recipe)
     {
         // TODO search for conflicts
+        // TODO regiter bukkit-recipes
          return this.getRecipes(module).add(recipe);
     }
 

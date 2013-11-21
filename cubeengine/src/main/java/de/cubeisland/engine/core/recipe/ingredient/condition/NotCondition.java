@@ -30,7 +30,7 @@ public class NotCondition extends IngredientCondition
     }
 
     @Override
-    protected boolean check(Permissible permissible, ItemStack itemStack)
+    public boolean check(Permissible permissible, ItemStack itemStack)
     {
         return !not.check(permissible, itemStack);
     }

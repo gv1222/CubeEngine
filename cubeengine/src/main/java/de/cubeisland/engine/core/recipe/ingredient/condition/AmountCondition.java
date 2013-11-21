@@ -64,7 +64,7 @@ public class AmountCondition extends IngredientCondition
     }
 
     @Override
-    protected boolean check(Permissible permissible, ItemStack itemStack)
+    public boolean check(Permissible permissible, ItemStack itemStack)
     {
         switch (this.type)
         {

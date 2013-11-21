@@ -32,7 +32,7 @@ public class PermissionCondition extends IngredientCondition
     }
 
     @Override
-    protected boolean check(Permissible permissible, ItemStack itemStack)
+    public boolean check(Permissible permissible, ItemStack itemStack)
     {
         if (permissible.hasPermission(perm))
         {

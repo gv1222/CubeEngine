@@ -50,11 +50,11 @@ public class MaterialCondition extends IngredientCondition
      */
     public static IngredientCondition of(MaterialData materialData)
     {
-        return new MaterialCondition(materialData.getItemType()).and(DataCondition.exact(materialData.getData()));
+        return new MaterialCondition(materialData.getItemType()).and(DurabilityCondition.exact(materialData.getData()));
     }
 
     @Override
-    protected boolean check(Permissible permissible, ItemStack itemStack)
+    public boolean check(Permissible permissible, ItemStack itemStack)
     {
         return itemStack.getType() == this.material;
     }

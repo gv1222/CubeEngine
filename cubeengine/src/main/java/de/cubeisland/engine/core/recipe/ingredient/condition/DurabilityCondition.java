@@ -21,9 +21,9 @@ import org.bukkit.inventory.ItemStack;
 import org.bukkit.permissions.Permissible;
 
 /**
- * Actually checks the durability (which is the materialData somehow)
+ * Checks the durability(data)
  */
-public class DataCondition extends IngredientCondition
+public class DurabilityCondition extends IngredientCondition
 {
     private enum Type
     {
@@ -31,46 +31,46 @@ public class DataCondition extends IngredientCondition
     }
 
     private Type type;
-    private byte data;
+    private short data;
 
-    private DataCondition(Type type, byte data)
+    private DurabilityCondition(Type type, short data)
     {
         this.type = type;
         this.data = data;
     }
 
-    public static DataCondition less(byte data)
+    public static DurabilityCondition less(short data)
     {
-        return new DataCondition(Type.LESS, data);
+        return new DurabilityCondition(Type.LESS, data);
     }
 
-    public static DataCondition more(byte data)
+    public static DurabilityCondition more(short data)
     {
-        return new DataCondition(Type.MORE, data);
+        return new DurabilityCondition(Type.MORE, data);
     }
 
-    public static DataCondition exact(byte data)
+    public static DurabilityCondition exact(short data)
     {
-        return new DataCondition(Type.EXACT, data);
+        return new DurabilityCondition(Type.EXACT, data);
     }
 
-    public static IngredientCondition notRange(byte from, byte to)
+    public static IngredientCondition notRange(short from, short to)
     {
-        return DataCondition.range(from, to).not();
+        return DurabilityCondition.range(from, to).not();
     }
 
-    public static IngredientCondition range(byte from, byte to)
+    public static IngredientCondition range(short from, short to)
     {
-        return DataCondition.more(from).and(DataCondition.less(to));
+        return DurabilityCondition.more(from).and(DurabilityCondition.less(to));
     }
 
-    public static DataCondition bitSet(byte bit)
+    public static DurabilityCondition bitSet(short bit)
     {
-        return new DataCondition(Type.BIT, bit);
+        return new DurabilityCondition(Type.BIT, bit);
     }
 
     @Override
-    protected boolean check(Permissible permissible, ItemStack itemStack)
+    public boolean check(Permissible permissible, ItemStack itemStack)
     {
         switch (this.type)
         {

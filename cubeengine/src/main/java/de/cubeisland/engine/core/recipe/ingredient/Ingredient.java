@@ -17,19 +17,32 @@
  */
 package de.cubeisland.engine.core.recipe.ingredient;
 
+import org.bukkit.Material;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.permissions.Permissible;
+
+import de.cubeisland.engine.core.recipe.ingredient.condition.IngredientCondition;
+import de.cubeisland.engine.core.recipe.ingredient.condition.MaterialCondition;
+import de.cubeisland.engine.core.recipe.ingredient.result.IngredientResult;
 
 /**
  * A crafting ingredient
  */
 public class Ingredient
 {
+    private IngredientCondition condition;
+    private IngredientResult result;
+
+    private Ingredient(IngredientCondition condition)
+    {
+        this.condition = condition;
+    }
+
     public int find(Permissible permissible, ItemStack[] matrix)
     {
         for (int i = 0; i < matrix.length; i++)
         {
-            if (this.check(permissible, matrix[i]))
+            if (condition.check(permissible, matrix[i]))
             {
                 return i;
             }
@@ -39,26 +52,51 @@ public class Ingredient
 
     public boolean check(Permissible permissible, ItemStack itemStack)
     {
-        // TODO implement me
-        return false;
+        return condition.check(permissible, itemStack);
     }
 
+    /**
+     * Returns the resulting itemStack
+     * <p>will return null if no result is given -> use default behaviour
+     *
+     * @param permissible
+     * @param itemStack
+     * @return
+     */
+    public ItemStack getResult(Permissible permissible, ItemStack itemStack)
+    {
+        if (result.check(permissible, itemStack))
+        {
+            return result.getResult(permissible, itemStack);
+        }
+        return null;
+    }
 
-    // Ingredient Conditions
-    // - itemname / itemlore
-    // - leathercolor rgb
-    // - bookitem title / author / pages
-    // - firework / firework charge item
-    // - skullowner
+    public Ingredient setResult(IngredientResult result)
+    {
+        this.result = result;
+        return this;
+    }
 
-    // all condition /w possible perm req. for condition to be needed
+    /**
+     * Creates a new Ingredient matching only the given material
+     *
+     * @param material
+     * @return
+     */
+    public static Ingredient ofMaterial(Material material)
+    {
+        return new Ingredient(MaterialCondition.of(material));
+    }
 
-
-    // Ingredient Result:
-    // - default (reduce by amount used if newamount = 0 replace /w air)
-    // - replace with ItemStack
-    // - keep (no change)
-    // - use (change|set durability)
-
-    // /w percentages
+    /**
+     * Creates a new Ingredient matching the given condition
+     *
+     * @param condition
+     * @return
+     */
+    public static Ingredient ofCondition(IngredientCondition condition)
+    {
+        return new Ingredient(condition);
+    }
 }

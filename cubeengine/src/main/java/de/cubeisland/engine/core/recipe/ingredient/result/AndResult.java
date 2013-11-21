@@ -15,27 +15,33 @@
  * You should have received a copy of the GNU General Public License
  * along with CubeEngine.  If not, see <http://www.gnu.org/licenses/>.
  */
-package de.cubeisland.engine.core.recipe.ingredient.condition;
+package de.cubeisland.engine.core.recipe.ingredient.result;
 
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.permissions.Permissible;
 
-public class ItemNameCondition extends IngredientCondition
+public class AndResult extends IngredientResult
 {
-    private String name;
+    private final IngredientResult left;
+    private final IngredientResult right;
 
-    public ItemNameCondition(String name)
+    public AndResult(IngredientResult left, IngredientResult right)
     {
-        this.name = name;
+        this.left = left;
+        this.right = right;
     }
 
     @Override
-    public boolean check(Permissible permissible, ItemStack itemStack)
+    public ItemStack getResult(Permissible permissible, ItemStack itemStack)
     {
-        if (itemStack.getItemMeta().hasDisplayName())
+        if (left.check(permissible, itemStack))
         {
-            return name.equals(itemStack.getItemMeta().getDisplayName());
+            itemStack = left.getResult(permissible, itemStack);
         }
-        return false;
+        if (right.check(permissible, itemStack))
+        {
+            itemStack = right.getResult(permissible, itemStack);
+        }
+        return itemStack;
     }
 }

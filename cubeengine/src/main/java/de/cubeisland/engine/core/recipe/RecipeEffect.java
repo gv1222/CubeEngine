@@ -36,5 +36,6 @@ public abstract class RecipeEffect
     // - modify exp/lvl
     // - modify money (needs Economy Service)
 
+    // /w ingredient condition
     // /w percentages
 }
