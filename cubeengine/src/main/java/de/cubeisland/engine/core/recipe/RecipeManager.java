@@ -24,18 +24,23 @@ import java.util.Map.Entry;
 import java.util.Set;
 
 import org.bukkit.Bukkit;
+import org.bukkit.Material;
 import org.bukkit.entity.HumanEntity;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
 import org.bukkit.event.inventory.CraftItemEvent;
+import org.bukkit.event.inventory.InventoryAction;
 import org.bukkit.event.inventory.PrepareItemCraftEvent;
 import org.bukkit.inventory.CraftingInventory;
 import org.bukkit.inventory.ItemStack;
+import org.bukkit.inventory.meta.ItemMeta;
 
 import de.cubeisland.engine.core.Core;
 import de.cubeisland.engine.core.CubeEngine;
 import de.cubeisland.engine.core.module.Module;
+
+import static org.bukkit.event.inventory.InventoryAction.MOVE_TO_OTHER_INVENTORY;
 
 public class RecipeManager implements Listener
 {
@@ -92,28 +97,100 @@ public class RecipeManager implements Listener
         }
         for (HumanEntity humanEntity : event.getViewers()) // only 1 humanEntity
         {
-            for (Recipe recipe : allRecipes)
+            if (humanEntity instanceof Player)
             {
-                if (recipe.matchesConditions(humanEntity, matrix))
+                for (Recipe recipe : allRecipes)
                 {
-                    event.getInventory().setResult(recipe.getResult(humanEntity));
-                    return;
+                    if (recipe.matchesConditions((Player)humanEntity, matrix))
+                    {
+                        Boolean shiftCraft = isShiftCrafting.get(humanEntity);
+                        if (shiftCraft != null)
+                        {
+                            isShiftCrafting.put((Player)humanEntity, !shiftCraft);
+                            if (shiftCraft)
+                            {
+                                ItemStack[] myMatrix = this.shiftCrafting.get(humanEntity);
+                                Map<Integer, ItemStack> ingredientResults = null;
+                                try
+                                {
+                                    ingredientResults = recipe.getIngredientResults((Player)humanEntity, myMatrix);
+                                }
+                                catch (IllegalStateException e) // TODO own exception for this
+                                {
+                                    event.getInventory().setResult(null); // Stop crafting!
+                                    return;
+                                }
+                                for (int i = 0 ; i < myMatrix.length ; i++)
+                                {
+                                    if (myMatrix[i] == null)
+                                    {
+                                        continue;
+                                    }
+                                    int amount = myMatrix[i].getAmount() - 1;
+                                    if (amount < 0)
+                                    {
+                                        amount = 0;
+                                    }
+                                    myMatrix[i].setAmount(amount);
+                                }
+                                for (Entry<Integer, ItemStack> entry : ingredientResults.entrySet())
+                                {
+                                    myMatrix[entry.getKey()] = entry.getValue();
+                                }
+                                event.getInventory().setResult(recipe.getResult((Player)humanEntity));
+                                return;
+                            }
+                        }
+                        event.getInventory().setResult(recipe.getPreview((Player)humanEntity));
+                        return;
+                    }
                 }
             }
         }
     }
 
+    private Map<Player, ItemStack[]> shiftCrafting = new HashMap<>();
+    private Map<Player, Boolean> isShiftCrafting = new HashMap<>();
+
     @EventHandler
     public void onItemCraft(CraftItemEvent event)
     {
-        for (Recipe recipe : allRecipes)
+        if (!(event.getWhoClicked() instanceof Player) || event.getAction() == InventoryAction.NOTHING)
         {
-            if (recipe.matchesConditions(event.getWhoClicked(), event.getInventory().getMatrix()))
+            return;
+        }
+        final Player player = (Player)event.getWhoClicked();
+        for (final Recipe recipe : allRecipes)
+        {
+            if (recipe.matchesConditions(player, event.getInventory().getMatrix()))
             {
-                event.getInventory().setResult(recipe.getResult(event.getWhoClicked()));
-                final Map<Integer, ItemStack> ingredientResults = recipe.getIngredientResults(event.getWhoClicked(), event.getInventory().getMatrix());
-                if (!ingredientResults.isEmpty())
+                final ItemStack[] matrix = event.getInventory().getMatrix();
+                for (int i = 0 ; i < matrix.length ; i++)
                 {
+                    if (matrix[i] == null)
+                    {
+                        continue;
+                    }
+                    matrix[i] = matrix[i].clone();
+                }
+                if (event.getAction() == MOVE_TO_OTHER_INVENTORY)
+                {
+                    this.shiftCrafting.put(player, matrix);
+                    this.isShiftCrafting.put(player, false);
+                }
+                event.getInventory().setResult(recipe.getResult(player));
+                final Map<Integer, ItemStack> ingredientResults = recipe.getIngredientResults(player, event.getInventory().getMatrix());
+                if (!ingredientResults.isEmpty() || event.getAction() == MOVE_TO_OTHER_INVENTORY)
+                {
+                    // TODO handle shift crafting when using percentages for results.
+                    // result is reset in onPrepareItemCraft when doing this
+                    // problem is ingredients. need to calculate of possible
+                    // what when craft req more than 1 of each item?
+                    // Action is then: MOVE_TO_OTHER_INVENTORY
+                    // other possible PICKUP_ALL
+                    // PICKUP_HALF <- does it really pickup half?
+                    // TODO handle if default result stackable but special result not cancel crafting or stmh else
+                    recipe.runEffects(core, player);
                     final CraftingInventory inventory = event.getInventory();
                     core.getTaskManager().runTaskDelayed(core.getModuleManager().getCoreModule(),
                                  new Runnable()
@@ -121,28 +198,47 @@ public class RecipeManager implements Listener
                                      @Override
                                      public void run()
                                      {
-                                         ItemStack[] matrix = inventory.getMatrix();
+                                         ItemStack[] myMatrix = shiftCrafting.remove(player);
+                                         if (myMatrix == null)
+                                         {
+                                             myMatrix = inventory.getMatrix();
+                                         }
+                                         Map<Integer, ItemStack> ingredientResults = recipe.getIngredientResults(player, matrix);
+                                         if (isShiftCrafting.remove(player) != null)
+                                         {
+                                             for (int i = 0 ; i < myMatrix.length ; i++)
+                                             {
+                                                 if (myMatrix[i] == null)
+                                                 {
+                                                     continue;
+                                                 }
+                                                 int amount = myMatrix[i].getAmount() - 1;
+                                                 if (amount < 0)
+                                                 {
+                                                     amount = 0;
+                                                 }
+                                                 myMatrix[i].setAmount(amount);
+                                             }
+                                         }
                                          for (Entry<Integer, ItemStack> entry : ingredientResults.entrySet())
                                          {
-                                             matrix[entry.getKey()] = entry.getValue();
+                                             myMatrix[entry.getKey()] = entry.getValue();
                                          }
-                                         inventory.setMatrix(matrix);
+                                         inventory.setMatrix(myMatrix);
+                                         // TODO try to set preview
                                      }
                                  }, 0L);
                 }
-                if (event.getWhoClicked() instanceof Player)
-                {
-                    final Player whoClicked = (Player)event.getWhoClicked();
-                    core.getTaskManager().runTaskDelayed(core.getModuleManager().getCoreModule(),
-                                 new Runnable()
-                                 {
-                                     @Override
-                                     public void run()
-                                     {
-                                         whoClicked.updateInventory();
-                                     }
-                                 }, 2L);
-                }
+                core.getTaskManager().runTaskDelayed(core.getModuleManager().getCoreModule(),
+                     new Runnable()
+                     {
+                         @Override
+                         public void run()
+                         {
+                             player.updateInventory();
+                         }
+                     }, 2L);
+
                 return;
             }
         }

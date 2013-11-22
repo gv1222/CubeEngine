@@ -15,29 +15,36 @@
  * You should have received a copy of the GNU General Public License
  * along with CubeEngine.  If not, see <http://www.gnu.org/licenses/>.
  */
-package de.cubeisland.engine.core.recipe.ingredient.condition;
+package de.cubeisland.engine.core.recipe.effect;
 
-import org.bukkit.inventory.ItemStack;
-import org.bukkit.permissions.Permissible;
+import org.bukkit.entity.Player;
+import org.bukkit.inventory.Inventory;
 
-public class PermissionCondition extends IngredientCondition
+import de.cubeisland.engine.core.Core;
+
+public abstract class RecipeEffect
 {
-    private final String perm;
-    private final boolean need;
+    // Effects:
+    // - command
+    // - chat
+    // - message
+    // - broadcast
 
-    public PermissionCondition(String perm, boolean need)
-    {
-        this.perm = perm;
-        this.need = need;
-    }
+    // - explode
+    // - setfire
+    // - sound / visual
+    // - summon
+    // - setblock (drop existing)
+    // - potionreffect
+    // - firework
 
-    @Override
-    public boolean check(Permissible permissible, ItemStack itemStack)
+    // - modify exp/lvl
+    // - modify money (needs Economy Service)
+
+    public abstract void runEffect(Core core, Player player);
+
+    public RecipeEffect delayedBy(long ticks)
     {
-        if (permissible.hasPermission(perm))
-        {
-            return need;
-        }
-        return !need;
+        return new DelayedEffect(ticks, this);
     }
 }

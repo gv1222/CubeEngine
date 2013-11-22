@@ -15,15 +15,15 @@
  * You should have received a copy of the GNU General Public License
  * along with CubeEngine.  If not, see <http://www.gnu.org/licenses/>.
  */
-package de.cubeisland.engine.core.recipe.ingredient.result;
+package de.cubeisland.engine.core.recipe.result;
 
 import java.util.Set;
 
 import org.bukkit.Material;
+import org.bukkit.entity.Player;
 import org.bukkit.inventory.ItemStack;
-import org.bukkit.permissions.Permissible;
 
-import de.cubeisland.engine.core.recipe.ingredient.condition.MaterialProvider;
+import de.cubeisland.engine.core.recipe.condition.ingredient.MaterialProvider;
 
 public class AndResult extends IngredientResult implements MaterialProvider
 {
@@ -37,17 +37,9 @@ public class AndResult extends IngredientResult implements MaterialProvider
     }
 
     @Override
-    public ItemStack getResult(Permissible permissible, ItemStack itemStack)
+    public ItemStack getResult(Player player, ItemStack itemStack)
     {
-        if (left.check(permissible, itemStack))
-        {
-            itemStack = left.getResult(permissible, itemStack);
-        }
-        if (right.check(permissible, itemStack))
-        {
-            itemStack = right.getResult(permissible, itemStack);
-        }
-        return itemStack;
+        return right.getResult(player, left.getResult(player, itemStack));
     }
 
     @Override

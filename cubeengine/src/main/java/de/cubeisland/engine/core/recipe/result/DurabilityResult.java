@@ -15,10 +15,10 @@
  * You should have received a copy of the GNU General Public License
  * along with CubeEngine.  If not, see <http://www.gnu.org/licenses/>.
  */
-package de.cubeisland.engine.core.recipe.ingredient.result;
+package de.cubeisland.engine.core.recipe.result;
 
+import org.bukkit.entity.Player;
 import org.bukkit.inventory.ItemStack;
-import org.bukkit.permissions.Permissible;
 
 public class DurabilityResult extends IngredientResult
 {
@@ -37,7 +37,7 @@ public class DurabilityResult extends IngredientResult
     }
 
     @Override
-    public ItemStack getResult(Permissible permissible, ItemStack itemStack)
+    public ItemStack getResult(Player player, ItemStack itemStack)
     {
         short durability = itemStack.getDurability();
         switch (this.type)

@@ -23,12 +23,13 @@ import java.util.Set;
 
 import org.bukkit.Material;
 import org.bukkit.Server;
+import org.bukkit.entity.Player;
 import org.bukkit.inventory.ItemStack;
-import org.bukkit.permissions.Permissible;
 
-import de.cubeisland.engine.core.recipe.ingredient.Ingredients;
-import de.cubeisland.engine.core.recipe.ingredient.condition.MaterialProvider;
-import de.cubeisland.engine.core.recipe.ingredient.result.IngredientResult;
+import de.cubeisland.engine.core.Core;
+import de.cubeisland.engine.core.recipe.condition.ingredient.MaterialProvider;
+import de.cubeisland.engine.core.recipe.effect.RecipeEffect;
+import de.cubeisland.engine.core.recipe.result.IngredientResult;
 
 /**
  * Represents some type of crafting recipe.
@@ -37,12 +38,19 @@ public class Recipe
 {
     private Ingredients ingredients;
     private IngredientResult result;
-    private Map<Integer, ItemStack> ingredientResults;
+    private RecipeEffect effect;
+    private IngredientResult preview;
 
     public Recipe(Ingredients ingredients, IngredientResult result)
     {
         this.ingredients = ingredients;
         this.result = result;
+    }
+
+    public Recipe withPreview(IngredientResult preview)
+    {
+        this.preview = preview;
+        return this;
     }
 
     private Set<org.bukkit.inventory.Recipe> bukkitRecipes;
@@ -69,18 +77,38 @@ public class Recipe
         throw new IllegalStateException("Recipe has no Material as Result");
     }
 
-    public boolean matchesConditions(Permissible permissible, ItemStack[] matrix)
+    public boolean matchesConditions(Player player, ItemStack[] matrix)
     {
-        return ingredients.check(permissible, matrix);
+        return ingredients.check(player, matrix);
     }
 
-    public ItemStack getResult(Permissible permissible)
+    public ItemStack getResult(Player player)
     {
-        return result.getResult(permissible, null);
+        return result.getResult(player, null);
     }
 
-    public Map<Integer, ItemStack> getIngredientResults(Permissible permissible, ItemStack[] matrix)
+    public Map<Integer, ItemStack> getIngredientResults(Player player, ItemStack[] matrix)
     {
-        return ingredients.getIngredientResults(permissible, matrix);
+        return ingredients.getIngredientResults(player, matrix.clone());
     }
+
+    public void runEffects(Core core, Player player)
+    {
+        if (effect == null)
+        {
+            return;
+        }
+        this.effect.runEffect(core, player);
+    }
+
+    public ItemStack getPreview(Player player)
+    {
+        if (this.preview == null)
+        {
+            return this.getResult(player);
+        }
+        return this.preview.getResult(player, null);
+    }
+
+    // TODO possibility to prevent shift-crafting
 }

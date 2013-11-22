@@ -15,20 +15,27 @@
  * You should have received a copy of the GNU General Public License
  * along with CubeEngine.  If not, see <http://www.gnu.org/licenses/>.
  */
-package de.cubeisland.engine.core.recipe.ingredient;
+package de.cubeisland.engine.core.recipe.condition.ingredient;
 
-import java.util.Map;
-import java.util.Set;
-
-import org.bukkit.Material;
+import org.bukkit.entity.Player;
 import org.bukkit.inventory.ItemStack;
-import org.bukkit.inventory.Recipe;
-import org.bukkit.permissions.Permissible;
 
-public interface Ingredients
+public class ItemNameCondition extends IngredientCondition
 {
-    public Set<Recipe> getBukkitRecipes(Material resultMaterial);
-    public boolean check(Permissible permissible, ItemStack[] matrix);
+    private String name;
 
-    public Map<Integer,ItemStack> getIngredientResults(Permissible permissible, ItemStack[] matrix);
+    public ItemNameCondition(String name)
+    {
+        this.name = name;
+    }
+
+    @Override
+    public boolean check(Player player, ItemStack itemStack)
+    {
+        if (itemStack.getItemMeta().hasDisplayName())
+        {
+            return name.equals(itemStack.getItemMeta().getDisplayName());
+        }
+        return false;
+    }
 }

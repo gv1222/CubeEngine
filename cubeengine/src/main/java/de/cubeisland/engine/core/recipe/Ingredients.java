@@ -15,16 +15,20 @@
  * You should have received a copy of the GNU General Public License
  * along with CubeEngine.  If not, see <http://www.gnu.org/licenses/>.
  */
-package de.cubeisland.engine.core.recipe.ingredient.condition;
+package de.cubeisland.engine.core.recipe;
 
+import java.util.Map;
 import java.util.Set;
 
 import org.bukkit.Material;
+import org.bukkit.entity.Player;
+import org.bukkit.inventory.ItemStack;
+import org.bukkit.inventory.Recipe;
 
-/**
- * Represents a condition that could provide a MaterialCondition
- */
-public interface MaterialProvider
+public interface Ingredients
 {
-    public Set<Material> getMaterials(Set<Material> set);
+    public Set<Recipe> getBukkitRecipes(Material resultMaterial);
+    public boolean check(Player player, ItemStack[] matrix);
+
+    public Map<Integer,ItemStack> getIngredientResults(Player player, ItemStack[] matrix);
 }

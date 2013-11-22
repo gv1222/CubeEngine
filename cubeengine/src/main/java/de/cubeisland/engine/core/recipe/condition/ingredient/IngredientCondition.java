@@ -15,27 +15,18 @@
  * You should have received a copy of the GNU General Public License
  * along with CubeEngine.  If not, see <http://www.gnu.org/licenses/>.
  */
-package de.cubeisland.engine.core.recipe;
+package de.cubeisland.engine.core.recipe.condition.ingredient;
 
-public abstract class RecipeEffect
+import de.cubeisland.engine.core.recipe.condition.Condition;
+
+public abstract class IngredientCondition extends Condition
 {
-    // Effects:
-    // - command
-    // - chat
-    // - message
-    // - broadcast
+    // Ingredient Conditions
+    // - itemname / itemlore
+    // - leathercolor rgb
+    // - bookitem title / author / pages
+    // - firework / firework charge item
+    // - skullowner
 
-    // - explode
-    // - setfire
-    // - sound / visual
-    // - summon
-    // - setblock (drop existing)
-    // - potionreffect
-    // - firework
-
-    // - modify exp/lvl
-    // - modify money (needs Economy Service)
-
-    // /w ingredient condition
-    // /w percentages
+    // TODO ingredient conditional effects
 }

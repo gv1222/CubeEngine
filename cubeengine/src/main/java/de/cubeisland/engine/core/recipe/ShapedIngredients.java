@@ -15,7 +15,7 @@
  * You should have received a copy of the GNU General Public License
  * along with CubeEngine.  If not, see <http://www.gnu.org/licenses/>.
  */
-package de.cubeisland.engine.core.recipe.ingredient;
+package de.cubeisland.engine.core.recipe;
 
 import java.util.HashMap;
 import java.util.HashSet;
@@ -24,10 +24,10 @@ import java.util.Map.Entry;
 import java.util.Set;
 
 import org.bukkit.Material;
+import org.bukkit.entity.Player;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.Recipe;
 import org.bukkit.inventory.ShapedRecipe;
-import org.bukkit.permissions.Permissible;
 
 import de.cubeisland.engine.core.util.math.BlockVector2;
 
@@ -73,12 +73,12 @@ public class ShapedIngredients implements Ingredients
     }
 
     @Override
-    public boolean check(Permissible permissible, ItemStack[] matrix)
+    public boolean check(Player player, ItemStack[] matrix)
     {
-        return checkShape(permissible, matrix, getSize(matrix)) != null;
+        return checkShape(player, matrix, getSize(matrix)) != null;
     }
 
-    private BlockVector2 checkShape(Permissible permissible, ItemStack[] matrix, BlockVector2 size)
+    private BlockVector2 checkShape(Player player, ItemStack[] matrix, BlockVector2 size)
     {
         if (size.equals(this.size))
         {
@@ -86,7 +86,7 @@ public class ShapedIngredients implements Ingredients
             {
                 for (int z = 0; z <= 3 - size.z; x++)
                 {
-                    if (this.checkShape(permissible, matrix, x, z))
+                    if (this.checkShape(player, matrix, x, z))
                     {
                         return new BlockVector2(x, z);
                     }
@@ -97,7 +97,7 @@ public class ShapedIngredients implements Ingredients
         return null;
     }
 
-    private boolean checkShape(Permissible permissible, ItemStack[] matrix, int xOffset, int zOffset)
+    private boolean checkShape(Player player, ItemStack[] matrix, int xOffset, int zOffset)
     {
         for (int x = 0; x < this.size.x - 1; x++)
         {
@@ -105,7 +105,7 @@ public class ShapedIngredients implements Ingredients
             {
                 ItemStack item = matrix[3 * (xOffset + x) + zOffset + z];
                 Ingredient ingredient = this.getIngredientAt(x, z);
-                if (item == null && ingredient != null || ingredient == null || !ingredient.check(permissible, item))
+                if (item == null && ingredient != null || ingredient == null || !ingredient.check(player, item))
                 {
                     return false;
                 }
@@ -192,10 +192,10 @@ public class ShapedIngredients implements Ingredients
     }
 
     @Override
-    public Map<Integer, ItemStack> getIngredientResults(Permissible permissible, ItemStack[] matrix)
+    public Map<Integer, ItemStack> getIngredientResults(Player player, ItemStack[] matrix)
     {
         Map<Integer, ItemStack> map = new HashMap<>();
-        BlockVector2 offSet = this.checkShape(permissible, matrix, getSize(matrix));
+        BlockVector2 offSet = this.checkShape(player, matrix, getSize(matrix));
         for (int x = 0; x < this.size.x - 1; x++)
         {
             for (int z = 0; z < this.size.z - 1; z++)
@@ -208,7 +208,7 @@ public class ShapedIngredients implements Ingredients
                     {
                         throw new IllegalStateException("WTF!?");
                     }
-                    map.put(3 * (offSet.x + x) + offSet.z + z, ingredient.getResult(permissible, item));
+                    map.put(3 * (offSet.x + x) + offSet.z + z, ingredient.getResult(player, item));
                 }
                 // else no ingredient here
             }

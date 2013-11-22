@@ -15,14 +15,12 @@
  * You should have received a copy of the GNU General Public License
  * along with CubeEngine.  If not, see <http://www.gnu.org/licenses/>.
  */
-package de.cubeisland.engine.core.recipe.ingredient.result;
+package de.cubeisland.engine.core.recipe.result;
 
-import java.util.Random;
-
+import org.bukkit.entity.Player;
 import org.bukkit.inventory.ItemStack;
-import org.bukkit.permissions.Permissible;
 
-import de.cubeisland.engine.core.recipe.ingredient.condition.IngredientCondition;
+import de.cubeisland.engine.core.recipe.condition.Condition;
 
 /**
  * Modifies a resulting ItemStack
@@ -30,10 +28,7 @@ import de.cubeisland.engine.core.recipe.ingredient.condition.IngredientCondition
  */
 public abstract class IngredientResult
 {
-    protected IngredientCondition condition;
-    private float chance = 1;
-
-    public abstract ItemStack getResult(Permissible permissible, ItemStack itemStack);
+    public abstract ItemStack getResult(Player player, ItemStack itemStack);
 
     public final IngredientResult or(IngredientResult other)
     {
@@ -47,26 +42,12 @@ public abstract class IngredientResult
 
     public final IngredientResult withChance(float chance)
     {
-        this.chance = chance;
-        return this;
+        return ConditionResult.ofChance(chance, this);
     }
 
-    public final IngredientResult withCondition(IngredientCondition condition)
+    public final IngredientResult withCondition(Condition condition)
     {
-        this.condition = condition;
-        return this;
-    }
-
-    public final boolean check(Permissible permissible, ItemStack itemStack)
-    {
-        if (chance != 1)
-        {
-            if (new Random().nextFloat() > chance)
-            {
-                return false;
-            }
-        }
-        return condition == null || condition.check(permissible, itemStack);
+        return ConditionResult.of(condition, this);
     }
 
     // cloneingredient (data/amount/enchants/name/lore/special(leatherdye/firework/book/skull...)/allmeta(ench/name/lore/special)/all(allmeta/data/amount))

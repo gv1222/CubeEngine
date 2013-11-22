@@ -32,6 +32,7 @@ import org.bukkit.World;
 import org.bukkit.World.Environment;
 import org.bukkit.WorldCreator;
 import org.bukkit.WorldType;
+import org.bukkit.block.Biome;
 import org.bukkit.block.Furnace;
 import org.bukkit.entity.Entity;
 import org.bukkit.entity.Player;
@@ -48,10 +49,13 @@ import org.bukkit.inventory.meta.ItemMeta;
 
 import de.cubeisland.engine.core.module.Module;
 import de.cubeisland.engine.core.recipe.RecipeManager;
-import de.cubeisland.engine.core.recipe.ingredient.Ingredient;
-import de.cubeisland.engine.core.recipe.ingredient.ShapelessIngredients;
-import de.cubeisland.engine.core.recipe.ingredient.result.ItemStackResult;
-import de.cubeisland.engine.core.recipe.ingredient.result.KeepResult;
+import de.cubeisland.engine.core.recipe.Ingredient;
+import de.cubeisland.engine.core.recipe.ShapelessIngredients;
+import de.cubeisland.engine.core.recipe.condition.general.BiomeCondition;
+import de.cubeisland.engine.core.recipe.effect.CommandEffect;
+import de.cubeisland.engine.core.recipe.result.EffectResult;
+import de.cubeisland.engine.core.recipe.result.ItemStackResult;
+import de.cubeisland.engine.core.recipe.result.KeepResult;
 import de.cubeisland.engine.core.util.ChatFormat;
 import de.cubeisland.engine.mystcube.blockpopulator.VillagePopulator;
 import de.cubeisland.engine.mystcube.chunkgenerator.FlatMapGenerator;
@@ -137,14 +141,27 @@ public class Mystcube extends Module implements Listener
         // TODO remove RecipeManager TEST
         this.recipeManager = new RecipeManager(this.getCore());
         this.getCore().getEventManager().registerListener(this, this.recipeManager);
-        ItemStack foldedPaper = new ItemStack(Material.PAPER);
-        ItemMeta itemMeta = foldedPaper.getItemMeta();
-        itemMeta.setDisplayName("Folded Paper");
-        foldedPaper.setItemMeta(itemMeta);
+        ItemStack sandpaper = new ItemStack(Material.PAPER);
+        ItemMeta itemMeta = sandpaper.getItemMeta();
+        itemMeta.setDisplayName("Sandpaper");
+        sandpaper.setItemMeta(itemMeta);
+        ItemStack fineSP = sandpaper.clone();
+        itemMeta.setDisplayName("Fine Sandpaper");
+        fineSP.setItemMeta(itemMeta);
+        ItemStack preview = sandpaper.clone();
+        itemMeta.setDisplayName("Sandpaper");
+        itemMeta.setLore(Arrays.asList("1% Chance to get Fine Sandpaper",
+                                       "80% Chance to keep Sand",
+                                       "when crafting in Desert Biome"));
+        preview.setItemMeta(itemMeta);
         de.cubeisland.engine.core.recipe.Recipe recipe = new de.cubeisland.engine.core.recipe.Recipe(
-            new ShapelessIngredients(Ingredient.ofMaterial(Material.PAPER),
-                                     Ingredient.ofMaterial(Material.REDSTONE_BLOCK).setResult(new KeepResult())),
-            new ItemStackResult(foldedPaper));
+            new ShapelessIngredients(Ingredient.withMaterial(Material.PAPER),
+                                     Ingredient.withMaterial(Material.SAND).withResult(
+                                         new KeepResult().withCondition(new BiomeCondition(Biome.DESERT, Biome.DESERT_HILLS))
+                                                         .withChance(0.8f))),
+            new ItemStackResult(sandpaper).withChance(0.99f).or(new ItemStackResult(fineSP).
+                                   and(new EffectResult(new CommandEffect("broadcast A lucky Player crafted Fine SandPaper!")))))
+            .withPreview(new ItemStackResult(preview));
         this.recipeManager.registerRecipe(this, recipe);
     }
 

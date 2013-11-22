@@ -15,21 +15,23 @@
  * You should have received a copy of the GNU General Public License
  * along with CubeEngine.  If not, see <http://www.gnu.org/licenses/>.
  */
-package de.cubeisland.engine.core.recipe.ingredient.condition;
+package de.cubeisland.engine.core.recipe.condition;
 
 
 import java.util.Set;
 
 import org.bukkit.Material;
+import org.bukkit.entity.Player;
 import org.bukkit.inventory.ItemStack;
-import org.bukkit.permissions.Permissible;
 
-public class AndCondition extends IngredientCondition implements MaterialProvider
+import de.cubeisland.engine.core.recipe.condition.ingredient.MaterialProvider;
+
+public class AndCondition extends Condition implements MaterialProvider
 {
-    private final IngredientCondition left;
-    private final IngredientCondition right;
+    private final Condition left;
+    private final Condition right;
 
-    public AndCondition(IngredientCondition left, IngredientCondition right)
+    public AndCondition(Condition left, Condition right)
     {
         // TODO handle impossible e.g. search for MaterialConditions combined with and
         this.left = left;
@@ -37,9 +39,9 @@ public class AndCondition extends IngredientCondition implements MaterialProvide
     }
 
     @Override
-    public boolean check(Permissible permissible, ItemStack itemStack)
+    public boolean check(Player player, ItemStack itemStack)
     {
-        return left.check(permissible, itemStack) && right.check(permissible, itemStack);
+        return left.check(player, itemStack) && right.check(player, itemStack);
     }
 
     @Override

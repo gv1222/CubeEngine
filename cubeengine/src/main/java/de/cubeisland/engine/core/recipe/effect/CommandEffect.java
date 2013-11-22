@@ -15,27 +15,27 @@
  * You should have received a copy of the GNU General Public License
  * along with CubeEngine.  If not, see <http://www.gnu.org/licenses/>.
  */
-package de.cubeisland.engine.core.recipe.ingredient.condition;
+package de.cubeisland.engine.core.recipe.effect;
 
-import org.bukkit.inventory.ItemStack;
-import org.bukkit.permissions.Permissible;
+import org.bukkit.entity.Player;
 
-public class ItemNameCondition extends IngredientCondition
+import de.cubeisland.engine.core.Core;
+
+public class CommandEffect extends RecipeEffect
 {
-    private String name;
+    private String command;
 
-    public ItemNameCondition(String name)
+    public CommandEffect(String command)
     {
-        this.name = name;
+        this.command = command;
     }
 
     @Override
-    public boolean check(Permissible permissible, ItemStack itemStack)
+    public void runEffect(Core core, Player player)
     {
-        if (itemStack.getItemMeta().hasDisplayName())
-        {
-            return name.equals(itemStack.getItemMeta().getDisplayName());
-        }
-        return false;
+        core.getCommandManager().runCommand(core.getCommandManager().getConsoleSender(), command);
+        // TODO run as player
+        // TODO run with player as param
+        // TODO run with other stuff as param
     }
 }

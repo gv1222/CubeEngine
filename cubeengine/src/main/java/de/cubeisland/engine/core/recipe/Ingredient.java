@@ -15,38 +15,40 @@
  * You should have received a copy of the GNU General Public License
  * along with CubeEngine.  If not, see <http://www.gnu.org/licenses/>.
  */
-package de.cubeisland.engine.core.recipe.ingredient;
+package de.cubeisland.engine.core.recipe;
 
 import java.util.HashSet;
 import java.util.Set;
 
 import org.bukkit.Material;
+import org.bukkit.entity.Player;
 import org.bukkit.inventory.ItemStack;
-import org.bukkit.permissions.Permissible;
 
-import de.cubeisland.engine.core.recipe.ingredient.condition.IngredientCondition;
-import de.cubeisland.engine.core.recipe.ingredient.condition.MaterialCondition;
-import de.cubeisland.engine.core.recipe.ingredient.condition.MaterialProvider;
-import de.cubeisland.engine.core.recipe.ingredient.result.IngredientResult;
+import de.cubeisland.engine.core.recipe.condition.Condition;
+import de.cubeisland.engine.core.recipe.condition.ingredient.IngredientCondition;
+import de.cubeisland.engine.core.recipe.condition.ingredient.MaterialCondition;
+import de.cubeisland.engine.core.recipe.condition.ingredient.MaterialProvider;
+import de.cubeisland.engine.core.recipe.result.IngredientResult;
 
 /**
  * A crafting ingredient
  */
 public class Ingredient
 {
-    private IngredientCondition condition;
+    private Condition condition;
+
     private IngredientResult result;
 
-    private Ingredient(IngredientCondition condition)
+    private Ingredient(Condition condition)
     {
         this.condition = condition;
     }
 
-    public final int find(Permissible permissible, ItemStack[] matrix)
+    public final int find(Player player, ItemStack[] matrix)
     {
         for (int i = 0; i < matrix.length; i++)
         {
-            if (condition.check(permissible, matrix[i]))
+            if (condition.check(player, matrix[i]))
             {
                 return i;
             }
@@ -54,33 +56,39 @@ public class Ingredient
         return -1;
     }
 
-    public final boolean check(Permissible permissible, ItemStack itemStack)
+    public final boolean check(Player player, ItemStack itemStack)
     {
-        return condition.check(permissible, itemStack);
+        return condition.check(player, itemStack);
     }
 
     /**
      * Returns the resulting itemStack
      * <p>will return null if no result is given -> use default behaviour
      *
-     * @param permissible
+     *
+     * @param player
      * @param itemStack
      * @return
      */
-    public final ItemStack getResult(Permissible permissible, ItemStack itemStack)
+    public final ItemStack getResult(Player player, ItemStack itemStack)
     {
         if (result == null)
         {
             return null;
         }
-        if (result.check(permissible, itemStack))
-        {
-            return result.getResult(permissible, itemStack);
-        }
-        return null;
+        return result.getResult(player, itemStack);
     }
 
-    public final Ingredient setResult(IngredientResult result)
+    public final Set<Material> getMaterials()
+    {
+        if (condition instanceof MaterialProvider)
+        {
+            return ((MaterialProvider)condition).getMaterials(new HashSet<Material>());
+        }
+        throw new IllegalStateException("No Material given for ingredient!");
+    }
+
+    public final Ingredient withResult(IngredientResult result)
     {
         this.result = result;
         return this;
@@ -92,7 +100,7 @@ public class Ingredient
      * @param material
      * @return
      */
-    public static Ingredient ofMaterial(Material material)
+    public static Ingredient withMaterial(Material material)
     {
         return new Ingredient(MaterialCondition.of(material));
     }
@@ -103,17 +111,9 @@ public class Ingredient
      * @param condition
      * @return
      */
-    public static Ingredient ofCondition(IngredientCondition condition)
+    public static Ingredient withCondition(IngredientCondition condition)
     {
         return new Ingredient(condition);
     }
 
-    public final Set<Material> getMaterials()
-    {
-        if (condition instanceof MaterialProvider)
-        {
-            return ((MaterialProvider)condition).getMaterials(new HashSet<Material>());
-        }
-        throw new IllegalStateException("No Material given for ingredient!");
-    }
 }

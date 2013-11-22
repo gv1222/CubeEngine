@@ -15,16 +15,35 @@
  * You should have received a copy of the GNU General Public License
  * along with CubeEngine.  If not, see <http://www.gnu.org/licenses/>.
  */
-package de.cubeisland.engine.core.recipe.ingredient.result;
+package de.cubeisland.engine.core.recipe.condition.general;
 
+import org.bukkit.entity.Player;
 import org.bukkit.inventory.ItemStack;
-import org.bukkit.permissions.Permissible;
 
-public class KeepResult extends IngredientResult
+import de.cubeisland.engine.core.recipe.condition.Condition;
+
+public class PermissionCondition extends Condition
 {
-    @Override
-    public ItemStack getResult(Permissible permissible, ItemStack itemStack)
+    private final String perm;
+    private final boolean need;
+
+    public PermissionCondition(String perm, boolean need)
     {
-        return itemStack.clone();
+        this.perm = perm;
+        this.need = need;
     }
+
+    // TODO helper methods
+
+    @Override
+    public boolean check(Player player, ItemStack itemStack)
+    {
+        if (player.hasPermission(perm))
+        {
+            return need;
+        }
+        return !need;
+    }
+
+
 }

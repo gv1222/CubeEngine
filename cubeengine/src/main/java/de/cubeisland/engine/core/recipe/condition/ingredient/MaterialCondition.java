@@ -15,14 +15,16 @@
  * You should have received a copy of the GNU General Public License
  * along with CubeEngine.  If not, see <http://www.gnu.org/licenses/>.
  */
-package de.cubeisland.engine.core.recipe.ingredient.condition;
+package de.cubeisland.engine.core.recipe.condition.ingredient;
 
 import java.util.Set;
 
 import org.bukkit.Material;
+import org.bukkit.entity.Player;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.material.MaterialData;
-import org.bukkit.permissions.Permissible;
+
+import de.cubeisland.engine.core.recipe.condition.Condition;
 
 public class MaterialCondition extends IngredientCondition implements MaterialProvider
 {
@@ -34,9 +36,9 @@ public class MaterialCondition extends IngredientCondition implements MaterialPr
         this.material = material;
     }
 
-    public static IngredientCondition of(Material... materials)
+    public static Condition of(Material... materials)
     {
-        IngredientCondition condition = new MaterialCondition(materials[0]);
+        Condition condition = new MaterialCondition(materials[0]);
         for (int i = 1; i < materials.length; i++)
         {
             condition = condition.or(new MaterialCondition(materials[i]));
@@ -50,13 +52,13 @@ public class MaterialCondition extends IngredientCondition implements MaterialPr
      * @param materialData
      * @return
      */
-    public static IngredientCondition of(MaterialData materialData)
+    public static Condition of(MaterialData materialData)
     {
         return new MaterialCondition(materialData.getItemType()).and(DurabilityCondition.exact(materialData.getData()));
     }
 
     @Override
-    public boolean check(Permissible permissible, ItemStack itemStack)
+    public boolean check(Player player, ItemStack itemStack)
     {
         if (itemStack == null) return false;
         return itemStack.getType() == this.material;

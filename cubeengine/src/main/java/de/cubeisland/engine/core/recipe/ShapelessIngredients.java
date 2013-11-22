@@ -15,7 +15,7 @@
  * You should have received a copy of the GNU General Public License
  * along with CubeEngine.  If not, see <http://www.gnu.org/licenses/>.
  */
-package de.cubeisland.engine.core.recipe.ingredient;
+package de.cubeisland.engine.core.recipe;
 
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -25,10 +25,10 @@ import java.util.Map;
 import java.util.Set;
 
 import org.bukkit.Material;
+import org.bukkit.entity.Player;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.Recipe;
 import org.bukkit.inventory.ShapelessRecipe;
-import org.bukkit.permissions.Permissible;
 
 import org.apache.commons.lang.Validate;
 
@@ -52,11 +52,11 @@ public class ShapelessIngredients implements Ingredients
     }
 
     @Override
-    public boolean check(Permissible permissible, ItemStack[] matrix)
+    public boolean check(Player player, ItemStack[] matrix)
     {
         for (Ingredient ingredient : ingredients)
         {
-            int index = ingredient.find(permissible, matrix);
+            int index = ingredient.find(player, matrix);
             if (index == -1)
             {
                 return false;
@@ -100,17 +100,17 @@ public class ShapelessIngredients implements Ingredients
     }
 
     @Override
-    public Map<Integer, ItemStack> getIngredientResults(Permissible permissible, ItemStack[] matrix)
+    public Map<Integer, ItemStack> getIngredientResults(Player player, ItemStack[] matrix)
     {
         Map<Integer, ItemStack> map = new HashMap<>();
         for (Ingredient ingredient : ingredients)
         {
-            int index = ingredient.find(permissible, matrix);
+            int index = ingredient.find(player, matrix);
             if (index == -1)
             {
                 throw new IllegalStateException("Invalid Recipe!");
             }
-            ItemStack result = ingredient.getResult(permissible, matrix[index]);
+            ItemStack result = ingredient.getResult(player, matrix[index]);
             if (result != null)
             {
                 map.put(index, result);

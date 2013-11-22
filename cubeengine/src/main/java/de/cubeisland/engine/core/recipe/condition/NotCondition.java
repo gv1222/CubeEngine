@@ -15,41 +15,37 @@
  * You should have received a copy of the GNU General Public License
  * along with CubeEngine.  If not, see <http://www.gnu.org/licenses/>.
  */
-package de.cubeisland.engine.core.recipe.ingredient.condition;
+package de.cubeisland.engine.core.recipe.condition;
 
 import java.util.Set;
 
 import org.bukkit.Material;
+import org.bukkit.entity.Player;
 import org.bukkit.inventory.ItemStack;
-import org.bukkit.permissions.Permissible;
 
-public class OrCondition extends IngredientCondition implements MaterialProvider
+import de.cubeisland.engine.core.recipe.condition.ingredient.MaterialProvider;
+
+public class NotCondition extends Condition implements MaterialProvider
 {
-    private IngredientCondition left;
-    private IngredientCondition right;
+    private Condition not;
 
-    public OrCondition(IngredientCondition left, IngredientCondition right)
+    public NotCondition(Condition not)
     {
-        this.left = left;
-        this.right = right;
+        this.not = not;
     }
 
     @Override
-    public boolean check(Permissible permissible, ItemStack itemStack)
+    public boolean check(Player player, ItemStack itemStack)
     {
-        return left.check(permissible, itemStack) || right.check(permissible, itemStack);
+        return !not.check(player, itemStack);
     }
 
     @Override
     public Set<Material> getMaterials(Set<Material> set)
     {
-        if (right instanceof MaterialProvider)
+        if (not instanceof MaterialProvider)
         {
-            set = ((MaterialProvider)right).getMaterials(set);
-        }
-        if (left instanceof MaterialProvider)
-        {
-            set = ((MaterialProvider)left).getMaterials(set);
+            return ((MaterialProvider)not).getMaterials(set); // TODO is this correct? perhaps prevent using not on MaterialConditions
         }
         return set;
     }

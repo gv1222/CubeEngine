@@ -15,10 +15,12 @@
  * You should have received a copy of the GNU General Public License
  * along with CubeEngine.  If not, see <http://www.gnu.org/licenses/>.
  */
-package de.cubeisland.engine.core.recipe.ingredient.condition;
+package de.cubeisland.engine.core.recipe.condition.ingredient;
 
+import org.bukkit.entity.Player;
 import org.bukkit.inventory.ItemStack;
-import org.bukkit.permissions.Permissible;
+
+import de.cubeisland.engine.core.recipe.condition.Condition;
 
 /**
  * Checks the durability(data)
@@ -39,38 +41,38 @@ public class DurabilityCondition extends IngredientCondition
         this.data = data;
     }
 
-    public static DurabilityCondition less(short data)
+    public static Condition less(short data)
     {
         return new DurabilityCondition(Type.LESS, data);
     }
 
-    public static DurabilityCondition more(short data)
+    public static Condition more(short data)
     {
         return new DurabilityCondition(Type.MORE, data);
     }
 
-    public static DurabilityCondition exact(short data)
+    public static Condition exact(short data)
     {
         return new DurabilityCondition(Type.EXACT, data);
     }
 
-    public static IngredientCondition notRange(short from, short to)
+    public static Condition notRange(short from, short to)
     {
         return DurabilityCondition.range(from, to).not();
     }
 
-    public static IngredientCondition range(short from, short to)
+    public static Condition range(short from, short to)
     {
         return DurabilityCondition.more(from).and(DurabilityCondition.less(to));
     }
 
-    public static DurabilityCondition bitSet(short bit)
+    public static Condition bitSet(short bit)
     {
         return new DurabilityCondition(Type.BIT, bit);
     }
 
     @Override
-    public boolean check(Permissible permissible, ItemStack itemStack)
+    public boolean check(Player player, ItemStack itemStack)
     {
         switch (this.type)
         {

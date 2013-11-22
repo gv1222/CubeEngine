@@ -15,10 +15,12 @@
  * You should have received a copy of the GNU General Public License
  * along with CubeEngine.  If not, see <http://www.gnu.org/licenses/>.
  */
-package de.cubeisland.engine.core.recipe.ingredient.condition;
+package de.cubeisland.engine.core.recipe.condition.ingredient;
 
+import org.bukkit.entity.Player;
 import org.bukkit.inventory.ItemStack;
-import org.bukkit.permissions.Permissible;
+
+import de.cubeisland.engine.core.recipe.condition.Condition;
 
 public class AmountCondition extends IngredientCondition
 {
@@ -53,18 +55,18 @@ public class AmountCondition extends IngredientCondition
         return new AmountCondition(Type.EXACT, data);
     }
 
-    public static IngredientCondition notRange(int from, int to)
+    public static Condition notRange(int from, int to)
     {
         return AmountCondition.range(from, to).not();
     }
 
-    public static IngredientCondition range(int from, int to)
+    public static Condition range(int from, int to)
     {
         return AmountCondition.more(from).and(AmountCondition.less(to));
     }
 
     @Override
-    public boolean check(Permissible permissible, ItemStack itemStack)
+    public boolean check(Player player, ItemStack itemStack)
     {
         switch (this.type)
         {
