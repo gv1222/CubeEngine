@@ -15,14 +15,15 @@
  * You should have received a copy of the GNU General Public License
  * along with CubeEngine.  If not, see <http://www.gnu.org/licenses/>.
  */
-package de.cubeisland.engine.core.recipe.effect;
+package de.cubeisland.engine.core.recipe.effect.logic;
 
 import org.bukkit.entity.Player;
 
 import de.cubeisland.engine.core.Core;
-import de.cubeisland.engine.core.recipe.condition.Condition;
+import de.cubeisland.engine.core.recipe.condition.logic.Condition;
+import de.cubeisland.engine.core.recipe.condition.general.ChanceCondition;
 
-public abstract class RecipeEffect
+public abstract class Effect
 {
     // Effects:
     // - command
@@ -50,28 +51,28 @@ public abstract class RecipeEffect
      */
     public abstract boolean runEffect(Core core, Player player);
 
-    public RecipeEffect delayedBy(long ticks)
+    public final Effect delayedBy(long ticks)
     {
         return new DelayedEffect(ticks, this);
     }
 
-    public RecipeEffect and(RecipeEffect effect)
+    public final Effect and(Effect effect)
     {
         return new AndEffect(this, effect);
     }
 
-    public RecipeEffect or(RecipeEffect effect)
+    public final Effect or(Effect effect)
     {
         return new OrEffect(this, effect);
     }
 
-    public RecipeEffect when(Condition condition)
+    public final Effect when(Condition condition)
     {
-        return ConditionEffect.of(condition, this);
+        return new ConditionEffect(condition, this);
     }
 
-    public RecipeEffect withChance(float chance)
+    public final Effect withChance(float chance)
     {
-        return ConditionEffect.ofChance(chance, this);
+        return new ConditionEffect(ChanceCondition.of(chance), this);
     }
 }

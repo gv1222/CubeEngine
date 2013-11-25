@@ -21,13 +21,14 @@ import org.bukkit.entity.Player;
 import org.bukkit.inventory.ItemStack;
 
 import de.cubeisland.engine.core.CubeEngine;
-import de.cubeisland.engine.core.recipe.effect.RecipeEffect;
+import de.cubeisland.engine.core.recipe.effect.logic.Effect;
+import de.cubeisland.engine.core.recipe.result.logic.Result;
 
-public class EffectResult extends IngredientResult
+public class EffectResult extends Result
 {
-    private RecipeEffect effect;
+    private Effect effect;
 
-    public EffectResult(RecipeEffect effect)
+    public EffectResult(Effect effect)
     {
         this.effect = effect;
     }

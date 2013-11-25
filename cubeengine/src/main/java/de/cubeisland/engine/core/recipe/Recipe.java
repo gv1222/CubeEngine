@@ -28,8 +28,8 @@ import org.bukkit.inventory.ItemStack;
 
 import de.cubeisland.engine.core.Core;
 import de.cubeisland.engine.core.recipe.condition.ingredient.MaterialProvider;
-import de.cubeisland.engine.core.recipe.effect.RecipeEffect;
-import de.cubeisland.engine.core.recipe.result.IngredientResult;
+import de.cubeisland.engine.core.recipe.effect.logic.Effect;
+import de.cubeisland.engine.core.recipe.result.logic.Result;
 
 /**
  * Represents some type of crafting recipe.
@@ -37,17 +37,17 @@ import de.cubeisland.engine.core.recipe.result.IngredientResult;
 public class Recipe
 {
     private Ingredients ingredients;
-    private IngredientResult result;
-    private RecipeEffect effect;
-    private IngredientResult preview;
+    private Result result;
+    private Effect effect;
+    private Result preview;
 
-    public Recipe(Ingredients ingredients, IngredientResult result)
+    public Recipe(Ingredients ingredients, Result result)
     {
         this.ingredients = ingredients;
         this.result = result;
     }
 
-    public Recipe withPreview(IngredientResult preview)
+    public Recipe withPreview(Result preview)
     {
         this.preview = preview;
         return this;

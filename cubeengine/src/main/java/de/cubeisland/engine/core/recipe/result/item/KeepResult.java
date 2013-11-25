@@ -15,34 +15,18 @@
  * You should have received a copy of the GNU General Public License
  * along with CubeEngine.  If not, see <http://www.gnu.org/licenses/>.
  */
-package de.cubeisland.engine.core.recipe.effect;
+package de.cubeisland.engine.core.recipe.result.item;
 
 import org.bukkit.entity.Player;
+import org.bukkit.inventory.ItemStack;
 
-import de.cubeisland.engine.core.Core;
+import de.cubeisland.engine.core.recipe.result.logic.Result;
 
-public class DelayedEffect extends RecipeEffect
+public class KeepResult extends Result
 {
-    private long delay;
-    private RecipeEffect effect;
-
-    DelayedEffect(long delay, RecipeEffect effect)
-    {
-        this.delay = delay;
-        this.effect = effect;
-    }
-
     @Override
-    public boolean runEffect(final Core core, final Player player)
+    public ItemStack getResult(Player player, ItemStack itemStack)
     {
-        core.getTaskManager().runTaskDelayed(core.getModuleManager().getCoreModule(), new Runnable()
-        {
-            @Override
-            public void run()
-            {
-                effect.runEffect(core, player);
-            }
-        }, this.delay);
-        return true;
+        return itemStack.clone();
     }
 }

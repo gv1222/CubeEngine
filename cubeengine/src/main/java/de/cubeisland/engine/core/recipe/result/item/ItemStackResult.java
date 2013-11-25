@@ -15,7 +15,7 @@
  * You should have received a copy of the GNU General Public License
  * along with CubeEngine.  If not, see <http://www.gnu.org/licenses/>.
  */
-package de.cubeisland.engine.core.recipe.result;
+package de.cubeisland.engine.core.recipe.result.item;
 
 import java.util.Set;
 
@@ -24,40 +24,32 @@ import org.bukkit.entity.Player;
 import org.bukkit.inventory.ItemStack;
 
 import de.cubeisland.engine.core.recipe.condition.ingredient.MaterialProvider;
+import de.cubeisland.engine.core.recipe.result.logic.Result;
 
-public class OrResult extends IngredientResult implements MaterialProvider
+public class ItemStackResult extends Result implements MaterialProvider
 {
-    private IngredientResult result1;
-    private IngredientResult result2;
+    private ItemStack result;
 
-    public OrResult(IngredientResult result1, IngredientResult result2)
+    public ItemStackResult(ItemStack result)
     {
-        this.result1 = result1;
-        this.result2 = result2;
+        this.result = result.clone();
     }
 
     @Override
     public ItemStack getResult(Player player, ItemStack itemStack)
     {
-        ItemStack result = result1.getResult(player, itemStack);
-        if (result == null)
-        {
-            return result2.getResult(player, itemStack);
-        }
-        return result;
+        return this.result.clone();
     }
+
+
+    // TODO more options
+    // - amount
+
 
     @Override
     public Set<Material> getMaterials(Set<Material> set)
     {
-        if (result1 instanceof MaterialProvider)
-        {
-            set = ((MaterialProvider)result1).getMaterials(set);
-        }
-        if (result2 instanceof MaterialProvider)
-        {
-            set = ((MaterialProvider)result2).getMaterials(set);
-        }
+        set.add(result.getType());
         return set;
     }
 }

@@ -20,7 +20,7 @@ package de.cubeisland.engine.core.recipe.condition.general;
 import org.bukkit.entity.Player;
 import org.bukkit.inventory.ItemStack;
 
-import de.cubeisland.engine.core.recipe.condition.Condition;
+import de.cubeisland.engine.core.recipe.condition.logic.Condition;
 
 public class PermissionCondition extends Condition
 {

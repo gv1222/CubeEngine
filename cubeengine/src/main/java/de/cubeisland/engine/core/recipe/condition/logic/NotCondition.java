@@ -15,16 +15,38 @@
  * You should have received a copy of the GNU General Public License
  * along with CubeEngine.  If not, see <http://www.gnu.org/licenses/>.
  */
-package de.cubeisland.engine.core.recipe.result;
+package de.cubeisland.engine.core.recipe.condition.logic;
 
+import java.util.Set;
+
+import org.bukkit.Material;
 import org.bukkit.entity.Player;
 import org.bukkit.inventory.ItemStack;
 
-public class KeepResult extends IngredientResult
+import de.cubeisland.engine.core.recipe.condition.ingredient.MaterialProvider;
+
+public class NotCondition extends Condition implements MaterialProvider
 {
-    @Override
-    public ItemStack getResult(Player player, ItemStack itemStack)
+    private Condition not;
+
+    NotCondition(Condition not)
     {
-        return itemStack.clone();
+        this.not = not;
+    }
+
+    @Override
+    public boolean check(Player player, ItemStack itemStack)
+    {
+        return !not.check(player, itemStack);
+    }
+
+    @Override
+    public Set<Material> getMaterials(Set<Material> set)
+    {
+        if (not instanceof MaterialProvider)
+        {
+            return ((MaterialProvider)not).getMaterials(set); // TODO is this correct? perhaps prevent using not on MaterialConditions
+        }
+        return set;
     }
 }

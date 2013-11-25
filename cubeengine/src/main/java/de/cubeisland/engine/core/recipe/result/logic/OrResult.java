@@ -15,42 +15,49 @@
  * You should have received a copy of the GNU General Public License
  * along with CubeEngine.  If not, see <http://www.gnu.org/licenses/>.
  */
-package de.cubeisland.engine.core.recipe.result;
+package de.cubeisland.engine.core.recipe.result.logic;
 
+import java.util.Set;
+
+import org.bukkit.Material;
 import org.bukkit.entity.Player;
 import org.bukkit.inventory.ItemStack;
 
-import de.cubeisland.engine.core.recipe.condition.Condition;
-import de.cubeisland.engine.core.recipe.condition.general.ChanceCondition;
+import de.cubeisland.engine.core.recipe.condition.ingredient.MaterialProvider;
 
-public class ConditionResult extends IngredientResult
+public class OrResult extends Result implements MaterialProvider
 {
-    private Condition condition;
-    private IngredientResult result;
+    private Result result1;
+    private Result result2;
 
-    private ConditionResult(Condition condition, IngredientResult result)
+    OrResult(Result result1, Result result2)
     {
-        this.condition = condition;
-        this.result = result;
+        this.result1 = result1;
+        this.result2 = result2;
     }
 
     @Override
     public ItemStack getResult(Player player, ItemStack itemStack)
     {
-        if (condition.check(player, itemStack))
+        ItemStack result = result1.getResult(player, itemStack);
+        if (result == null)
         {
-            return result.getResult(player, itemStack);
+            return result2.getResult(player, itemStack);
         }
-        return null;
+        return result;
     }
 
-    public static ConditionResult of(Condition condition, IngredientResult result)
+    @Override
+    public Set<Material> getMaterials(Set<Material> set)
     {
-        return new ConditionResult(condition, result);
-    }
-
-    public static ConditionResult ofChance(float chance, IngredientResult result)
-    {
-        return new ConditionResult(ChanceCondition.of(chance), result);
+        if (result1 instanceof MaterialProvider)
+        {
+            set = ((MaterialProvider)result1).getMaterials(set);
+        }
+        if (result2 instanceof MaterialProvider)
+        {
+            set = ((MaterialProvider)result2).getMaterials(set);
+        }
+        return set;
     }
 }

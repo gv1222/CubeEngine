@@ -15,30 +15,44 @@
  * You should have received a copy of the GNU General Public License
  * along with CubeEngine.  If not, see <http://www.gnu.org/licenses/>.
  */
-package de.cubeisland.engine.core.recipe.effect;
+package de.cubeisland.engine.core.recipe.condition.logic;
 
+import java.util.Set;
+
+import org.bukkit.Material;
 import org.bukkit.entity.Player;
+import org.bukkit.inventory.ItemStack;
 
-import de.cubeisland.engine.core.Core;
+import de.cubeisland.engine.core.recipe.condition.ingredient.MaterialProvider;
 
-public class OrEffect extends RecipeEffect
+public class OrCondition extends Condition implements MaterialProvider
 {
-    private RecipeEffect left;
-    private RecipeEffect right;
+    private Condition left;
+    private Condition right;
 
-    OrEffect(RecipeEffect left, RecipeEffect right)
+    OrCondition(Condition left, Condition right)
     {
         this.left = left;
         this.right = right;
     }
 
     @Override
-    public boolean runEffect(Core core, Player player)
+    public boolean check(Player player, ItemStack itemStack)
     {
-        if (left.runEffect(core, player))
+        return left.check(player, itemStack) || right.check(player, itemStack);
+    }
+
+    @Override
+    public Set<Material> getMaterials(Set<Material> set)
+    {
+        if (right instanceof MaterialProvider)
         {
-            return true;
+            set = ((MaterialProvider)right).getMaterials(set);
         }
-        return right.runEffect(core, player);
+        if (left instanceof MaterialProvider)
+        {
+            set = ((MaterialProvider)left).getMaterials(set);
+        }
+        return set;
     }
 }

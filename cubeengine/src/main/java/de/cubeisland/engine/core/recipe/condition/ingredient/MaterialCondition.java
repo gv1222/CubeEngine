@@ -24,7 +24,7 @@ import org.bukkit.entity.Player;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.material.MaterialData;
 
-import de.cubeisland.engine.core.recipe.condition.Condition;
+import de.cubeisland.engine.core.recipe.condition.logic.Condition;
 
 public class MaterialCondition extends IngredientCondition implements MaterialProvider
 {

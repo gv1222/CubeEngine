@@ -24,11 +24,11 @@ import org.bukkit.Material;
 import org.bukkit.entity.Player;
 import org.bukkit.inventory.ItemStack;
 
-import de.cubeisland.engine.core.recipe.condition.Condition;
+import de.cubeisland.engine.core.recipe.condition.logic.Condition;
 import de.cubeisland.engine.core.recipe.condition.ingredient.IngredientCondition;
 import de.cubeisland.engine.core.recipe.condition.ingredient.MaterialCondition;
 import de.cubeisland.engine.core.recipe.condition.ingredient.MaterialProvider;
-import de.cubeisland.engine.core.recipe.result.IngredientResult;
+import de.cubeisland.engine.core.recipe.result.logic.Result;
 
 /**
  * A crafting ingredient
@@ -37,7 +37,7 @@ public class Ingredient
 {
     private Condition condition;
 
-    private IngredientResult result;
+    private Result result;
 
     private Ingredient(Condition condition)
     {
@@ -88,7 +88,7 @@ public class Ingredient
         throw new IllegalStateException("No Material given for ingredient!");
     }
 
-    public final Ingredient withResult(IngredientResult result)
+    public final Ingredient withResult(Result result)
     {
         this.result = result;
         return this;

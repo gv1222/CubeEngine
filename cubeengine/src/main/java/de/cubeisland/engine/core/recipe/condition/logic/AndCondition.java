@@ -15,7 +15,8 @@
  * You should have received a copy of the GNU General Public License
  * along with CubeEngine.  If not, see <http://www.gnu.org/licenses/>.
  */
-package de.cubeisland.engine.core.recipe.result;
+package de.cubeisland.engine.core.recipe.condition.logic;
+
 
 import java.util.Set;
 
@@ -25,27 +26,27 @@ import org.bukkit.inventory.ItemStack;
 
 import de.cubeisland.engine.core.recipe.condition.ingredient.MaterialProvider;
 
-public class AndResult extends IngredientResult implements MaterialProvider
+public class AndCondition extends Condition implements MaterialProvider
 {
-    private final IngredientResult left;
-    private final IngredientResult right;
+    private final Condition left;
+    private final Condition right;
 
-    public AndResult(IngredientResult left, IngredientResult right)
+    AndCondition(Condition left, Condition right)
     {
+        // TODO handle impossible e.g. search for MaterialConditions combined with and
         this.left = left;
         this.right = right;
     }
 
     @Override
-    public ItemStack getResult(Player player, ItemStack itemStack)
+    public boolean check(Player player, ItemStack itemStack)
     {
-        return right.getResult(player, left.getResult(player, itemStack));
+        return left.check(player, itemStack) && right.check(player, itemStack);
     }
 
     @Override
     public Set<Material> getMaterials(Set<Material> set)
     {
-
         int size = set.size();
         if (left instanceof MaterialProvider)
         {
@@ -59,7 +60,7 @@ public class AndResult extends IngredientResult implements MaterialProvider
         }
         if (change && size != set.size())
         {
-            throw new IllegalStateException("Invalid condition! Cannot combine 2 Materials with AND");
+            throw new IllegalStateException("Invalid condition! Cannot combine 2 MaterialConditions with AND");
         }
         return set;
     }

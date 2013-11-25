@@ -21,8 +21,9 @@ import org.bukkit.Location;
 import org.bukkit.entity.Player;
 
 import de.cubeisland.engine.core.Core;
+import de.cubeisland.engine.core.recipe.effect.logic.Effect;
 
-public class ExplodeEffect extends RecipeEffect
+public class ExplodeEffect extends Effect
 {
     private float power;
     private boolean setFire;

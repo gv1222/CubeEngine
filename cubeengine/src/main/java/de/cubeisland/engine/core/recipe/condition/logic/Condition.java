@@ -15,7 +15,7 @@
  * You should have received a copy of the GNU General Public License
  * along with CubeEngine.  If not, see <http://www.gnu.org/licenses/>.
  */
-package de.cubeisland.engine.core.recipe.condition;
+package de.cubeisland.engine.core.recipe.condition.logic;
 
 import org.bukkit.entity.Player;
 import org.bukkit.inventory.ItemStack;

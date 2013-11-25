@@ -20,8 +20,9 @@ package de.cubeisland.engine.core.recipe.effect;
 import org.bukkit.entity.Player;
 
 import de.cubeisland.engine.core.Core;
+import de.cubeisland.engine.core.recipe.effect.logic.Effect;
 
-public class CommandEffect extends RecipeEffect
+public class CommandEffect extends Effect
 {
     private String command;
 

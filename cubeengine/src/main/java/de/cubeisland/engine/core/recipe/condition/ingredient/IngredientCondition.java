@@ -17,7 +17,7 @@
  */
 package de.cubeisland.engine.core.recipe.condition.ingredient;
 
-import de.cubeisland.engine.core.recipe.condition.Condition;
+import de.cubeisland.engine.core.recipe.condition.logic.Condition;
 
 public abstract class IngredientCondition extends Condition
 {

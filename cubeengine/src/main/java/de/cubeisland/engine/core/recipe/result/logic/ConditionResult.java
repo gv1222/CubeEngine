@@ -15,27 +15,31 @@
  * You should have received a copy of the GNU General Public License
  * along with CubeEngine.  If not, see <http://www.gnu.org/licenses/>.
  */
-package de.cubeisland.engine.core.recipe.effect;
+package de.cubeisland.engine.core.recipe.result.logic;
 
 import org.bukkit.entity.Player;
+import org.bukkit.inventory.ItemStack;
 
-import de.cubeisland.engine.core.Core;
+import de.cubeisland.engine.core.recipe.condition.logic.Condition;
 
-public class AndEffect extends RecipeEffect
+public class ConditionResult extends Result
 {
-    private RecipeEffect left;
-    private RecipeEffect right;
+    private Condition condition;
+    private Result result;
 
-    AndEffect(RecipeEffect left, RecipeEffect right)
+    ConditionResult(Condition condition, Result result)
     {
-        this.left = left;
-        this.right = right;
+        this.condition = condition;
+        this.result = result;
     }
 
     @Override
-    public boolean runEffect(Core core, Player player)
+    public ItemStack getResult(Player player, ItemStack itemStack)
     {
-        boolean b = left.runEffect(core, player);
-        return right.runEffect(core, player) && b;
+        if (condition.check(player, itemStack))
+        {
+            return result.getResult(player, itemStack);
+        }
+        return null;
     }
 }

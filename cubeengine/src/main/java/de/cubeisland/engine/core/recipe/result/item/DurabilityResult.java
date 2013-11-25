@@ -15,64 +15,74 @@
  * You should have received a copy of the GNU General Public License
  * along with CubeEngine.  If not, see <http://www.gnu.org/licenses/>.
  */
-package de.cubeisland.engine.core.recipe.result;
+package de.cubeisland.engine.core.recipe.result.item;
 
 import org.bukkit.entity.Player;
 import org.bukkit.inventory.ItemStack;
 
-public class AmountResult extends IngredientResult
+import de.cubeisland.engine.core.recipe.result.logic.Result;
+
+public class DurabilityResult extends Result
 {
     private enum Type
     {
-        SET, ADD;
+        SET, ADD, SET_BIT, UNSET_BIT;
     }
 
     private Type type;
-    private int amount;
+    private short data;
 
-    private AmountResult(Type type, int amount)
+    private DurabilityResult(Type type, short data)
     {
         this.type = type;
-        this.amount = amount;
+        this.data = data;
     }
 
     @Override
     public ItemStack getResult(Player player, ItemStack itemStack)
     {
-        int amount = itemStack.getAmount();
+        short durability = itemStack.getDurability();
         switch (this.type)
         {
         case SET:
-            amount = this.amount;
+            durability = data;
             break;
         case ADD:
-            amount+= this.amount;
+            durability += data;
+            break;
+        case SET_BIT:
+            durability |= data;
+            break;
+        case UNSET_BIT:
+            durability &= ~data;
             break;
         }
-        if (amount < 0)
-        {
-            amount = 0;
-        }
-        if (amount > 64)
-        {
-            amount = 64; // TODO ???
-        }
-        itemStack.setAmount(amount);
+        itemStack.setDurability(durability);
         return itemStack;
     }
 
-    public static AmountResult add(int amount)
+    public static DurabilityResult add(short data)
     {
-        return new AmountResult(Type.ADD, amount);
+        return new DurabilityResult(Type.ADD, data);
     }
 
-    public static AmountResult remove(int amount)
+    public static DurabilityResult remove(short data)
     {
-        return new AmountResult(Type.ADD, -amount);
+        return new DurabilityResult(Type.ADD, (short)-data);
     }
 
-    public static AmountResult set(int amount)
+    public static DurabilityResult set(short data)
     {
-        return new AmountResult(Type.SET, amount);
+        return new DurabilityResult(Type.SET, data);
+    }
+
+    public static DurabilityResult setBit(short data)
+    {
+        return new DurabilityResult(Type.SET_BIT, data);
+    }
+
+    public static DurabilityResult unsetBit(short data)
+    {
+        return new DurabilityResult(Type.UNSET_BIT, data);
     }
 }

@@ -15,29 +15,27 @@
  * You should have received a copy of the GNU General Public License
  * along with CubeEngine.  If not, see <http://www.gnu.org/licenses/>.
  */
-package de.cubeisland.engine.core.recipe.condition.general;
+package de.cubeisland.engine.core.recipe.effect.logic;
 
-import java.util.Arrays;
-import java.util.Collection;
-
-import org.bukkit.block.Biome;
 import org.bukkit.entity.Player;
-import org.bukkit.inventory.ItemStack;
 
-import de.cubeisland.engine.core.recipe.condition.logic.Condition;
+import de.cubeisland.engine.core.Core;
 
-public class BiomeCondition extends Condition
+public class AndEffect extends Effect
 {
-    private Collection<Biome> biomes;
+    private Effect left;
+    private Effect right;
 
-    public BiomeCondition(Biome... biomes)
+    AndEffect(Effect left, Effect right)
     {
-        this.biomes = Arrays.asList(biomes);
+        this.left = left;
+        this.right = right;
     }
 
     @Override
-    public boolean check(Player player, ItemStack itemStack)
+    public boolean runEffect(Core core, Player player)
     {
-        return this.biomes.contains(player.getLocation().getBlock().getBiome());
+        boolean b = left.runEffect(core, player);
+        return right.runEffect(core, player) && b;
     }
 }

@@ -15,38 +15,34 @@
  * You should have received a copy of the GNU General Public License
  * along with CubeEngine.  If not, see <http://www.gnu.org/licenses/>.
  */
-package de.cubeisland.engine.core.recipe.effect;
+package de.cubeisland.engine.core.recipe.effect.logic;
 
 import org.bukkit.entity.Player;
 
 import de.cubeisland.engine.core.Core;
-import de.cubeisland.engine.core.recipe.condition.Condition;
-import de.cubeisland.engine.core.recipe.condition.general.ChanceCondition;
 
-public class ConditionEffect extends RecipeEffect
+public class DelayedEffect extends Effect
 {
-    private Condition condition;
-    private RecipeEffect effect;
+    private long delay;
+    private Effect effect;
 
-    private ConditionEffect(Condition condition, RecipeEffect effect)
+    DelayedEffect(long delay, Effect effect)
     {
-        this.condition = condition;
+        this.delay = delay;
         this.effect = effect;
     }
 
-    public static ConditionEffect of(Condition condition, RecipeEffect effect)
-    {
-        return new ConditionEffect(condition, effect);
-    }
-
-    public static ConditionEffect ofChance(float chance, RecipeEffect effect)
-    {
-        return new ConditionEffect(ChanceCondition.of(chance), effect);
-    }
-
     @Override
-    public boolean runEffect(Core core, Player player)
+    public boolean runEffect(final Core core, final Player player)
     {
-        return condition.check(player, null) && effect.runEffect(core, player);
+        core.getTaskManager().runTaskDelayed(core.getModuleManager().getCoreModule(), new Runnable()
+        {
+            @Override
+            public void run()
+            {
+                effect.runEffect(core, player);
+            }
+        }, this.delay);
+        return true;
     }
 }

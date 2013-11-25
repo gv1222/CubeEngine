@@ -15,7 +15,7 @@
  * You should have received a copy of the GNU General Public License
  * along with CubeEngine.  If not, see <http://www.gnu.org/licenses/>.
  */
-package de.cubeisland.engine.core.recipe.condition;
+package de.cubeisland.engine.core.recipe.result.logic;
 
 import java.util.Set;
 
@@ -25,27 +25,41 @@ import org.bukkit.inventory.ItemStack;
 
 import de.cubeisland.engine.core.recipe.condition.ingredient.MaterialProvider;
 
-public class NotCondition extends Condition implements MaterialProvider
+public class AndResult extends Result implements MaterialProvider
 {
-    private Condition not;
+    private final Result left;
+    private final Result right;
 
-    public NotCondition(Condition not)
+    AndResult(Result left, Result right)
     {
-        this.not = not;
+        this.left = left;
+        this.right = right;
     }
 
     @Override
-    public boolean check(Player player, ItemStack itemStack)
+    public ItemStack getResult(Player player, ItemStack itemStack)
     {
-        return !not.check(player, itemStack);
+        return right.getResult(player, left.getResult(player, itemStack));
     }
 
     @Override
     public Set<Material> getMaterials(Set<Material> set)
     {
-        if (not instanceof MaterialProvider)
+
+        int size = set.size();
+        if (left instanceof MaterialProvider)
         {
-            return ((MaterialProvider)not).getMaterials(set); // TODO is this correct? perhaps prevent using not on MaterialConditions
+            set = ((MaterialProvider)left).getMaterials(set);
+        }
+        boolean change = size != set.size();
+        size = set.size();
+        if (right instanceof MaterialProvider)
+        {
+            set = ((MaterialProvider)right).getMaterials(set);
+        }
+        if (change && size != set.size())
+        {
+            throw new IllegalStateException("Invalid condition! Cannot combine 2 Materials with AND");
         }
         return set;
     }

@@ -15,39 +15,41 @@
  * You should have received a copy of the GNU General Public License
  * along with CubeEngine.  If not, see <http://www.gnu.org/licenses/>.
  */
-package de.cubeisland.engine.core.recipe.result;
+package de.cubeisland.engine.core.recipe.result.logic;
 
 import org.bukkit.entity.Player;
 import org.bukkit.inventory.ItemStack;
 
-import de.cubeisland.engine.core.recipe.condition.Condition;
+import de.cubeisland.engine.core.recipe.condition.logic.Condition;
+import de.cubeisland.engine.core.recipe.condition.general.ChanceCondition;
 
 /**
  * Modifies a resulting ItemStack
  * <p>This may be used as result for Ingredients BUT ALSO as result for the crafted item
  */
-public abstract class IngredientResult
+public abstract class Result
 {
     public abstract ItemStack getResult(Player player, ItemStack itemStack);
 
-    public final IngredientResult or(IngredientResult other)
+    public final Result or(Result other)
     {
         return new OrResult(this, other);
     }
 
-    public final IngredientResult and(IngredientResult other)
+    public final Result and(Result other)
     {
         return new AndResult(this, other);
     }
 
-    public final IngredientResult withChance(float chance)
+    public final Result withChance(float chance)
     {
-        return ConditionResult.ofChance(chance, this);
+
+        return new ConditionResult(ChanceCondition.of(chance), this);
     }
 
-    public final IngredientResult withCondition(Condition condition)
+    public final Result withCondition(Condition condition)
     {
-        return ConditionResult.of(condition, this);
+        return new ConditionResult(condition, this);
     }
 
     // cloneingredient (data/amount/enchants/name/lore/special(leatherdye/firework/book/skull...)/allmeta(ench/name/lore/special)/all(allmeta/data/amount))

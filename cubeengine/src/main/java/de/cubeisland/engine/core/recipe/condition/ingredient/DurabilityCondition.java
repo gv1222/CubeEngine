@@ -20,7 +20,7 @@ package de.cubeisland.engine.core.recipe.condition.ingredient;
 import org.bukkit.entity.Player;
 import org.bukkit.inventory.ItemStack;
 
-import de.cubeisland.engine.core.recipe.condition.Condition;
+import de.cubeisland.engine.core.recipe.condition.logic.Condition;
 
 /**
  * Checks the durability(data)
