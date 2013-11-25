@@ -26,13 +26,6 @@ import de.cubeisland.engine.core.recipe.condition.general.ChanceCondition;
 public abstract class Effect
 {
     // Effects:
-    // - command
-    // - chat
-    // - message
-    // - broadcast
-
-    // - explode
-    // - setfire
     // - sound / visual
     // - summon
     // - setblock (drop existing)
