@@ -20,8 +20,8 @@ package de.cubeisland.engine.core.recipe.result.logic;
 import org.bukkit.entity.Player;
 import org.bukkit.inventory.ItemStack;
 
-import de.cubeisland.engine.core.recipe.condition.logic.Condition;
 import de.cubeisland.engine.core.recipe.condition.general.ChanceCondition;
+import de.cubeisland.engine.core.recipe.condition.logic.Condition;
 
 /**
  * Modifies a resulting ItemStack

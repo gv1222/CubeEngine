@@ -32,7 +32,6 @@ public abstract class Effect
     // - potionreffect
     // - firework
 
-    // - modify exp/lvl
     // - modify money (needs Economy Service)
 
     /**
