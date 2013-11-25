@@ -52,6 +52,7 @@ import de.cubeisland.engine.core.recipe.Ingredient;
 import de.cubeisland.engine.core.recipe.RecipeManager;
 import de.cubeisland.engine.core.recipe.ShapelessIngredients;
 import de.cubeisland.engine.core.recipe.condition.general.BiomeCondition;
+import de.cubeisland.engine.core.recipe.condition.general.GamemodeCondition;
 import de.cubeisland.engine.core.recipe.condition.ingredient.DurabilityCondition;
 import de.cubeisland.engine.core.recipe.condition.ingredient.MaterialCondition;
 import de.cubeisland.engine.core.recipe.effect.CommandEffect;
@@ -173,6 +174,17 @@ public class Mystcube extends Module implements Listener
             new de.cubeisland.engine.core.recipe.Recipe(ingredients,
                 new ItemStackResult(Material.WOOL).and(DurabilityResult.set((short)14)).and(NameResult.of("Very Red Wool")))
             );
+
+        this.recipeManager.registerRecipe(this,
+                                          new de.cubeisland.engine.core.recipe.Recipe(
+                                              new ShapelessIngredients(Ingredient.withCondition(
+                                                  MaterialCondition.of(Material.IRON_INGOT).and(GamemodeCondition.creative())))
+                                          , new ItemStackResult(Material.GOLD_INGOT))
+                                         .withPreview(new ItemStackResult(Material.GOLD_INGOT).and(
+                                             LoreResult.of("&eYour creative mode",
+                                                           "&eis so awesome, you can",
+                                                           "&econvert iron to gold")))
+                                         );
     }
 
     private Set<Recipe> myRecipes = new HashSet<>();

@@ -43,7 +43,6 @@ public abstract class Condition
     {
         return this.and(new PermissionCondition(perm, need));
     }
-
     public abstract boolean check(Player player, ItemStack itemStack);
 }
 
@@ -56,8 +55,5 @@ public abstract class Condition
 // - exp/level
 // - money (needs Economy Service)
 // - itemInHand /w ingredient OR itemstack
-// - gamemode
-// - cooldown
-// - powered by redstone
-
-// permcheck if condition is req
+// - cooldown (needs some sort of manager)
+// - powered by redstone (get block from playerinteract save later remove on death/tp/quit/close etc.)
