@@ -23,11 +23,15 @@ import java.util.Set;
 
 import org.bukkit.Server;
 import org.bukkit.entity.Player;
+import org.bukkit.inventory.FurnaceRecipe;
 import org.bukkit.inventory.ItemStack;
+import org.bukkit.inventory.ShapedRecipe;
+import org.bukkit.inventory.ShapelessRecipe;
 import org.bukkit.material.MaterialData;
 
 import de.cubeisland.engine.core.Core;
 import de.cubeisland.engine.core.recipe.condition.ingredient.MaterialProvider;
+import de.cubeisland.engine.core.recipe.condition.logic.Condition;
 import de.cubeisland.engine.core.recipe.effect.logic.Effect;
 import de.cubeisland.engine.core.recipe.result.logic.Result;
 
@@ -37,6 +41,7 @@ import de.cubeisland.engine.core.recipe.result.logic.Result;
 public class Recipe
 {
     private Ingredients ingredients;
+    private Condition condition;
     private Result result;
     private Effect effect;
     private Result preview;
@@ -50,6 +55,12 @@ public class Recipe
     public Recipe withPreview(Result preview)
     {
         this.preview = preview;
+        return this;
+    }
+
+    public Recipe withCondition(Condition condition)
+    {
+        this.condition = condition;
         return this;
     }
 
@@ -79,6 +90,13 @@ public class Recipe
 
     public boolean matchesConditions(Player player, ItemStack[] matrix)
     {
+        if (this.condition != null)
+        {
+            if (!this.condition.check(player, null))
+            {
+                return false;
+            }
+        }
         return ingredients.check(player, matrix);
     }
 
@@ -108,6 +126,60 @@ public class Recipe
             return this.getResult(player);
         }
         return this.preview.getResult(player, null);
+    }
+
+    public boolean matchesRecipe(org.bukkit.inventory.Recipe checkRecipe)
+    {
+        for (org.bukkit.inventory.Recipe myRecipe : this.bukkitRecipes)
+        {
+            if (myRecipe.getClass().isAssignableFrom(checkRecipe.getClass())) // same type of recipe
+            {
+                if (checkRecipe.getResult().equals(myRecipe.getResult()))
+                {
+                    if (checkRecipe instanceof ShapelessRecipe)
+                    {
+                        if (((ShapelessRecipe)checkRecipe).getIngredientList().equals(
+                            ((ShapelessRecipe)myRecipe).getIngredientList()))
+                        {
+                            return true;
+                        }
+                    }
+                    else if (checkRecipe instanceof ShapedRecipe)
+                    {
+                        String[] checkShape = ((ShapedRecipe)checkRecipe).getShape();
+                        String[] myShape = ((ShapedRecipe)myRecipe).getShape();
+                        Map<Character, ItemStack> checkMap = ((ShapedRecipe)checkRecipe).getIngredientMap();
+                        Map<Character, ItemStack> myMap = ((ShapedRecipe)myRecipe).getIngredientMap();
+                        try
+                        {
+                            for (int i = 0; i < checkShape.length; i++)
+                            {
+                                for (int j = 0; j < checkShape[i].length(); j++)
+                                {
+                                    ItemStack checkItem = checkMap.get(checkShape[i].charAt(j));
+                                    ItemStack myItem = myMap.get(myShape[i].charAt(j));
+                                    if (checkItem != myItem)
+                                    {
+                                        if (checkItem == null || !checkItem.equals(myItem))
+                                        {
+                                            break;
+                                        }
+                                    }
+                                }
+                            }
+                            return true;
+                        }
+                        catch (IndexOutOfBoundsException ignore) // wrong shape
+                        {}
+                    }
+                    else if (checkRecipe instanceof FurnaceRecipe)
+                    {
+                        // TODO not implemented yet
+                    }
+                }
+            }
+        }
+        return false;
     }
 
     // TODO possibility to prevent shift-crafting

@@ -23,6 +23,7 @@ import java.util.Map;
 import java.util.Map.Entry;
 import java.util.Set;
 
+import org.bukkit.Material;
 import org.bukkit.entity.Player;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.Recipe;
@@ -84,7 +85,7 @@ public class ShapedIngredients implements Ingredients
         {
             for (int x = 0 ; x <= 3 - size.x ; x++)
             {
-                for (int z = 0; z <= 3 - size.z; x++)
+                for (int z = 0; z <= 3 - size.z; z++)
                 {
                     if (this.checkShape(player, matrix, x, z))
                     {
@@ -103,10 +104,14 @@ public class ShapedIngredients implements Ingredients
         {
             for (int z = 0; z < this.size.z - 1; z++)
             {
-                ItemStack item = matrix[3 * (xOffset + x) + zOffset + z];
+                ItemStack item = matrix[3 * (zOffset + z) + xOffset + x];
                 Ingredient ingredient = this.getIngredientAt(x, z);
                 if (item == null && ingredient != null || ingredient == null || !ingredient.check(player, item))
                 {
+                    if (item != null && item.getType() == Material.AIR && ingredient == null)
+                    {
+                        continue;
+                    }
                     return false;
                 }
                 // else correct ingredient -> check next
@@ -126,9 +131,9 @@ public class ShapedIngredients implements Ingredients
         int lowY = -1;
         int highX = -1;
         int highY = -1;
-        for (int i = 0; i <= 3; i++)
+        for (int i = 0; i < 3; i++)
         {
-            for (int j = 0; j <= 3; j++)
+            for (int j = 0; j < 3; j++)
             {
                 if (matrix[i*3 + j] != null)
                 {
@@ -155,7 +160,7 @@ public class ShapedIngredients implements Ingredients
         {
             throw new IllegalArgumentException("Empty Matrix!");
         }
-        return new BlockVector2(highX-lowX, highY-lowY);
+        return new BlockVector2(highX-lowX+1, highY-lowY+1);
     }
 
     @Override
@@ -168,16 +173,20 @@ public class ShapedIngredients implements Ingredients
         for (Entry<Character, Ingredient> entry : this.ingredientMap.entrySet())
         {
             tempMaps = new HashSet<>();
-            for (MaterialData material : entry.getValue().getMaterials())
+            if (entry.getValue() != null)
             {
-                for (Map<Character, MaterialData> materials : endMaps)
+                for (MaterialData material : entry.getValue().getMaterials())
                 {
-                    Map<Character, MaterialData> mat = new HashMap<>(materials);
-                    mat.put(entry.getKey(), material);
-                    tempMaps.add(mat);
+                    for (Map<Character, MaterialData> materials : endMaps)
+                    {
+                        Map<Character, MaterialData> mat = new HashMap<>(materials);
+                        mat.put(entry.getKey(), material);
+                        tempMaps.add(mat);
+                    }
                 }
+                endMaps = tempMaps;
             }
-            endMaps = tempMaps;
+
         }
         for (Map<Character, MaterialData> mats : endMaps)
         {
@@ -204,11 +213,10 @@ public class ShapedIngredients implements Ingredients
                 if (item != null)
                 {
                     Ingredient ingredient = this.getIngredientAt(x, z);
-                    if (ingredient == null)
+                    if (ingredient != null)
                     {
-                        throw new IllegalStateException("WTF!?");
-                    }
-                    map.put(3 * (offSet.x + x) + offSet.z + z, ingredient.getResult(player, item));
+                        map.put(3 * (offSet.x + x) + offSet.z + z, ingredient.getResult(player, item));
+                    } // else ignore because empty
                 }
                 // else no ingredient here
             }

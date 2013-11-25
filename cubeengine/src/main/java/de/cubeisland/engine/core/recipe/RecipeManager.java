@@ -24,7 +24,6 @@ import java.util.Map.Entry;
 import java.util.Set;
 
 import org.bukkit.Bukkit;
-import org.bukkit.Material;
 import org.bukkit.entity.HumanEntity;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
@@ -34,7 +33,6 @@ import org.bukkit.event.inventory.InventoryAction;
 import org.bukkit.event.inventory.PrepareItemCraftEvent;
 import org.bukkit.inventory.CraftingInventory;
 import org.bukkit.inventory.ItemStack;
-import org.bukkit.inventory.meta.ItemMeta;
 
 import de.cubeisland.engine.core.Core;
 import de.cubeisland.engine.core.CubeEngine;
@@ -101,48 +99,55 @@ public class RecipeManager implements Listener
             {
                 for (Recipe recipe : allRecipes)
                 {
-                    if (recipe.matchesConditions((Player)humanEntity, matrix))
+                    if (recipe.matchesRecipe(event.getRecipe()))
                     {
-                        Boolean shiftCraft = isShiftCrafting.get(humanEntity);
-                        if (shiftCraft != null)
+                        if (recipe.matchesConditions((Player)humanEntity, matrix))
                         {
-                            isShiftCrafting.put((Player)humanEntity, !shiftCraft);
-                            if (shiftCraft)
+                            Boolean shiftCraft = isShiftCrafting.get(humanEntity);
+                            if (shiftCraft != null)
                             {
-                                ItemStack[] myMatrix = this.shiftCrafting.get(humanEntity);
-                                Map<Integer, ItemStack> ingredientResults = null;
-                                try
+                                isShiftCrafting.put((Player)humanEntity, !shiftCraft);
+                                if (shiftCraft)
                                 {
-                                    ingredientResults = recipe.getIngredientResults((Player)humanEntity, myMatrix);
-                                }
-                                catch (IllegalStateException e) // TODO own exception for this
-                                {
-                                    event.getInventory().setResult(null); // Stop crafting!
+                                    ItemStack[] myMatrix = this.shiftCrafting.get(humanEntity);
+                                    Map<Integer, ItemStack> ingredientResults = null;
+                                    try
+                                    {
+                                        ingredientResults = recipe.getIngredientResults((Player)humanEntity, myMatrix);
+                                    }
+                                    catch (IllegalStateException e) // TODO own exception for this
+                                    {
+                                        event.getInventory().setResult(null); // Stop crafting!
+                                        return;
+                                    }
+                                    for (int i = 0 ; i < myMatrix.length ; i++)
+                                    {
+                                        if (myMatrix[i] == null)
+                                        {
+                                            continue;
+                                        }
+                                        int amount = myMatrix[i].getAmount() - 1;
+                                        if (amount < 0)
+                                        {
+                                            amount = 0;
+                                        }
+                                        myMatrix[i].setAmount(amount);
+                                    }
+                                    for (Entry<Integer, ItemStack> entry : ingredientResults.entrySet())
+                                    {
+                                        myMatrix[entry.getKey()] = entry.getValue();
+                                    }
+                                    event.getInventory().setResult(recipe.getResult((Player)humanEntity));
                                     return;
                                 }
-                                for (int i = 0 ; i < myMatrix.length ; i++)
-                                {
-                                    if (myMatrix[i] == null)
-                                    {
-                                        continue;
-                                    }
-                                    int amount = myMatrix[i].getAmount() - 1;
-                                    if (amount < 0)
-                                    {
-                                        amount = 0;
-                                    }
-                                    myMatrix[i].setAmount(amount);
-                                }
-                                for (Entry<Integer, ItemStack> entry : ingredientResults.entrySet())
-                                {
-                                    myMatrix[entry.getKey()] = entry.getValue();
-                                }
-                                event.getInventory().setResult(recipe.getResult((Player)humanEntity));
-                                return;
                             }
+                            event.getInventory().setResult(recipe.getPreview((Player)humanEntity));
+                            return;
                         }
-                        event.getInventory().setResult(recipe.getPreview((Player)humanEntity));
-                        return;
+                        else
+                        {
+                            event.getInventory().setResult(null);
+                        }
                     }
                 }
             }
