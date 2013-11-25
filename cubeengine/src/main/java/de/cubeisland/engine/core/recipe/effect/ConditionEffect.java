@@ -45,8 +45,8 @@ public class ConditionEffect extends RecipeEffect
     }
 
     @Override
-    public void runEffect(Core core, Player player)
+    public boolean runEffect(Core core, Player player)
     {
-
+        return condition.check(player, null) && effect.runEffect(core, player);
     }
 }

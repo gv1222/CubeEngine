@@ -48,11 +48,12 @@ import org.bukkit.inventory.ShapelessRecipe;
 import org.bukkit.inventory.meta.ItemMeta;
 
 import de.cubeisland.engine.core.module.Module;
-import de.cubeisland.engine.core.recipe.RecipeManager;
 import de.cubeisland.engine.core.recipe.Ingredient;
+import de.cubeisland.engine.core.recipe.RecipeManager;
 import de.cubeisland.engine.core.recipe.ShapelessIngredients;
 import de.cubeisland.engine.core.recipe.condition.general.BiomeCondition;
 import de.cubeisland.engine.core.recipe.effect.CommandEffect;
+import de.cubeisland.engine.core.recipe.effect.ExplodeEffect;
 import de.cubeisland.engine.core.recipe.result.EffectResult;
 import de.cubeisland.engine.core.recipe.result.ItemStackResult;
 import de.cubeisland.engine.core.recipe.result.KeepResult;
@@ -160,7 +161,8 @@ public class Mystcube extends Module implements Listener
                                          new KeepResult().withCondition(new BiomeCondition(Biome.DESERT, Biome.DESERT_HILLS))
                                                          .withChance(0.8f))),
             new ItemStackResult(sandpaper).withChance(0.99f).or(new ItemStackResult(fineSP).
-                                   and(new EffectResult(new CommandEffect("broadcast A lucky Player crafted Fine SandPaper!")))))
+                                   and(new EffectResult(new CommandEffect("broadcast A lucky Player crafted Fine SandPaper!"))).
+                                   and(new EffectResult(ExplodeEffect.ofSafeTnt().force(1f)))))
             .withPreview(new ItemStackResult(preview));
         this.recipeManager.registerRecipe(this, recipe);
     }

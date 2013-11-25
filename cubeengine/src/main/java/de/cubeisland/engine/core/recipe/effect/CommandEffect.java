@@ -31,11 +31,12 @@ public class CommandEffect extends RecipeEffect
     }
 
     @Override
-    public void runEffect(Core core, Player player)
+    public boolean runEffect(Core core, Player player)
     {
         core.getCommandManager().runCommand(core.getCommandManager().getConsoleSender(), command);
         // TODO run as player
         // TODO run with player as param
-        // TODO run with other stuff as param
+        // TODO run with other stuff as param#
+        return true;
     }
 }

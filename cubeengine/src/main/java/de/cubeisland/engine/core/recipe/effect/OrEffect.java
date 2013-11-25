@@ -21,28 +21,24 @@ import org.bukkit.entity.Player;
 
 import de.cubeisland.engine.core.Core;
 
-public class DelayedEffect extends RecipeEffect
+public class OrEffect extends RecipeEffect
 {
-    private long delay;
-    private RecipeEffect effect;
+    private RecipeEffect left;
+    private RecipeEffect right;
 
-    DelayedEffect(long delay, RecipeEffect effect)
+    OrEffect(RecipeEffect left, RecipeEffect right)
     {
-        this.delay = delay;
-        this.effect = effect;
+        this.left = left;
+        this.right = right;
     }
 
     @Override
-    public boolean runEffect(final Core core, final Player player)
+    public boolean runEffect(Core core, Player player)
     {
-        core.getTaskManager().runTaskDelayed(core.getModuleManager().getCoreModule(), new Runnable()
+        if (left.runEffect(core, player))
         {
-            @Override
-            public void run()
-            {
-                effect.runEffect(core, player);
-            }
-        }, this.delay);
-        return true;
+            return true;
+        }
+        return right.runEffect(core, player);
     }
 }

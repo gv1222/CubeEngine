@@ -18,9 +18,9 @@
 package de.cubeisland.engine.core.recipe.effect;
 
 import org.bukkit.entity.Player;
-import org.bukkit.inventory.Inventory;
 
 import de.cubeisland.engine.core.Core;
+import de.cubeisland.engine.core.recipe.condition.Condition;
 
 public abstract class RecipeEffect
 {
@@ -41,10 +41,37 @@ public abstract class RecipeEffect
     // - modify exp/lvl
     // - modify money (needs Economy Service)
 
-    public abstract void runEffect(Core core, Player player);
+    /**
+     * Returns true if an effect ran
+     *
+     * @param core
+     * @param player
+     * @return
+     */
+    public abstract boolean runEffect(Core core, Player player);
 
     public RecipeEffect delayedBy(long ticks)
     {
         return new DelayedEffect(ticks, this);
+    }
+
+    public RecipeEffect and(RecipeEffect effect)
+    {
+        return new AndEffect(this, effect);
+    }
+
+    public RecipeEffect or(RecipeEffect effect)
+    {
+        return new OrEffect(this, effect);
+    }
+
+    public RecipeEffect when(Condition condition)
+    {
+        return ConditionEffect.of(condition, this);
+    }
+
+    public RecipeEffect withChance(float chance)
+    {
+        return ConditionEffect.ofChance(chance, this);
     }
 }
