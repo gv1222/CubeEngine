@@ -17,44 +17,35 @@
  */
 package de.cubeisland.engine.core.recipe.result.item;
 
-import java.util.Set;
+import java.util.Arrays;
 
-import org.bukkit.Material;
 import org.bukkit.entity.Player;
 import org.bukkit.inventory.ItemStack;
+import org.bukkit.inventory.meta.ItemMeta;
 
-import de.cubeisland.engine.core.recipe.condition.ingredient.MaterialProvider;
 import de.cubeisland.engine.core.recipe.result.logic.Result;
 
-public class ItemStackResult extends Result implements MaterialProvider
+public class LoreResult extends Result
 {
-    private ItemStack result;
+    private String[] lines;
 
-    public ItemStackResult(ItemStack result)
+    private LoreResult(String... lines)
     {
-        this.result = result.clone();
-    }
-
-    public ItemStackResult(Material material)
-    {
-        this.result = new ItemStack(material);
+        this.lines = lines;
     }
 
     @Override
     public ItemStack getResult(Player player, ItemStack itemStack)
     {
-        return this.result.clone();
+        // TODO what if itemStack is null ? throw illegalarg?
+        ItemMeta itemMeta = itemStack.getItemMeta();
+        itemMeta.setLore(Arrays.asList(lines));
+        itemStack.setItemMeta(itemMeta);
+        return itemStack;
     }
 
-
-    // TODO more options
-    // - amount
-
-
-    @Override
-    public Set<Material> getMaterials(Set<Material> set)
+    public static LoreResult of(String... lines)
     {
-        set.add(result.getType());
-        return set;
+        return new LoreResult(lines);
     }
 }

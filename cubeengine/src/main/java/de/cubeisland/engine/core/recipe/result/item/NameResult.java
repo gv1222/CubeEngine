@@ -17,44 +17,33 @@
  */
 package de.cubeisland.engine.core.recipe.result.item;
 
-import java.util.Set;
-
-import org.bukkit.Material;
 import org.bukkit.entity.Player;
 import org.bukkit.inventory.ItemStack;
+import org.bukkit.inventory.meta.ItemMeta;
 
-import de.cubeisland.engine.core.recipe.condition.ingredient.MaterialProvider;
 import de.cubeisland.engine.core.recipe.result.logic.Result;
 
-public class ItemStackResult extends Result implements MaterialProvider
+public class NameResult extends Result
 {
-    private ItemStack result;
+    private String name;
 
-    public ItemStackResult(ItemStack result)
+    private NameResult(String name)
     {
-        this.result = result.clone();
-    }
-
-    public ItemStackResult(Material material)
-    {
-        this.result = new ItemStack(material);
+        this.name = name;
     }
 
     @Override
     public ItemStack getResult(Player player, ItemStack itemStack)
     {
-        return this.result.clone();
+        // TODO what if itemStack is null ? throw illegalarg?
+        ItemMeta itemMeta = itemStack.getItemMeta();
+        itemMeta.setDisplayName(this.name);
+        itemStack.setItemMeta(itemMeta);
+        return itemStack;
     }
 
-
-    // TODO more options
-    // - amount
-
-
-    @Override
-    public Set<Material> getMaterials(Set<Material> set)
+    public static NameResult of(String name)
     {
-        set.add(result.getType());
-        return set;
+        return new NameResult(name);
     }
 }
