@@ -17,12 +17,16 @@
  */
 package de.cubeisland.engine.core.recipe.result.item;
 
+import java.util.LinkedList;
+
 import org.bukkit.entity.Player;
 import org.bukkit.inventory.ItemStack;
+import org.bukkit.material.MaterialData;
 
+import de.cubeisland.engine.core.recipe.condition.ingredient.MaterialProvider;
 import de.cubeisland.engine.core.recipe.result.logic.Result;
 
-public class DurabilityResult extends Result
+public class DurabilityResult extends Result implements MaterialProvider
 {
     private enum Type
     {
@@ -84,5 +88,15 @@ public class DurabilityResult extends Result
     public static DurabilityResult unsetBit(short data)
     {
         return new DurabilityResult(Type.UNSET_BIT, data);
+    }
+
+    @Override
+    public LinkedList<MaterialData> getMaterials(LinkedList<MaterialData> list)
+    {
+        if (this.type == Type.SET)
+        {
+            list.getLast().setData((byte)this.data);
+        }
+        return list;
     }
 }

@@ -23,11 +23,11 @@ import java.util.Map;
 import java.util.Map.Entry;
 import java.util.Set;
 
-import org.bukkit.Material;
 import org.bukkit.entity.Player;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.Recipe;
 import org.bukkit.inventory.ShapedRecipe;
+import org.bukkit.material.MaterialData;
 
 import de.cubeisland.engine.core.util.math.BlockVector2;
 
@@ -159,30 +159,30 @@ public class ShapedIngredients implements Ingredients
     }
 
     @Override
-    public Set<Recipe> getBukkitRecipes(Material resultMaterial)
+    public Set<Recipe> getBukkitRecipes(MaterialData resultMaterial)
     {
         Set<Recipe> recipes = new HashSet<>();
-        Set<Map<Character, Material>> endMaps = new HashSet<>();
-        endMaps.add(new HashMap<Character, Material>());
-        Set<Map<Character, Material>> tempMaps;
+        Set<Map<Character, MaterialData>> endMaps = new HashSet<>();
+        endMaps.add(new HashMap<Character, MaterialData>());
+        Set<Map<Character, MaterialData>> tempMaps;
         for (Entry<Character, Ingredient> entry : this.ingredientMap.entrySet())
         {
             tempMaps = new HashSet<>();
-            for (Material material : entry.getValue().getMaterials())
+            for (MaterialData material : entry.getValue().getMaterials())
             {
-                for (Map<Character, Material> materials : endMaps)
+                for (Map<Character, MaterialData> materials : endMaps)
                 {
-                    Map<Character, Material> mat = new HashMap<>(materials);
+                    Map<Character, MaterialData> mat = new HashMap<>(materials);
                     mat.put(entry.getKey(), material);
                     tempMaps.add(mat);
                 }
             }
             endMaps = tempMaps;
         }
-        for (Map<Character, Material> mats : endMaps)
+        for (Map<Character, MaterialData> mats : endMaps)
         {
-            ShapedRecipe shapedRecipe = new ShapedRecipe(new ItemStack(resultMaterial)).shape(this.shape);
-            for (Entry<Character, Material> entry : mats.entrySet())
+            ShapedRecipe shapedRecipe = new ShapedRecipe(new ItemStack(resultMaterial.toItemStack())).shape(this.shape);
+            for (Entry<Character, MaterialData> entry : mats.entrySet())
             {
                 shapedRecipe.setIngredient(entry.getKey(), entry.getValue());
             }

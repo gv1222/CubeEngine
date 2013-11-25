@@ -17,14 +17,14 @@
  */
 package de.cubeisland.engine.core.recipe;
 
-import java.util.HashSet;
+import java.util.LinkedList;
 import java.util.Map;
 import java.util.Set;
 
-import org.bukkit.Material;
 import org.bukkit.Server;
 import org.bukkit.entity.Player;
 import org.bukkit.inventory.ItemStack;
+import org.bukkit.material.MaterialData;
 
 import de.cubeisland.engine.core.Core;
 import de.cubeisland.engine.core.recipe.condition.ingredient.MaterialProvider;
@@ -64,11 +64,11 @@ public class Recipe
         }
     }
 
-    private Material getResultMaterial()
+    private MaterialData getResultMaterial()
     {
         if (result instanceof MaterialProvider)
         {
-            Set<Material> materials = ((MaterialProvider)result).getMaterials(new HashSet<Material>());
+            LinkedList<MaterialData> materials = ((MaterialProvider)result).getMaterials(new LinkedList<MaterialData>());
             if (!materials.isEmpty())
             {
                 return materials.iterator().next();

@@ -17,19 +17,22 @@
  */
 package de.cubeisland.engine.core.recipe.condition.ingredient;
 
+import java.util.LinkedList;
+
 import org.bukkit.entity.Player;
 import org.bukkit.inventory.ItemStack;
+import org.bukkit.material.MaterialData;
 
 import de.cubeisland.engine.core.recipe.condition.logic.Condition;
 
 /**
  * Checks the durability(data)
  */
-public class DurabilityCondition extends IngredientCondition
+public class DurabilityCondition extends IngredientCondition implements MaterialProvider
 {
     private enum Type
     {
-        EXACT, MORE, LESS, BIT;
+        EXACT, MORE, LESS, BIT, ANY
     }
 
     private Type type;
@@ -84,7 +87,28 @@ public class DurabilityCondition extends IngredientCondition
                 return itemStack.getDurability() < data;
             case BIT:
                 return (itemStack.getDurability() & data) == data;
+            case ANY:
+                return true;
         }
         throw new IllegalStateException();
+    }
+
+    @Override
+    public LinkedList<MaterialData> getMaterials(LinkedList<MaterialData> list)
+    {
+        if (this.type == Type.EXACT)
+        {
+            list.getLast().setData((byte)this.data);
+        }
+        else
+        {
+            list.getLast().setData((byte)-1); // wildcard
+        }
+        return list;
+    }
+
+    public static DurabilityCondition any()
+    {
+        return new DurabilityCondition(Type.ANY, (short)-1);
     }
 }

@@ -53,7 +53,6 @@ public abstract class Result
     }
 
     // cloneingredient (data/amount/enchants/name/lore/special(leatherdye/firework/book/skull...)/allmeta(ench/name/lore/special)/all(allmeta/data/amount))
-    // itemname / itemlore
     // leathercolor rgb
     // bookitem title / author / pages
     // firework / firework charge item

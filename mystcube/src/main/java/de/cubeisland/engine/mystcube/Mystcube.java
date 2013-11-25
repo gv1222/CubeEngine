@@ -52,9 +52,12 @@ import de.cubeisland.engine.core.recipe.Ingredient;
 import de.cubeisland.engine.core.recipe.RecipeManager;
 import de.cubeisland.engine.core.recipe.ShapelessIngredients;
 import de.cubeisland.engine.core.recipe.condition.general.BiomeCondition;
+import de.cubeisland.engine.core.recipe.condition.ingredient.DurabilityCondition;
+import de.cubeisland.engine.core.recipe.condition.ingredient.MaterialCondition;
 import de.cubeisland.engine.core.recipe.effect.CommandEffect;
 import de.cubeisland.engine.core.recipe.effect.ExplodeEffect;
 import de.cubeisland.engine.core.recipe.result.EffectResult;
+import de.cubeisland.engine.core.recipe.result.item.DurabilityResult;
 import de.cubeisland.engine.core.recipe.result.item.ItemStackResult;
 import de.cubeisland.engine.core.recipe.result.item.KeepResult;
 import de.cubeisland.engine.core.recipe.result.item.LoreResult;
@@ -154,11 +157,22 @@ public class Mystcube extends Module implements Listener
                                 and(new EffectResult(new CommandEffect("broadcast A lucky Player crafted Fine SandPaper!"))).
                                 and(new EffectResult(ExplodeEffect.ofSafeTnt().force(1f)))))
                 .withPreview(new ItemStackResult(Material.PAPER).
-                        and(NameResult.of("Sandpaper")).
-                        and(LoreResult.of("1% Chance to get Fine Sandpaper",
-                                          "80% Chance to keep Sand",
-                                          "when crafting in Desert Biome")));
+                                                                    and(NameResult.of("Sandpaper")).
+                                                                    and(LoreResult
+                                                                            .of("1% Chance to get Fine Sandpaper", "80% Chance to keep Sand", "when crafting in Desert Biome")));
         this.recipeManager.registerRecipe(this, recipe);
+
+        ShapelessIngredients ingredients = new ShapelessIngredients(Ingredient.withCondition(
+            MaterialCondition.of(Material.WOOL).and(DurabilityCondition.exact((short)14)))); // RED WOOL
+        ingredients.addIngredient(Ingredient.withCondition(MaterialCondition.of(Material.BED, Material.RED_MUSHROOM,
+                Material.TNT, Material.REDSTONE, Material.REDSTONE_BLOCK, Material.REDSTONE_ORE, Material.REDSTONE_TORCH_ON,
+                Material.NETHERRACK, Material.NETHER_BRICK, Material.NETHER_BRICK_ITEM, Material.NETHER_BRICK_STAIRS,
+                Material.NETHER_FENCE, Material.NETHER_STALK, Material.APPLE, Material.MELON, Material.RAW_BEEF,
+                Material.SPIDER_EYE, Material.FERMENTED_SPIDER_EYE, Material.RECORD_4)));
+        this.recipeManager.registerRecipe(this,
+            new de.cubeisland.engine.core.recipe.Recipe(ingredients,
+                new ItemStackResult(Material.WOOL).and(DurabilityResult.set((short)14)).and(NameResult.of("Very Red Wool")))
+            );
     }
 
     private Set<Recipe> myRecipes = new HashSet<>();

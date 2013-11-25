@@ -18,11 +18,11 @@
 package de.cubeisland.engine.core.recipe.condition.logic;
 
 
-import java.util.Set;
+import java.util.LinkedList;
 
-import org.bukkit.Material;
 import org.bukkit.entity.Player;
 import org.bukkit.inventory.ItemStack;
+import org.bukkit.material.MaterialData;
 
 import de.cubeisland.engine.core.recipe.condition.ingredient.MaterialProvider;
 
@@ -45,23 +45,23 @@ public class AndCondition extends Condition implements MaterialProvider
     }
 
     @Override
-    public Set<Material> getMaterials(Set<Material> set)
+    public LinkedList<MaterialData> getMaterials(LinkedList<MaterialData> list)
     {
-        int size = set.size();
+        int size = list.size();
         if (left instanceof MaterialProvider)
         {
-            set = ((MaterialProvider)left).getMaterials(set);
+            list = ((MaterialProvider)left).getMaterials(list);
         }
-        boolean change = size != set.size();
-        size = set.size();
+        boolean change = size != list.size();
+        size = list.size();
         if (right instanceof MaterialProvider)
         {
-            set = ((MaterialProvider)right).getMaterials(set);
+            list = ((MaterialProvider)right).getMaterials(list);
         }
-        if (change && size != set.size())
+        if (change && size != list.size())
         {
             throw new IllegalStateException("Invalid condition! Cannot combine 2 MaterialConditions with AND");
         }
-        return set;
+        return list;
     }
 }

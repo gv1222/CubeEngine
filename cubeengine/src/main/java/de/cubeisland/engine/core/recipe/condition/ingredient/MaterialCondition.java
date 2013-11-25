@@ -17,7 +17,7 @@
  */
 package de.cubeisland.engine.core.recipe.condition.ingredient;
 
-import java.util.Set;
+import java.util.LinkedList;
 
 import org.bukkit.Material;
 import org.bukkit.entity.Player;
@@ -65,9 +65,9 @@ public class MaterialCondition extends IngredientCondition implements MaterialPr
     }
 
     @Override
-    public Set<Material> getMaterials(Set<Material> set)
+    public LinkedList<MaterialData> getMaterials(LinkedList<MaterialData> list)
     {
-        set.add(this.material);
-        return set;
+        list.add(new MaterialData(this.material));
+        return list;
     }
 }

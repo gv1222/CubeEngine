@@ -17,17 +17,16 @@
  */
 package de.cubeisland.engine.core.recipe;
 
-import java.util.HashSet;
-import java.util.Set;
+import java.util.LinkedList;
 
 import org.bukkit.Material;
 import org.bukkit.entity.Player;
 import org.bukkit.inventory.ItemStack;
+import org.bukkit.material.MaterialData;
 
-import de.cubeisland.engine.core.recipe.condition.logic.Condition;
-import de.cubeisland.engine.core.recipe.condition.ingredient.IngredientCondition;
 import de.cubeisland.engine.core.recipe.condition.ingredient.MaterialCondition;
 import de.cubeisland.engine.core.recipe.condition.ingredient.MaterialProvider;
+import de.cubeisland.engine.core.recipe.condition.logic.Condition;
 import de.cubeisland.engine.core.recipe.result.logic.Result;
 
 /**
@@ -79,11 +78,11 @@ public class Ingredient
         return result.getResult(player, itemStack);
     }
 
-    public final Set<Material> getMaterials()
+    public final LinkedList<MaterialData> getMaterials()
     {
         if (condition instanceof MaterialProvider)
         {
-            return ((MaterialProvider)condition).getMaterials(new HashSet<Material>());
+            return ((MaterialProvider)condition).getMaterials(new LinkedList<MaterialData>());
         }
         throw new IllegalStateException("No Material given for ingredient!");
     }
@@ -111,7 +110,7 @@ public class Ingredient
      * @param condition
      * @return
      */
-    public static Ingredient withCondition(IngredientCondition condition)
+    public static Ingredient withCondition(Condition condition)
     {
         return new Ingredient(condition);
     }

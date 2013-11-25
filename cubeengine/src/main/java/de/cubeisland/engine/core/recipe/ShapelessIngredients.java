@@ -24,11 +24,11 @@ import java.util.List;
 import java.util.Map;
 import java.util.Set;
 
-import org.bukkit.Material;
 import org.bukkit.entity.Player;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.Recipe;
 import org.bukkit.inventory.ShapelessRecipe;
+import org.bukkit.material.MaterialData;
 
 import org.apache.commons.lang.Validate;
 
@@ -67,30 +67,30 @@ public class ShapelessIngredients implements Ingredients
     }
 
     @Override
-    public Set<Recipe> getBukkitRecipes(Material resultMaterial)
+    public Set<Recipe> getBukkitRecipes(MaterialData resultMaterial)
     {
         Set<Recipe> recipes = new HashSet<>();
-        Set<Set<Material>> endSets = new HashSet<>();
-        endSets.add(new HashSet<Material>());
-        Set<Set<Material>> tempSets;
+        Set<Set<MaterialData>> endSets = new HashSet<>();
+        endSets.add(new HashSet<MaterialData>());
+        Set<Set<MaterialData>> tempSets;
         for (Ingredient ingredient : ingredients)
         {
             tempSets = new HashSet<>();
-            for (Material material : ingredient.getMaterials())
+            for (MaterialData material : ingredient.getMaterials())
             {
-                for (Set<Material> materials : endSets)
+                for (Set<MaterialData> materials : endSets)
                 {
-                    Set<Material> mat = new HashSet<>(materials);
+                    Set<MaterialData> mat = new HashSet<>(materials);
                     mat.add(material);
                     tempSets.add(mat);
                 }
             }
             endSets = tempSets;
         }
-        for (Set<Material> materials : endSets)
+        for (Set<MaterialData> materials : endSets)
         {
-            ShapelessRecipe shapelessRecipe = new ShapelessRecipe(new ItemStack(resultMaterial));
-            for (Material material : materials)
+            ShapelessRecipe shapelessRecipe = new ShapelessRecipe(resultMaterial.toItemStack());
+            for (MaterialData material : materials)
             {
                 shapelessRecipe.addIngredient(1, material);
             }

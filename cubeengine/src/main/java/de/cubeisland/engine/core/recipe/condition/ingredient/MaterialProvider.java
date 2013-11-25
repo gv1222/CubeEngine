@@ -17,14 +17,15 @@
  */
 package de.cubeisland.engine.core.recipe.condition.ingredient;
 
+import java.util.LinkedList;
 import java.util.Set;
 
-import org.bukkit.Material;
+import org.bukkit.material.MaterialData;
 
 /**
  * Represents a condition that could provide a MaterialCondition
  */
 public interface MaterialProvider
 {
-    public Set<Material> getMaterials(Set<Material> set);
+    public LinkedList<MaterialData> getMaterials(LinkedList<MaterialData> list);
 }

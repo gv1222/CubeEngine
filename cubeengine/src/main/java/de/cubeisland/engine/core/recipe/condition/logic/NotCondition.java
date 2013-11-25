@@ -17,11 +17,11 @@
  */
 package de.cubeisland.engine.core.recipe.condition.logic;
 
-import java.util.Set;
+import java.util.LinkedList;
 
-import org.bukkit.Material;
 import org.bukkit.entity.Player;
 import org.bukkit.inventory.ItemStack;
+import org.bukkit.material.MaterialData;
 
 import de.cubeisland.engine.core.recipe.condition.ingredient.MaterialProvider;
 
@@ -41,12 +41,12 @@ public class NotCondition extends Condition implements MaterialProvider
     }
 
     @Override
-    public Set<Material> getMaterials(Set<Material> set)
+    public LinkedList<MaterialData> getMaterials(LinkedList<MaterialData> list)
     {
         if (not instanceof MaterialProvider)
         {
-            return ((MaterialProvider)not).getMaterials(set); // TODO is this correct? perhaps prevent using not on MaterialConditions
+            return ((MaterialProvider)not).getMaterials(list); // TODO is this correct? perhaps prevent using not on MaterialConditions
         }
-        return set;
+        return list;
     }
 }

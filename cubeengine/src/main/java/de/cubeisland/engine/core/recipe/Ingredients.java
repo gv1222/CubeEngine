@@ -20,14 +20,14 @@ package de.cubeisland.engine.core.recipe;
 import java.util.Map;
 import java.util.Set;
 
-import org.bukkit.Material;
 import org.bukkit.entity.Player;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.Recipe;
+import org.bukkit.material.MaterialData;
 
 public interface Ingredients
 {
-    public Set<Recipe> getBukkitRecipes(Material resultMaterial);
+    public Set<Recipe> getBukkitRecipes(MaterialData resultMaterial);
     public boolean check(Player player, ItemStack[] matrix);
 
     public Map<Integer,ItemStack> getIngredientResults(Player player, ItemStack[] matrix);

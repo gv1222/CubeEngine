@@ -17,11 +17,12 @@
  */
 package de.cubeisland.engine.core.recipe.result.item;
 
-import java.util.Set;
+import java.util.LinkedList;
 
 import org.bukkit.Material;
 import org.bukkit.entity.Player;
 import org.bukkit.inventory.ItemStack;
+import org.bukkit.material.MaterialData;
 
 import de.cubeisland.engine.core.recipe.condition.ingredient.MaterialProvider;
 import de.cubeisland.engine.core.recipe.result.logic.Result;
@@ -50,11 +51,10 @@ public class ItemStackResult extends Result implements MaterialProvider
     // TODO more options
     // - amount
 
-
     @Override
-    public Set<Material> getMaterials(Set<Material> set)
+    public LinkedList<MaterialData> getMaterials(LinkedList<MaterialData> list)
     {
-        set.add(result.getType());
-        return set;
+        list.add(result.getData().clone());
+        return list;
     }
 }
