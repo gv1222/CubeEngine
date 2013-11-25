@@ -24,14 +24,21 @@ import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.meta.ItemMeta;
 
 import de.cubeisland.engine.core.recipe.result.logic.Result;
+import de.cubeisland.engine.core.util.ChatFormat;
 
 public class LoreResult extends Result
 {
     private String[] lines;
 
+    // TODO \n
+
     private LoreResult(String... lines)
     {
         this.lines = lines;
+        for (int i = 0; i < lines.length; i++)
+        {
+            lines[i] = ChatFormat.parseFormats(lines[i]);
+        }
     }
 
     @Override

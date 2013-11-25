@@ -22,6 +22,7 @@ import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.meta.ItemMeta;
 
 import de.cubeisland.engine.core.recipe.result.logic.Result;
+import de.cubeisland.engine.core.util.ChatFormat;
 
 public class NameResult extends Result
 {
@@ -29,7 +30,7 @@ public class NameResult extends Result
 
     private NameResult(String name)
     {
-        this.name = name;
+        this.name = ChatFormat.parseFormats(name);
     }
 
     @Override

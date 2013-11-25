@@ -20,11 +20,13 @@ package de.cubeisland.engine.core.recipe.condition.ingredient;
 import org.bukkit.entity.Player;
 import org.bukkit.inventory.ItemStack;
 
-public class ItemNameCondition extends IngredientCondition
+import de.cubeisland.engine.core.util.ChatFormat;
+
+public class NameCondition extends IngredientCondition
 {
     private String name;
 
-    public ItemNameCondition(String name)
+    private NameCondition(String name)
     {
         this.name = name;
     }
@@ -37,5 +39,15 @@ public class ItemNameCondition extends IngredientCondition
             return name.equals(itemStack.getItemMeta().getDisplayName());
         }
         return false;
+    }
+
+    public static NameCondition of(String name)
+    {
+        return new NameCondition(ChatFormat.parseFormats(name));
+    }
+
+    public static NameCondition ofRaw(String name)
+    {
+        return new NameCondition(name);
     }
 }
