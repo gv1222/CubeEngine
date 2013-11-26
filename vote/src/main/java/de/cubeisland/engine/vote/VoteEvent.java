@@ -15,32 +15,39 @@
  * You should have received a copy of the GNU General Public License
  * along with CubeEngine.  If not, see <http://www.gnu.org/licenses/>.
  */
-package de.cubeisland.engine.reputation.privilige;
+package de.cubeisland.engine.vote;
 
+import org.bukkit.event.HandlerList;
+
+import de.cubeisland.engine.core.Core;
 import de.cubeisland.engine.core.user.User;
+import de.cubeisland.engine.core.user.UserEvent;
 
-public class CommandPrivilege implements Privilege
+public class VoteEvent extends UserEvent
 {
-    private String commandGive;
-    private String commandRemove;
+    private int voteAmount;
 
-    @Override
-    public void give(User user)
+    public VoteEvent(Core core, User user, int voteAmount)
     {
-        if (this.commandGive != null)
-        {
-            String cmd = commandGive.replace("{USER}", user.getName());
-            user.getCore().getCommandManager().runCommand(user.getCore().getCommandManager().getConsoleSender(), cmd);
-        }
+        super(core, user);
+        this.voteAmount = voteAmount;
     }
 
-    @Override
-    public void remove(User user)
+    public int getVoteAmount()
     {
-        if (this.commandRemove != null)
-        {
-            String cmd = commandRemove.replace("{USER}", user.getName());
-            user.getCore().getCommandManager().runCommand(user.getCore().getCommandManager().getConsoleSender(), cmd);
-        }
+        return voteAmount;
+    }
+
+    private static final HandlerList handlers = new HandlerList();
+
+    @Override
+    public HandlerList getHandlers()
+    {
+        return handlers;
+    }
+
+    public static HandlerList getHandlerList()
+    {
+        return handlers;
     }
 }

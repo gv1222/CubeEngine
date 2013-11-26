@@ -18,14 +18,35 @@
 package de.cubeisland.engine.reputation;
 
 import de.cubeisland.engine.core.module.Module;
+import de.cubeisland.engine.core.user.User;
+import de.cubeisland.engine.reputation.storage.ReputationModel;
+import org.jooq.DSLContext;
+import org.jooq.types.UInteger;
+
+import static de.cubeisland.engine.reputation.storage.ReputationTable.TABLE_REPUTATION;
 
 public class Reputation extends Module
 {
     private ReputationConfig config;
+    private DSLContext dsl;
     
     @Override
     public void onEnable()
     {
         this.config = this.loadConfig(ReputationConfig.class);
+        this.dsl = this.getCore().getDB().getDSL();
+    }
+
+    public void modifyReputation(User user, int amount)
+    {
+        ReputationModel model = this.dsl.selectFrom(TABLE_REPUTATION)
+                                                  .where(TABLE_REPUTATION.USER_ID.eq(UInteger.valueOf(user.getId())))
+                                                  .fetchOne();
+        if (model == null)
+        {
+            model = new ReputationModel();
+        }
+        model.setValue(model.getValue() + amount);
+        model.update();
     }
 }

@@ -92,6 +92,7 @@ public class Vote extends Module implements Listener
                 replace("{MONEY}", moneyFormat).
                 replace("{AMOUNT}", String.valueOf(voteamount)).
                 replace("{VOTEURL}", this.config.voteUrl)));
+            this.getCore().getEventManager().fireEvent(new VoteEvent(this.getCore(), user, voteamount));
         }
     }
 
