@@ -17,7 +17,30 @@
  */
 package de.cubeisland.engine.reputation;
 
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
+
 import de.cubeisland.engine.configuration.YamlConfiguration;
+import de.cubeisland.engine.configuration.annotations.Comment;
+import de.cubeisland.engine.reputation.modifiers.Modifier;
+import de.cubeisland.engine.reputation.privilige.Privilege;
 
 public class ReputationConfig extends YamlConfiguration
-{}
+{
+    // TODO converters
+    @Comment("Maps reputation to the privileges you get or loose when passing that reputation")
+    public Map<Integer, Privilege> privileges = new HashMap<>();
+    @Comment("A List of modifiers that can modify Reputation")
+    public List<Modifier> modifiers = new ArrayList<>();
+
+    // TODO report / praise? cmds values
+
+    @Override
+    public String[] head()
+    {
+        // TODO append all possible Modifiers & Privileges
+        return null;
+    }
+}
