@@ -1,0 +1,98 @@
+/**
+ * This file is part of CubeEngine.
+ * CubeEngine is licensed under the GNU General Public License Version 3.
+ *
+ * CubeEngine is free software: you can redistribute it and/or modify
+ * it under the terms of the GNU General Public License as published by
+ * the Free Software Foundation, either version 3 of the License, or
+ * (at your option) any later version.
+ *
+ * CubeEngine is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * GNU General Public License for more details.
+ *
+ * You should have received a copy of the GNU General Public License
+ * along with CubeEngine.  If not, see <http://www.gnu.org/licenses/>.
+ */
+package de.cubeisland.engine.core.recipe;
+
+import java.util.Arrays;
+import java.util.Collections;
+import java.util.HashSet;
+import java.util.List;
+import java.util.Set;
+
+import org.bukkit.inventory.FurnaceRecipe;
+import org.bukkit.inventory.ItemStack;
+import org.bukkit.inventory.Recipe;
+import org.bukkit.material.MaterialData;
+
+import de.cubeisland.engine.core.util.Pair;
+
+public class FurnaceIngredients implements Ingredients
+{
+    private Ingredient smeltable;
+    private List<FuelIngredient> fuels; // can be null;
+    // TODO FuelResult
+
+    public FurnaceIngredients(Ingredient smeltable, FuelIngredient... fuels)
+    {
+        this.smeltable = smeltable;
+        this.fuels = Arrays.asList(fuels);
+    }
+
+    public FurnaceIngredients(Ingredient smeltable)
+    {
+        this.smeltable = smeltable;
+        this.fuels = Collections.emptyList();
+    }
+
+    public boolean isSmeltable(ItemStack check)
+    {
+        return this.smeltable.check(null, check);
+    }
+
+    public Pair<Integer, Integer> getTimes(ItemStack fuel, ItemStack smeltable)
+    {
+        if (this.isSmeltable(smeltable))
+        {
+            if (fuels.isEmpty()) // ignore fuel
+            {
+                return new Pair<>(-1 , -1);
+            }
+            else
+            {
+                for (FuelIngredient fuelIngredient : this.fuels)
+                {
+                    if (fuelIngredient.ingredient.check(null, fuel))
+                    {
+                        return new Pair<>(fuelIngredient.fuelTicks, fuelIngredient.smeltTicks);
+                    }
+                }
+            }
+            return new Pair<>(0, 0); // No burning
+        }
+        else
+        {
+            return null;
+        }
+    }
+
+    @Override
+    public Set<Recipe> getBukkitRecipes(MaterialData resultMaterial)
+    {
+        Set<Recipe> recipes = new HashSet<>();
+        ItemStack result = resultMaterial.toItemStack();
+        for (MaterialData ingredient : this.smeltable.getMaterials())
+        {
+            recipes.add(new FurnaceRecipe(result, ingredient));
+        }
+        return recipes;
+    }
+
+    public ItemStack getIngredientResult(ItemStack bukkitResult)
+    {
+        return this.smeltable.getResult(null, bukkitResult);
+    }
+}

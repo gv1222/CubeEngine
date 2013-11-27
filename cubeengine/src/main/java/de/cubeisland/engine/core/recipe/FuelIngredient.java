@@ -17,12 +17,24 @@
  */
 package de.cubeisland.engine.core.recipe;
 
-import java.util.Set;
-
-import org.bukkit.inventory.Recipe;
-import org.bukkit.material.MaterialData;
-
-public interface Ingredients
+public class FuelIngredient
 {
-    Set<Recipe> getBukkitRecipes(MaterialData resultMaterial);
+    public static final int DEFAULT_SMELT_TIME = 10 * 20;
+    public final Ingredient ingredient;
+    public final int fuelTicks;
+    public final int smeltTicks;
+
+    public FuelIngredient(Ingredient ingredient, int fuelTicks)
+    {
+        this.ingredient = ingredient;
+        this.fuelTicks = fuelTicks;
+        this.smeltTicks = DEFAULT_SMELT_TIME; // 10 sec
+    }
+
+    public FuelIngredient(Ingredient ingredient, int fuelTicks, int smeltTicks)
+    {
+        this.ingredient = ingredient;
+        this.fuelTicks = fuelTicks;
+        this.smeltTicks = smeltTicks;
+    }
 }

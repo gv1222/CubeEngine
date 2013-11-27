@@ -32,7 +32,7 @@ import org.bukkit.material.MaterialData;
 
 import de.cubeisland.engine.core.util.math.BlockVector2;
 
-public class ShapedIngredients implements Ingredients
+public class ShapedIngredients implements WorkbenchIngredients
 {
     private final String[] shape;
     private final BlockVector2 size;

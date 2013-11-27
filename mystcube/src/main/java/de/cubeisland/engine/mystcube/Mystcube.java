@@ -17,45 +17,35 @@
  */
 package de.cubeisland.engine.mystcube;
 
-import java.util.Arrays;
 import java.util.HashSet;
 import java.util.Random;
 import java.util.Set;
 
 import org.bukkit.Bukkit;
-import org.bukkit.DyeColor;
-import org.bukkit.Effect;
-import org.bukkit.Location;
 import org.bukkit.Material;
-import org.bukkit.Sound;
 import org.bukkit.World;
 import org.bukkit.World.Environment;
 import org.bukkit.WorldCreator;
 import org.bukkit.WorldType;
 import org.bukkit.block.Biome;
-import org.bukkit.block.Furnace;
-import org.bukkit.entity.Entity;
-import org.bukkit.entity.Player;
-import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
-import org.bukkit.event.inventory.FurnaceSmeltEvent;
-import org.bukkit.event.inventory.PrepareItemCraftEvent;
-import org.bukkit.inventory.FurnaceRecipe;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.Recipe;
-import org.bukkit.inventory.ShapedRecipe;
-import org.bukkit.inventory.ShapelessRecipe;
-import org.bukkit.inventory.meta.ItemMeta;
 
 import de.cubeisland.engine.core.module.Module;
+import de.cubeisland.engine.core.recipe.FuelIngredient;
+import de.cubeisland.engine.core.recipe.FurnaceIngredients;
+import de.cubeisland.engine.core.recipe.FurnaceRecipe;
 import de.cubeisland.engine.core.recipe.Ingredient;
 import de.cubeisland.engine.core.recipe.RecipeManager;
 import de.cubeisland.engine.core.recipe.ShapedIngredients;
 import de.cubeisland.engine.core.recipe.ShapelessIngredients;
+import de.cubeisland.engine.core.recipe.WorkbenchRecipe;
 import de.cubeisland.engine.core.recipe.condition.general.BiomeCondition;
 import de.cubeisland.engine.core.recipe.condition.general.GamemodeCondition;
 import de.cubeisland.engine.core.recipe.condition.ingredient.DurabilityCondition;
 import de.cubeisland.engine.core.recipe.condition.ingredient.MaterialCondition;
+import de.cubeisland.engine.core.recipe.condition.ingredient.NameCondition;
 import de.cubeisland.engine.core.recipe.effect.CommandEffect;
 import de.cubeisland.engine.core.recipe.effect.ExplodeEffect;
 import de.cubeisland.engine.core.recipe.result.EffectResult;
@@ -65,7 +55,6 @@ import de.cubeisland.engine.core.recipe.result.item.ItemStackResult;
 import de.cubeisland.engine.core.recipe.result.item.KeepResult;
 import de.cubeisland.engine.core.recipe.result.item.LoreResult;
 import de.cubeisland.engine.core.recipe.result.item.NameResult;
-import de.cubeisland.engine.core.util.ChatFormat;
 import de.cubeisland.engine.mystcube.blockpopulator.VillagePopulator;
 import de.cubeisland.engine.mystcube.chunkgenerator.FlatMapGenerator;
 
@@ -99,41 +88,40 @@ public class Mystcube extends Module implements Listener
     @Override
     public void onEnable()
     {
-        // CUSTOM CRAFTING TEST
-        ItemStack item = new ItemStack(Material.PAPER, 8);
-        ItemMeta meta = item.getItemMeta();
-        meta.setDisplayName(ChatFormat.parseFormats("&6Magic Paper"));
-        meta.setLore(Arrays.asList(ChatFormat.parseFormats("&eThe D'ni used this kind of"),
-                                   ChatFormat.parseFormats("&epaper to write their Ages")));
-        item.setItemMeta(meta);
-        MAGIC_PAPER = item.clone();
-        MAGIC_PAPER.setAmount(1);
-        ShapedRecipe magicPaper = new ShapedRecipe(item).shape("ppp", "prp", "ppp").setIngredient('p', Material.PAPER).setIngredient('r', Material.REDSTONE);
-        this.registerRecipe(magicPaper);
+        this.recipeManager = new RecipeManager(this.getCore());
 
-        item = new ItemStack(Material.PAPER, 1);
-        meta = item.getItemMeta();
-        meta.setDisplayName(ChatFormat.parseFormats("&9Raw Linking Panel"));
-        meta.setLore(Arrays.asList(ChatFormat.parseFormats("&eAn unfinished linking panel."),
-                                   ChatFormat.parseFormats("&eGreat heat is needed to"),
-                                   ChatFormat.parseFormats("&emake it usable in a book")));
-        item.setItemMeta(meta);
-        RAW_PANEL = item;
-        ShapelessRecipe rawLinkingPanel = new ShapelessRecipe(item);
-        rawLinkingPanel.addIngredient(1, Material.PAPER).addIngredient(1, Material.DIAMOND);
-        this.registerRecipe(rawLinkingPanel);
+        this.recipeManager.registerRecipe(this,
+                  new WorkbenchRecipe(
+                      new ShapedIngredients("ppp","prp","ppp")
+                          .setIngredient('p', Ingredient.withMaterial(Material.PAPER))
+                          .setIngredient('r', Ingredient.withMaterial(Material.REDSTONE))
+                      ,new ItemStackResult(Material.PAPER).and(NameResult.of("&3Magic Paper"))
+                          .and(LoreResult.of("&eThe D'ni used this kind of",
+                                             "&epaper to write their Ages")
+                          .and(AmountResult.set(8)))
+                  ));
 
-        item = new ItemStack(Material.PAPER, 1);
-        meta = item.getItemMeta();
-        meta.setDisplayName(ChatFormat.parseFormats("&6Linking Panel"));
-        meta.setLore(Arrays.asList(ChatFormat.parseFormats("&eWhen used in an age or linking book"),
-                                   ChatFormat.parseFormats("&eyou will get teleported"),
-                                   ChatFormat.parseFormats("&eby merely touching the panel")));
-        item.setItemMeta(meta);
+        this.recipeManager.registerRecipe(this,
+                  new WorkbenchRecipe(
+                      new ShapelessIngredients(Ingredient.withMaterial(Material.PAPER),
+                                               Ingredient.withMaterial(Material.DIAMOND))
+                      ,new ItemStackResult(Material.PAPER).and(NameResult.of("&9Raw Linking Panel"))
+                          .and(LoreResult.of("&eAn unfinished linking panel.",
+                                             "&eGreat heat is needed to",
+                                             "&emake it usable in a book"))
+                  ));
 
-        LINKING_PANEL = item;
-        FurnaceRecipe linkingPanel = new FurnaceRecipe(item, Material.PAPER);
-        this.registerRecipe(linkingPanel);
+        this.recipeManager.registerRecipe(this,
+                                          new FurnaceRecipe(new FurnaceIngredients(
+                                              Ingredient.withCondition(MaterialCondition.of(Material.PAPER).and(NameCondition.of("&9Raw Linking Panel")))
+                                              , new FuelIngredient(Ingredient.withMaterial(Material.BLAZE_POWDER), 20 , 5)
+                                          ), new ItemStackResult(Material.PAPER).and(NameResult.of("&6Linking Panel")
+                                                                                    .and(LoreResult.of("&eWhen used in an age or linking book",
+                                                                                                       "&eyou will get teleported",
+                                                                                                       "&eby merely touching the panel")))));
+
+/*
+
 
         item = new ItemStack(Material.INK_SACK, 1, DyeColor.GRAY.getDyeData()); // Setting Color /w MaterialData does not work WHÝ?!
         meta.setDisplayName(ChatFormat.parseFormats("&6Ash"));
@@ -148,13 +136,14 @@ public class Mystcube extends Module implements Listener
                                    ChatFormat.parseFormats("&ewaiting to be written")));
         item.setItemMeta(meta);
         BLANK_BOOK = item;
+        */
 
         this.getCore().getEventManager().registerListener(this, this);
 
         // TODO remove RecipeManager TEST
-        this.recipeManager = new RecipeManager(this.getCore());
+
         this.getCore().getEventManager().registerListener(this, this.recipeManager);
-        de.cubeisland.engine.core.recipe.Recipe recipe = new de.cubeisland.engine.core.recipe.Recipe(
+        de.cubeisland.engine.core.recipe.Recipe recipe = new WorkbenchRecipe(
             new ShapelessIngredients(Ingredient.withMaterial(Material.PAPER),
                                      Ingredient.withMaterial(Material.SAND).withResult(
                                          new KeepResult().withCondition(new BiomeCondition(Biome.DESERT, Biome.DESERT_HILLS))
@@ -178,19 +167,19 @@ public class Mystcube extends Module implements Listener
                         Material.NETHER_FENCE, Material.NETHER_STALK, Material.APPLE, Material.MELON, Material.RAW_BEEF,
                         Material.SPIDER_EYE, Material.FERMENTED_SPIDER_EYE, Material.RECORD_4)));
         this.recipeManager.registerRecipe(this,
-                                          new de.cubeisland.engine.core.recipe.Recipe(ingredients,
+                                          new WorkbenchRecipe(ingredients,
                                           new ItemStackResult(Material.WOOL).and(DurabilityResult.set((short)14)).
                                               and(NameResult.of("&cVery Red Wool")))
                                          );
 
-        this.recipeManager.registerRecipe(this, new de.cubeisland.engine.core.recipe.Recipe(
+        this.recipeManager.registerRecipe(this, new WorkbenchRecipe(
             new ShapedIngredients(" x ", "   ", "x x")
                             .setIngredient('x', Ingredient.withCondition(MaterialCondition.of(Material.IRON_INGOT))),
             new ItemStackResult(Material.GOLD_INGOT).and(AmountResult.set(3)))
             .withCondition(GamemodeCondition.creative()).
-            withPreview(new ItemStackResult(Material.GOLD_INGOT).and(
-                LoreResult.of("&eYour creative mode", "&eis so awesome, you can", "&econvert iron to gold"))
-                        .and(AmountResult.set(3))));
+            withPreview(new ItemStackResult(Material.GOLD_INGOT).and(LoreResult
+                                                                         .of("&eYour creative mode", "&eis so awesome, you can", "&econvert iron to gold"))
+                                                                .and(AmountResult.set(3))));
     }
 
     private Set<Recipe> myRecipes = new HashSet<>();
@@ -215,50 +204,5 @@ public class Mystcube extends Module implements Listener
     public void onLoad()
     {
         this.getCore().getWorldManager().registerGenerator(this, "flat", new FlatMapGenerator());
-    }
-
-    @EventHandler
-    public void onCraft(PrepareItemCraftEvent event)
-    {
-        if (event.getRecipe().getResult().getType() == Material.BOOK)
-        {
-            if (event.getInventory().contains(MAGIC_PAPER, 2) && event.getInventory().contains(LINKING_PANEL, 1))
-            {
-                event.getInventory().setResult(BLANK_BOOK.clone());
-            }
-        }
-    }
-
-    @EventHandler
-    public void onSmelted(FurnaceSmeltEvent event)
-    {
-        if (event.getSource().getType() == Material.PAPER)
-        {
-            if (event.getSource().isSimilar(RAW_PANEL))
-            {
-                return;
-            }
-            Furnace furnace = (Furnace)event.getBlock().getState();
-            int amount = furnace.getInventory().getSmelting().getAmount();
-            furnace.getInventory().getSmelting().setAmount(1); // ALL Paper burned
-            event.setResult(ASH.clone());
-            Location furnaceLocation = furnace.getLocation();
-            furnace.getWorld().playEffect(furnaceLocation.add(0, 1, 0), Effect.MOBSPAWNER_FLAMES, 4, 50);
-            furnace.getWorld().playSound(furnaceLocation, Sound.FIRE, 1, 1);
-            Location loc2 = new Location(null, 0,0,0);
-            if (amount > 8)
-            {
-                for (Entity entity : furnace.getWorld().getEntities())
-                {
-                    if (entity instanceof Player)
-                    {
-                        if (entity.getLocation(loc2).distanceSquared(furnaceLocation) <= 4)
-                        {
-                            entity.setFireTicks(20 + amount * 2);
-                        }
-                    }
-                }
-            }
-        }
     }
 }

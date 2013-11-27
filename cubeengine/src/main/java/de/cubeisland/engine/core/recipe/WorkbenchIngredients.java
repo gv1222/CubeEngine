@@ -17,12 +17,13 @@
  */
 package de.cubeisland.engine.core.recipe;
 
-import java.util.Set;
+import java.util.Map;
 
-import org.bukkit.inventory.Recipe;
-import org.bukkit.material.MaterialData;
+import org.bukkit.entity.Player;
+import org.bukkit.inventory.ItemStack;
 
-public interface Ingredients
+public interface WorkbenchIngredients extends Ingredients
 {
-    Set<Recipe> getBukkitRecipes(MaterialData resultMaterial);
+    Map<Integer,ItemStack> getIngredientResults(Player player, ItemStack[] matrix);
+    boolean check(Player player, ItemStack[] matrix);
 }

@@ -32,7 +32,7 @@ import org.bukkit.material.MaterialData;
 
 import org.apache.commons.lang.Validate;
 
-public class ShapelessIngredients implements Ingredients
+public class ShapelessIngredients implements WorkbenchIngredients
 {
     private List<Ingredient> ingredients = new ArrayList<>();
 

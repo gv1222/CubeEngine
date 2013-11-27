@@ -42,34 +42,49 @@ import static org.bukkit.event.inventory.InventoryAction.MOVE_TO_OTHER_INVENTORY
 
 public class RecipeManager implements Listener
 {
-    private Map<Module, Set<Recipe>> recipes = new HashMap<>();
-    private Set<Recipe> allRecipes = new HashSet<>();
-    private Core core;
+    protected Map<Module, Set<Recipe>> recipes = new HashMap<>();
+    protected Set<WorkbenchRecipe> workbenchRecipes = new HashSet<>();
+    protected Set<FurnaceRecipe> furnaceRecipes = new HashSet<>();
+    private final FurnaceManager furnaceManager;
+
+    protected Core core;
 
     public RecipeManager(Core core)
     {
         this.core = core;
+        this.furnaceManager = new FurnaceManager(this);
     }
 
     public void registerRecipe(Module module, Recipe recipe)
     {
         recipe.registerBukkitRecipes(Bukkit.getServer());
         this.getRecipes(module).add(recipe);
-        this.allRecipes.add(recipe);
+        if (recipe instanceof WorkbenchRecipe)
+        {
+            this.workbenchRecipes.add((WorkbenchRecipe)recipe);
+        }
+        else if (recipe instanceof FurnaceRecipe)
+        {
+            this.furnaceRecipes.add((FurnaceRecipe)recipe);
+        }
+        else
+        {
+            throw new IllegalStateException();
+        }
     }
 
     public void unregisterRecipe(Module module, Recipe recipe)
     {
         // TODO remove bukkit recipes (saved recipes are in our Recipe object)
         this.getRecipes(module).remove(recipe);
-        this.allRecipes.remove(recipe);
+        this.workbenchRecipes.remove(recipe);
     }
 
     public void unregisterAllRecipes(Module module)
     {
         // TODO remove bukkit recipes (saved recipes are in our Recipe object)
         Set<Recipe> remove = this.recipes.remove(module);
-        this.allRecipes.removeAll(remove);
+        this.workbenchRecipes.removeAll(remove);
     }
 
     private Set<Recipe> getRecipes(Module module)
@@ -97,7 +112,7 @@ public class RecipeManager implements Listener
         {
             if (humanEntity instanceof Player)
             {
-                for (Recipe recipe : allRecipes)
+                for (WorkbenchRecipe recipe : workbenchRecipes)
                 {
                     if (recipe.matchesRecipe(event.getRecipe()))
                     {
@@ -165,7 +180,7 @@ public class RecipeManager implements Listener
             return;
         }
         final Player player = (Player)event.getWhoClicked();
-        for (final Recipe recipe : allRecipes)
+        for (final WorkbenchRecipe recipe : workbenchRecipes)
         {
             if (recipe.matchesConditions(player, event.getInventory().getMatrix()))
             {
@@ -193,7 +208,7 @@ public class RecipeManager implements Listener
                     // what when craft req more than 1 of each item?
                     // Action is then: MOVE_TO_OTHER_INVENTORY
                     // other possible PICKUP_ALL
-                    // PICKUP_HALF <- does it really pickup half?
+                    // PICKUP_HALF <- does it really pickup half? no
                     // TODO handle if default result stackable but special result not cancel crafting or stmh else
                     recipe.runEffects(core, player);
                     final CraftingInventory inventory = event.getInventory();
@@ -248,4 +263,6 @@ public class RecipeManager implements Listener
             }
         }
     }
+
+     //TODO remove recipe when unloading module
 }
