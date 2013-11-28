@@ -19,29 +19,29 @@ package de.cubeisland.engine.core.recipe;
 
 import java.util.HashMap;
 import java.util.Map;
-import java.util.concurrent.TimeUnit;
 
 import org.bukkit.Location;
-import org.bukkit.Material;
 import org.bukkit.block.Furnace;
+import org.bukkit.entity.HumanEntity;
+import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
 import org.bukkit.event.inventory.FurnaceBurnEvent;
 import org.bukkit.event.inventory.FurnaceSmeltEvent;
+import org.bukkit.event.inventory.InventoryClickEvent;
+import org.bukkit.event.inventory.InventoryType.SlotType;
+import org.bukkit.inventory.FurnaceInventory;
 import org.bukkit.inventory.ItemStack;
 
 import de.cubeisland.engine.core.module.CoreModule;
 import de.cubeisland.engine.core.util.Pair;
-import de.cubeisland.engine.core.util.Profiler;
-
-import static de.cubeisland.engine.core.recipe.FuelIngredient.DEFAULT_SMELT_TIME;
 
 public class FurnaceManager implements Listener
 {
     protected final CoreModule coreModule;
     protected RecipeManager manager;
 
-    protected Map<Location, ItemStack> fuelMap = new HashMap<>();
+    protected Map<Location, FuelIngredient> fuelMap = new HashMap<>();
     protected Map<Location, CustomSmelting> smeltMap = new HashMap<>();
 
     public FurnaceManager(RecipeManager manager)
@@ -65,26 +65,15 @@ public class FurnaceManager implements Listener
                 FurnaceIngredients ingredients = recipe.getIngredients();
                 if (recipe.matchesRecipe(furnace.getInventory().getSmelting()))
                 {
-                    Pair<Integer,Integer> times = ingredients.getTimes(event.getFuel(), furnace.getInventory().getSmelting());
-                    if (times != null)
+                    Pair<FuelIngredient, Boolean> fuel = ingredients.matchFuelIngredient(event.getFuel(),
+                         furnace.getInventory().getSmelting());
+                    if (fuel != null && fuel.getRight())
                     {
-                        if (times.getLeft() != 0)
-                        {
-                            event.setBurnTime(times.getLeft());
-                            this.manager.core.getTaskManager().runTaskDelayed(coreModule, new Runnable()
-                            {
-                                @Override
-                                public void run()
-                                {
-                                    fuelEnd(furnace, location);
-                                }
-                            }, times.getLeft() - 1);
-                            fuelMap.put(location, event.getFuel());
-                            System.out.print("new Fuel " + furnace.getBurnTime() + " +" + event.getBurnTime());
-                            this.startSmelting(recipe, furnace, times);
-                            smeltMap.get(location).updateLastFuelTick(event.getBurnTime());
-                            return;
-                        }
+                        event.setBurnTime(fuel.getLeft().fuelTicks);
+                        fuelMap.put(location, fuel.getLeft());
+                        System.out.print("New Fuel | BurnTime +" + event.getBurnTime());
+                        this.startSmelting(recipe, furnace, fuel.getLeft(), event.getBurnTime());
+                        return;
                     }
                     invalidRecipe = true;
                 }
@@ -96,61 +85,30 @@ public class FurnaceManager implements Listener
         }
     }
 
-    private void startSmelting(final FurnaceRecipe recipe, final Furnace furnace, final Pair<Integer, Integer> times)
+    private void startSmelting(final FurnaceRecipe recipe, final Furnace furnace, final FuelIngredient times, int burnTime)
     {
         Location location = furnace.getLocation();
         CustomSmelting smelting = smeltMap.get(location);
         if (smelting == null)
         {
-            Profiler.endProfiling("tester", TimeUnit.MILLISECONDS);
-            Profiler.startProfiling("tester");
-            System.out.print("START F:" + furnace.getBurnTime());
-            smeltMap.put(location, new CustomSmelting(FurnaceManager.this, furnace, recipe, times));
+            System.out.print("Start Smelt | Fuel " + burnTime);
+            smeltMap.put(location, new CustomSmelting(FurnaceManager.this, furnace, recipe, times)
+                .updateLastFuelTick(burnTime));
         }
         else
         {
-            System.out.print("CONTINUE F:" + furnace.getBurnTime() + " C: " + smelting.curSmeltTime);
-            smelting.updateLastFuelTick(furnace.getBurnTime());
+            System.out.print("Continue Smelt | Fuel " + burnTime +
+                                 " C:" + smelting.curSmeltTime + "/" + smelting.totalSmeltTime);
+            smelting.updateLastFuelTick(burnTime + smelting.getLastFuelTick());
         }
     }
 
-    private void fuelEnd(final Furnace furnace, final Location location)
+    private void restartSmelting(final FurnaceRecipe recipe, final Furnace furnace, final Location location, final int endFuel)
     {
-        System.out.print("Fuel End " + furnace.getBurnTime());
-        this.fuelMap.remove(location);
-        ItemStack fuel = furnace.getInventory().getFuel();
-        CustomSmelting smelt = this.smeltMap.remove(location);
-        if (fuel == null || fuel.getType() == Material.AIR)
+        if (endFuel == 0)
         {
             return;
         }
-        ItemStack smelting = furnace.getInventory().getSmelting();
-        if (smelting == null || smelting.getType() == Material.AIR)
-        {
-            return;
-        }
-        if (smelt != null)
-        {
-            if (smelt.recipe.matchesRecipe(smelting))
-            {
-                Pair<Integer, Integer> times = smelt.recipe.getIngredients().getTimes(fuel, smelting);
-                if (times != null)
-                {
-                    if (times.getRight() != 0)
-                    {
-                        this.smeltMap.put(location, smelt);
-                    }
-                    else
-                    {
-                        smelt.stop();
-                    }
-                }
-            } // else no match -> no smelt
-        }
-    }
-
-    private void restartSmelting(final FurnaceRecipe recipe, final Furnace furnace, final Location location)
-    {
         if (smeltMap.get(location) != null)
         {
             return; // already smelting smth else
@@ -161,19 +119,18 @@ public class FurnaceManager implements Listener
                    @Override
                    public void run()
                    {
-                       Pair<Integer, Integer> times = recipe.getIngredients()
-                                                            .getTimes(fuelMap.get(location), furnace.getInventory().getSmelting());
-                       if (times != null) // can smelt ?
+                       if (recipe.ingredients.isSmeltable(furnace.getInventory().getSmelting()))
                        {
-                           if (times.getRight() != DEFAULT_SMELT_TIME)
-                           {
-                               System.out.print("Restart");
-                               startSmelting(recipe, furnace, times);
-                           }
-                       } // else other recipe
+                           System.out.print("Restart");
+                           startSmelting(recipe, furnace, fuelMap.get(location), endFuel);
+                       }
+                       else
+                       {
+                            System.out.print("No Restart!");
+                            // TODO search recipe OR do not continue smelt animation
+                       }
                    }
                });
-
     }
 
     @EventHandler
@@ -184,41 +141,160 @@ public class FurnaceManager implements Listener
             final Furnace furnace = (Furnace)event.getBlock().getState();
             final Location location = furnace.getLocation();
             CustomSmelting smelt = this.smeltMap.remove(location);
-
             if (smelt == null)
             {
-                return;
-                // TODO vanilla recipe?
-            }
-            Pair<Integer, Integer> times = smelt.recipe.getIngredients()
-                         .getTimes(this.fuelMap.get(location), event.getSource());
-            if (times == null) // no match /w customSmelting
-            {
-                // TODO if custom fuel time need to restart cooking timer!
-            }
-            else // prepared custom smelting
-            {
-                if (times.getLeft() == 0)
+                if (fuelMap.get(location) != null)
                 {
-                    this.manager.core.getLog().warn("Someone almost smelted with an invalid fuel!");
-                    event.setCancelled(true); // invalid fuel
-                    return;
-                }
-                ItemStack result = smelt.recipe.getResult(null);
-                if (result == null)
-                {
+                    System.out.print("Custom Fuel Detected!");
                     event.setCancelled(true);
-                    return;
                 }
-                event.setResult(result);
-                System.out.print("### SMELT ###" + (float)Profiler.endProfiling("tester", TimeUnit.MILLISECONDS) / 50);
-                // TODO recipe.getIngredients().getIngredientResult(event.getSource());
-                if (furnace.getBurnTime() != 0)
-                {
-                    this.restartSmelting(smelt.recipe, furnace, location);
-                }
-                //event.getSource()
+                // TODO vanilla recipe?
+                return;
+            }
+            ItemStack result = smelt.recipe.getResult(null);
+            if (result == null)
+            {
+                event.setCancelled(true);
+                return;
+            }
+            event.setResult(result);
+            System.out.print("### SMELT ###");
+            final ItemStack ingredientResult = smelt.recipe.getIngredients().getIngredientResult(event.getSource().clone());
+            if (ingredientResult != null)
+            {
+                this.manager.core.getTaskManager().runTask(coreModule,
+                   new Runnable()
+                   {
+                       @Override
+                       public void run()
+                       {
+                           furnace.getInventory().setSmelting(ingredientResult);
+                           for (HumanEntity humanEntity : furnace.getInventory().getViewers())
+                           {
+                               if (humanEntity instanceof Player)
+                               {
+                                   ((Player)humanEntity).updateInventory();
+                               }
+                           }
+                       }
+                   });
+            }
+
+            if (furnace.getBurnTime() > 0)
+            {
+                this.restartSmelting(smelt.recipe, furnace, location, smelt.getEndFuel());
+            }
+            else
+            {
+                this.fuelMap.remove(location);
             }
         }
     }
+
+    @EventHandler
+    public void onNewSmeltable(InventoryClickEvent event)
+    {
+        // TODO prevent taking out when fuel not used up / add preview for furnacerecipe
+        // TODO FurnaceExtractEvent
+        if (event.getInventory() instanceof FurnaceInventory)
+        {
+            if (event.getInventory().getHolder() instanceof Furnace)
+            {
+                Furnace furnace = (Furnace)event.getInventory().getHolder();
+                if (furnace.getBurnTime() <= 0)
+                {
+                    return;
+                }
+                //ItemStack oldItem = furnace.getInventory().getSmelting();
+                ItemStack newItem = null;
+                switch (event.getAction())
+                {
+                case SWAP_WITH_CURSOR:
+                case PLACE_ALL:
+                    if (event.getRawSlot() == 0)
+                    {
+                        newItem = event.getCursor();
+                        break;
+                    }
+                    return;
+                case HOTBAR_SWAP:
+                    if (event.getRawSlot() == 0)
+                    {
+                        newItem = event.getWhoClicked().getInventory().getItem(event.getHotbarButton());
+                        break;
+                    }
+                    return;
+                case PLACE_ONE:
+                    if (event.getRawSlot() != 0 || event.getCursor().isSimilar(furnace.getInventory().getSmelting()))
+                    {
+                        return;
+                    }
+                    newItem = event.getCursor();
+                    break;
+                case PICKUP_ALL:
+                    if (event.getRawSlot() == 0)
+                    {
+                        break;
+                    }
+                    return;
+                case MOVE_TO_OTHER_INVENTORY:
+                    if (event.getRawSlot() == 0)
+                    {
+                        break;
+                    }
+                    else if (event.getRawSlot() > event.getView().getTopInventory().getSize())
+                    {
+                        newItem = event.getCurrentItem();
+                    }
+                    else if (event.getSlotType() == SlotType.RESULT)
+                    {
+                        return; // shift click out result
+                    }
+                    break;
+                default: return;
+                }
+                Location location = furnace.getLocation();
+                FuelIngredient customFuel = this.fuelMap.get(location);
+                CustomSmelting customSmelting = this.smeltMap.get(location);
+                if (customSmelting != null)
+                {
+                    // TODO block changing
+                    event.setCancelled(true);
+                    return;
+                }
+                if (newItem == null)
+                {
+                    return;
+                }
+                boolean invalidRecipe = false;
+                for (final FurnaceRecipe recipe : this.manager.furnaceRecipes)
+                {
+                    FurnaceIngredients ingredients = recipe.getIngredients();
+                    if (recipe.matchesRecipe(newItem))
+                    {
+                        if (ingredients.hasFuel(customFuel))
+                        {
+                            if (ingredients.isSmeltable(newItem))
+                            {
+                                System.out.print("New Smeltable");
+                                this.startSmelting(recipe, furnace, customFuel, furnace.getBurnTime());
+                                return;
+                            }
+                        }
+                        invalidRecipe = true;
+                    }
+                }
+                if (invalidRecipe || customFuel != null)
+                {
+                    event.setCancelled(true);
+                    System.out.print("No valid Recipe");
+                    // TODO prevent burning instead ??
+                }
+            }
+        }
+    }
+
+    // TODO intercept putting new items in furnace when smelting a custom recipe
+
+    // exp gained etc
 }

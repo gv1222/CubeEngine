@@ -53,13 +53,13 @@ public class FurnaceIngredients implements Ingredients
         return this.smeltable.check(null, check);
     }
 
-    public Pair<Integer, Integer> getTimes(ItemStack fuel, ItemStack smeltable)
+    public Pair<FuelIngredient, Boolean> matchFuelIngredient(ItemStack fuel, ItemStack smeltable)
     {
         if (this.isSmeltable(smeltable))
         {
             if (fuels.isEmpty()) // ignore fuel
             {
-                return new Pair<>(-1 , -1);
+                return new Pair<>(null , true);
             }
             else
             {
@@ -67,11 +67,11 @@ public class FurnaceIngredients implements Ingredients
                 {
                     if (fuelIngredient.ingredient.check(null, fuel))
                     {
-                        return new Pair<>(fuelIngredient.fuelTicks, fuelIngredient.smeltTicks);
+                        return new Pair<>(fuelIngredient, true);
                     }
                 }
             }
-            return new Pair<>(0, 0); // No burning
+            return new Pair<>(null, false); // No burning
         }
         else
         {
@@ -94,5 +94,10 @@ public class FurnaceIngredients implements Ingredients
     public ItemStack getIngredientResult(ItemStack bukkitResult)
     {
         return this.smeltable.getResult(null, bukkitResult);
+    }
+
+    public boolean hasFuel(FuelIngredient customFuel)
+    {
+        return this.fuels.contains(customFuel);
     }
 }

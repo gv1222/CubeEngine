@@ -43,6 +43,7 @@ import de.cubeisland.engine.core.recipe.ShapelessIngredients;
 import de.cubeisland.engine.core.recipe.WorkbenchRecipe;
 import de.cubeisland.engine.core.recipe.condition.general.BiomeCondition;
 import de.cubeisland.engine.core.recipe.condition.general.GamemodeCondition;
+import de.cubeisland.engine.core.recipe.condition.ingredient.AmountCondition;
 import de.cubeisland.engine.core.recipe.condition.ingredient.DurabilityCondition;
 import de.cubeisland.engine.core.recipe.condition.ingredient.MaterialCondition;
 import de.cubeisland.engine.core.recipe.condition.ingredient.NameCondition;
@@ -112,13 +113,16 @@ public class Mystcube extends Module implements Listener
                   ));
 
         this.recipeManager.registerRecipe(this,
-                                          new FurnaceRecipe(new FurnaceIngredients(
-                                              Ingredient.withCondition(MaterialCondition.of(Material.PAPER).and(NameCondition.of("&9Raw Linking Panel")))
-                                              , new FuelIngredient(Ingredient.withMaterial(Material.BLAZE_POWDER), 20 , 5)
-                                          ), new ItemStackResult(Material.PAPER).and(NameResult.of("&6Linking Panel")
-                                                                                    .and(LoreResult.of("&eWhen used in an age or linking book",
-                                                                                                       "&eyou will get teleported",
-                                                                                                       "&eby merely touching the panel")))));
+                  new FurnaceRecipe(new FurnaceIngredients(
+                      Ingredient.withCondition(MaterialCondition.of(Material.PAPER).and(NameCondition.of("&9Raw Linking Panel")
+                                                           .and(AmountCondition.more(1))))
+                      .withResult(AmountResult.remove(2))
+                      , new FuelIngredient(Ingredient.withMaterial(Material.BLAZE_POWDER), 20 , 4 * 20),
+                        new FuelIngredient(Ingredient.withMaterial(Material.OBSIDIAN), 64 * 20, 20)
+                  ), new ItemStackResult(Material.PAPER).and(NameResult.of("&6Linking Panel")
+                                                            .and(LoreResult.of("&eWhen used in an age or linking book",
+                                                                               "&eyou will get teleported",
+                                                                               "&eby merely touching the panel")))));
 
 /*
 

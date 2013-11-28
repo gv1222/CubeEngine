@@ -71,11 +71,11 @@ public class AmountCondition extends IngredientCondition
         switch (this.type)
         {
         case EXACT:
-            return itemStack.getDurability() == amount;
+            return itemStack.getAmount() == amount;
         case MORE:
-            return itemStack.getDurability() > amount;
+            return itemStack.getAmount() > amount;
         case LESS:
-            return itemStack.getDurability() < amount;
+            return itemStack.getAmount() < amount;
         }
         throw new IllegalStateException();
     }
