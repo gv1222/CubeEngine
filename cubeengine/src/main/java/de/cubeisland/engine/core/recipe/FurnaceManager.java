@@ -146,12 +146,14 @@ public class FurnaceManager implements Listener
             {
                 smelting.updateForNewRecipe(furnace, recipe, fuel);
                 System.out.print("#" + smelting.N + " ReStart Smelt | Fuel " + furnaceBurnTime +" | " + smelting.curSmeltTime + "/" + smelting.totalSmeltTime);
+                smelting.updateLastFuelTick(furnaceBurnTime);
             }
             else
             {
                 System.out.print("#" + smelting.N + " Continue Smelt | Fuel " + furnaceBurnTime +" | " + smelting.curSmeltTime + "/" + smelting.totalSmeltTime);
+                smelting.updateLastFuelTick(furnaceBurnTime + smelting.getLastFuelTick());
             }
-            smelting.updateLastFuelTick(furnaceBurnTime);
+
         }
     }
 
