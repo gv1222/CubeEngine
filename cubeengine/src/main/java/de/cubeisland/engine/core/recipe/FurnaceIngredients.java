@@ -99,6 +99,10 @@ public class FurnaceIngredients implements Ingredients
 
     public boolean hasFuel(FuelIngredient customFuel)
     {
+        if (customFuel == null)
+        {
+            return this.fuels == null || this.fuels.isEmpty();
+        }
         return this.fuels.contains(customFuel);
     }
 }

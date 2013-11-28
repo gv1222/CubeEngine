@@ -115,14 +115,19 @@ public class Mystcube extends Module implements Listener
         this.recipeManager.registerRecipe(this,
                   new FurnaceRecipe(new FurnaceIngredients(
                       Ingredient.withCondition(MaterialCondition.of(Material.PAPER).and(NameCondition.of("&9Raw Linking Panel")
-                                                           .and(AmountCondition.more(1))))
+                                                           .and(AmountCondition.more(2))))
                       .withResult(AmountResult.remove(2))
                       , new FuelIngredient(Ingredient.withMaterial(Material.BLAZE_POWDER), 20 , 4 * 20),
-                        new FuelIngredient(Ingredient.withMaterial(Material.OBSIDIAN), 64 * 20, 20)
+                        new FuelIngredient(Ingredient.withMaterial(Material.OBSIDIAN), 64 * 20, 20) // TODO remove long burning test
                   ), new ItemStackResult(Material.PAPER).and(NameResult.of("&6Linking Panel")
                                                             .and(LoreResult.of("&eWhen used in an age or linking book",
                                                                                "&eyou will get teleported",
-                                                                               "&eby merely touching the panel")))));
+                                                                               "&eby merely touching the panel"))))
+                                         .withPreview(new ItemStackResult(Material.PAPER).and(NameResult.of("&6Linking Panel"))
+                                                                                             .and(LoreResult.of("&eTwo Raw Linking Panels",
+                                                                                                  "&eforged together by great",
+                                                                                                  "&eheat. It is still warm."))))
+        ;
 
 /*
 

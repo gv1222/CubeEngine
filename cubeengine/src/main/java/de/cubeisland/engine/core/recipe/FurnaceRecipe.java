@@ -17,6 +17,8 @@
  */
 package de.cubeisland.engine.core.recipe;
 
+import org.bukkit.block.BlockState;
+import org.bukkit.entity.Player;
 import org.bukkit.inventory.ItemStack;
 
 import de.cubeisland.engine.core.recipe.condition.logic.Condition;
@@ -24,9 +26,26 @@ import de.cubeisland.engine.core.recipe.result.logic.Result;
 
 public class FurnaceRecipe extends Recipe<FurnaceIngredients>
 {
+    private Result preview;
+
     public FurnaceRecipe(FurnaceIngredients ingredients, Result result)
     {
         super(ingredients, result);
+    }
+
+    public final FurnaceRecipe withPreview(Result preview)
+    {
+        this.preview = preview;
+        return this;
+    }
+
+    public final ItemStack getPreview(Player player, BlockState block)
+    {
+        if (preview == null)
+        {
+            return this.getResult(player, block);
+        }
+        return this.preview.getResult(player, block, null);
     }
 
     @Override

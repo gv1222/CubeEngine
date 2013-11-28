@@ -27,24 +27,51 @@ import static de.cubeisland.engine.core.recipe.FuelIngredient.DEFAULT_SMELT_TIME
 
 public class CustomSmelting
 {
-    public final FurnaceRecipe recipe;
     private final Location location;
-    public final int totalSmeltTime;
-    protected int curSmeltTime;
-    private final float factor;
     private final CoreModule coreModule;
+    private final FurnaceManager manager;
+
+    protected FurnaceRecipe recipe;
+    protected FuelIngredient fuel;
+    protected int totalSmeltTime;
+    protected int curSmeltTime;
+    private float factor;
+
+    private Runnable runner;
+    private Integer taskID = null;
+
+    private int lastFuelTick = -1;
+    private int endFuel;
 
     public int getLastFuelTick()
     {
         return lastFuelTick;
     }
 
-    private int lastFuelTick = -1;
+    public int N = 0; // TODO make private
 
-    public int n;
-    public static int N;
+    public CustomSmelting(FurnaceManager manager, Furnace furnace, FurnaceRecipe recipe, FuelIngredient fuel)
+    {
+        this.location = furnace.getLocation();
+        this.coreModule = manager.coreModule;
+        this.manager = manager;
 
-    private int endFuel;
+        this.updateForNewRecipe(furnace, recipe, fuel);
+    }
+
+    public CustomSmelting updateForNewRecipe(Furnace furnace, FurnaceRecipe recipe, FuelIngredient fuel)
+    {
+        this.recipe = recipe;
+        this.fuel = fuel;
+        this.totalSmeltTime = fuel.smeltTicks;
+        this.factor = (float)totalSmeltTime / DEFAULT_SMELT_TIME;
+        this.curSmeltTime = 0;
+        this.done(); // JUST TO BE SURE
+        this.endFuel = furnace.getBurnTime();
+        this.lastFuelTick = furnace.getBurnTime();
+        this.runSmelting(furnace);
+        return this;
+    }
 
     public CustomSmelting updateLastFuelTick(int ticks)
     {
@@ -52,46 +79,79 @@ public class CustomSmelting
         return this;
     }
 
-    public CustomSmelting(final FurnaceManager manager, final Furnace furnace, FurnaceRecipe setRecipe, final FuelIngredient fuel)
+    public int getEndFuel()
     {
-        n = N++;
-        this.recipe = setRecipe;
-        this.location = furnace.getLocation();
-        this.totalSmeltTime = fuel.smeltTicks;
-        this.factor = (float)totalSmeltTime / DEFAULT_SMELT_TIME;
-        this.coreModule = manager.coreModule;
-        this.curSmeltTime = 0;
-        Runnable runner = new Runnable()
+        return endFuel;
+    }
+
+    public void done()
+    {
+        runner = null;
+        if (taskID != null)
+        {
+            this.coreModule.getCore().getTaskManager().cancelTask(this.coreModule, this.taskID);
+            this.taskID = null;
+            System.out.print("TASK STOPPED");
+        }
+        N++;
+    }
+
+    public boolean isDone()
+    {
+        return this.runner == null;
+    }
+
+    private void runSmelting(final Furnace furnace)
+    {
+        this.runner = new Runnable()
         {
             private boolean noFuel = false;
+            private final int n = N;
 
             @Override
             public void run()
             {
                 // TODO stop when result is full  OR DropResult drops the item to the ground
+                if (N != n)
+                {
+                    done();
+                    return;
+                }
                 if (noFuel || furnace.getInventory().getSmelting() == null || furnace.getInventory().getSmelting().getType() == Material.AIR)
                 {
                     manager.smeltMap.remove(location);
-                    System.out.print("Abort Smelt: nothing to smelt OR no more fuel");
+                    System.out.print("#" +n + " Abort Smelt | Fuel " + furnace.getBurnTime() + " | " + curSmeltTime + "/" + totalSmeltTime);
+                    done();
                     return;
                 }
                 if (furnace.getBurnTime() <= 0 && lastFuelTick <= 0)
                 {
                     this.noFuel = true;
                 }
-                if (manager.fuelMap.get(location) == fuel)
+                FuelIngredient customFuel = manager.fuelMap.get(location);
+                if (customFuel == fuel)
                 {
                     if (!recipe.getIngredients().isSmeltable(furnace.getInventory().getSmelting()))
                     {
-                        System.out.print("Abort Smelt: Smelt changed");
+                        System.out.print("#" +n + " Abort Smelt: Smelt changed"); // restarts elsewhere
+                        done();
                         return;
                     }
                 }
                 else
                 {
-                    // TODO handle fuel change
-                    System.out.print("Abort Smelt: Fuel changed");
-                    return;
+                    if (recipe.ingredients.hasFuel(customFuel)) // valid fuel?
+                    {
+                        totalSmeltTime = customFuel.smeltTicks;
+                        System.out.print("#" +n + " Fuel changed | " + curSmeltTime + "/" + totalSmeltTime);
+                    }
+                    else
+                    {
+                        // TODO handle fuel change
+                        System.out.print("#" +n + " Abort Smelt: Fuel changed");
+                        done();
+                        return;
+                    }
                 }
                 curSmeltTime += lastFuelTick - furnace.getBurnTime();
                 short cookTime = (short)(curSmeltTime / factor);
@@ -108,26 +168,21 @@ public class CustomSmelting
                         }
                     }
                     furnace.setCookTime(cookTime);
-                    coreModule.getCore().getTaskManager().runTaskDelayed(coreModule, this, 1);
                 }
                 else
                 {
                     endFuel = (short)(furnace.getBurnTime() + curSmeltTime - totalSmeltTime);
                     if (furnace.getBurnTime() <= 0)
                     {
-                        System.out.print("Last Smelt! (Fuel +1)");
+                        System.out.print("#" +n + " Last Smelt! (Fuel +1)");
                         furnace.setBurnTime((short)1);
                     }
                     furnace.setCookTime((short)(DEFAULT_SMELT_TIME));
-                    System.out.print("Smelt Done | EndFuel " + endFuel +"(+" +(curSmeltTime - totalSmeltTime) + ")");
+                    done();
+                    System.out.print("#" +n + " Smelt Done | EndFuel " + endFuel +"(+" +(curSmeltTime - totalSmeltTime) + ")");
                 }
             }
         };
-        manager.coreModule.getCore().getTaskManager().runTaskDelayed(manager.coreModule, runner, 1);
-    }
-
-    public int getEndFuel()
-    {
-        return endFuel;
+        this.taskID = manager.coreModule.getCore().getTaskManager().runTimer(manager.coreModule, runner, 1, 1);
     }
 }

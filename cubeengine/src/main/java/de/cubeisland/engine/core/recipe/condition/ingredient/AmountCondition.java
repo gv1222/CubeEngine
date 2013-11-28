@@ -73,9 +73,9 @@ public class AmountCondition extends IngredientCondition
         case EXACT:
             return itemStack.getAmount() == amount;
         case MORE:
-            return itemStack.getAmount() > amount;
+            return itemStack.getAmount() >= amount;
         case LESS:
-            return itemStack.getAmount() < amount;
+            return itemStack.getAmount() <= amount;
         }
         throw new IllegalStateException();
     }
