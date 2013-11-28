@@ -19,6 +19,7 @@ package de.cubeisland.engine.core.recipe.result.logic;
 
 import java.util.LinkedList;
 
+import org.bukkit.block.BlockState;
 import org.bukkit.entity.Player;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.material.MaterialData;
@@ -37,9 +38,9 @@ public class AndResult extends Result implements MaterialProvider
     }
 
     @Override
-    public ItemStack getResult(Player player, ItemStack itemStack)
+    public ItemStack getResult(Player player, BlockState block, ItemStack itemStack)
     {
-        return right.getResult(player, left.getResult(player, itemStack));
+        return right.getResult(player, block, left.getResult(player, block, itemStack));
     }
 
     @Override

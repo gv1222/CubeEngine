@@ -21,6 +21,7 @@ import java.util.LinkedList;
 import java.util.Set;
 
 import org.bukkit.Server;
+import org.bukkit.block.BlockState;
 import org.bukkit.entity.Player;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.material.MaterialData;
@@ -77,9 +78,9 @@ public abstract class Recipe<T extends Ingredients>
         throw new IllegalStateException("Recipe has no Material as Result");
     }
 
-    public final ItemStack getResult(Player player)
+    public final ItemStack getResult(Player player, BlockState block)
     {
-        return result.getResult(player, null);
+        return result.getResult(player, block, null);
     }
 
     public final void runEffects(Core core, Player player)

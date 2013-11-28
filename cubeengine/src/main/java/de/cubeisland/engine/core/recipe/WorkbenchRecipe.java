@@ -19,6 +19,7 @@ package de.cubeisland.engine.core.recipe;
 
 import java.util.Map;
 
+import org.bukkit.block.BlockState;
 import org.bukkit.entity.Player;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.ShapedRecipe;
@@ -36,9 +37,9 @@ public class WorkbenchRecipe extends Recipe<WorkbenchIngredients>
         super(ingredients, result);
     }
 
-    public final Map<Integer, ItemStack> getIngredientResults(Player player, ItemStack[] matrix)
+    public final Map<Integer, ItemStack> getIngredientResults(Player player, BlockState block, ItemStack[] matrix)
     {
-        return ingredients.getIngredientResults(player, matrix.clone());
+        return ingredients.getIngredientResults(player, block, matrix.clone());
     }
 
     public final WorkbenchRecipe withPreview(Result preview)
@@ -65,13 +66,13 @@ public class WorkbenchRecipe extends Recipe<WorkbenchIngredients>
         return ingredients.check(player, matrix);
     }
 
-    public final ItemStack getPreview(Player player)
+    public final ItemStack getPreview(Player player, BlockState block)
     {
         if (this.preview == null)
         {
-            return this.getResult(player);
+            return this.getResult(player, block);
         }
-        return this.preview.getResult(player, null);
+        return this.preview.getResult(player, block, null);
     }
 
     public final boolean matchesRecipe(org.bukkit.inventory.Recipe checkRecipe)

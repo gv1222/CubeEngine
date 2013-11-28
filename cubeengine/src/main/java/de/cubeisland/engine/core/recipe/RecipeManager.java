@@ -128,7 +128,7 @@ public class RecipeManager implements Listener
                                     Map<Integer, ItemStack> ingredientResults = null;
                                     try
                                     {
-                                        ingredientResults = recipe.getIngredientResults((Player)humanEntity, myMatrix);
+                                        ingredientResults = recipe.getIngredientResults((Player)humanEntity, null, myMatrix); // TODO block
                                     }
                                     catch (IllegalStateException e) // TODO own exception for this
                                     {
@@ -152,11 +152,11 @@ public class RecipeManager implements Listener
                                     {
                                         myMatrix[entry.getKey()] = entry.getValue();
                                     }
-                                    event.getInventory().setResult(recipe.getResult((Player)humanEntity));
+                                    event.getInventory().setResult(recipe.getResult((Player)humanEntity, null)); // TODO block
                                     return;
                                 }
                             }
-                            event.getInventory().setResult(recipe.getPreview((Player)humanEntity));
+                            event.getInventory().setResult(recipe.getPreview((Player)humanEntity, null)); // TODO block
                             return;
                         }
                         else
@@ -198,8 +198,8 @@ public class RecipeManager implements Listener
                     this.shiftCrafting.put(player, matrix);
                     this.isShiftCrafting.put(player, false);
                 }
-                event.getInventory().setResult(recipe.getResult(player));
-                final Map<Integer, ItemStack> ingredientResults = recipe.getIngredientResults(player, event.getInventory().getMatrix());
+                event.getInventory().setResult(recipe.getResult(player, null)); // TODO block
+                final Map<Integer, ItemStack> ingredientResults = recipe.getIngredientResults(player, null, event.getInventory().getMatrix()); // TODO block
                 if (!ingredientResults.isEmpty() || event.getAction() == MOVE_TO_OTHER_INVENTORY)
                 {
                     // TODO handle shift crafting when using percentages for results.
@@ -223,7 +223,7 @@ public class RecipeManager implements Listener
                                          {
                                              myMatrix = inventory.getMatrix();
                                          }
-                                         Map<Integer, ItemStack> ingredientResults = recipe.getIngredientResults(player, matrix);
+                                         Map<Integer, ItemStack> ingredientResults = recipe.getIngredientResults(player, null, matrix); // TODO block
                                          if (isShiftCrafting.remove(player) != null)
                                          {
                                              for (int i = 0 ; i < myMatrix.length ; i++)

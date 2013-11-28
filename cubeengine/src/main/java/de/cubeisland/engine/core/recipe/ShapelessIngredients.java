@@ -24,6 +24,7 @@ import java.util.List;
 import java.util.Map;
 import java.util.Set;
 
+import org.bukkit.block.BlockState;
 import org.bukkit.entity.Player;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.Recipe;
@@ -100,7 +101,7 @@ public class ShapelessIngredients implements WorkbenchIngredients
     }
 
     @Override
-    public Map<Integer, ItemStack> getIngredientResults(Player player, ItemStack[] matrix)
+    public Map<Integer, ItemStack> getIngredientResults(Player player, BlockState block, ItemStack[] matrix)
     {
         Map<Integer, ItemStack> map = new HashMap<>();
         for (Ingredient ingredient : ingredients)
@@ -110,7 +111,7 @@ public class ShapelessIngredients implements WorkbenchIngredients
             {
                 throw new IllegalStateException("Invalid Recipe!");
             }
-            ItemStack result = ingredient.getResult(player, matrix[index]);
+            ItemStack result = ingredient.getResult(player, block, matrix[index]);
             if (result != null)
             {
                 map.put(index, result);

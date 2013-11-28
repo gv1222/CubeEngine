@@ -17,6 +17,7 @@
  */
 package de.cubeisland.engine.core.recipe.result.logic;
 
+import org.bukkit.block.BlockState;
 import org.bukkit.entity.Player;
 import org.bukkit.inventory.ItemStack;
 
@@ -29,7 +30,7 @@ import de.cubeisland.engine.core.recipe.condition.logic.Condition;
  */
 public abstract class Result
 {
-    public abstract ItemStack getResult(Player player, ItemStack itemStack);
+    public abstract ItemStack getResult(Player player, BlockState block, ItemStack itemStack);
 
     public final Result or(Result other)
     {

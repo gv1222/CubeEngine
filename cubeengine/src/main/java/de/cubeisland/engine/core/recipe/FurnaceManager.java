@@ -151,7 +151,7 @@ public class FurnaceManager implements Listener
                 // TODO vanilla recipe?
                 return;
             }
-            ItemStack result = smelt.recipe.getResult(null);
+            ItemStack result = smelt.recipe.getResult(null, furnace);
             if (result == null)
             {
                 event.setCancelled(true);
@@ -159,7 +159,7 @@ public class FurnaceManager implements Listener
             }
             event.setResult(result);
             System.out.print("### SMELT ###");
-            final ItemStack ingredientResult = smelt.recipe.getIngredients().getIngredientResult(event.getSource().clone());
+            final ItemStack ingredientResult = smelt.recipe.getIngredients().getIngredientResult(event.getSource().clone(), furnace);
             if (ingredientResult != null)
             {
                 this.manager.core.getTaskManager().runTask(coreModule,

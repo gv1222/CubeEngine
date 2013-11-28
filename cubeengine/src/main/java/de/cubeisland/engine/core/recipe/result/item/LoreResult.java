@@ -19,6 +19,7 @@ package de.cubeisland.engine.core.recipe.result.item;
 
 import java.util.Arrays;
 
+import org.bukkit.block.BlockState;
 import org.bukkit.entity.Player;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.meta.ItemMeta;
@@ -42,7 +43,7 @@ public class LoreResult extends Result
     }
 
     @Override
-    public ItemStack getResult(Player player, ItemStack itemStack)
+    public ItemStack getResult(Player player, BlockState block, ItemStack itemStack)
     {
         // TODO what if itemStack is null ? throw illegalarg?
         ItemMeta itemMeta = itemStack.getItemMeta();

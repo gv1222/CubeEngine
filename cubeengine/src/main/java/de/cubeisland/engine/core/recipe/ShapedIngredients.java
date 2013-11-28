@@ -24,6 +24,7 @@ import java.util.Map.Entry;
 import java.util.Set;
 
 import org.bukkit.Material;
+import org.bukkit.block.BlockState;
 import org.bukkit.entity.Player;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.Recipe;
@@ -201,7 +202,7 @@ public class ShapedIngredients implements WorkbenchIngredients
     }
 
     @Override
-    public Map<Integer, ItemStack> getIngredientResults(Player player, ItemStack[] matrix)
+    public Map<Integer, ItemStack> getIngredientResults(Player player, BlockState block, ItemStack[] matrix)
     {
         Map<Integer, ItemStack> map = new HashMap<>();
         BlockVector2 offSet = this.checkShape(player, matrix, getSize(matrix));
@@ -215,7 +216,7 @@ public class ShapedIngredients implements WorkbenchIngredients
                     Ingredient ingredient = this.getIngredientAt(x, z);
                     if (ingredient != null)
                     {
-                        map.put(3 * (offSet.x + x) + offSet.z + z, ingredient.getResult(player, item));
+                        map.put(3 * (offSet.x + x) + offSet.z + z, ingredient.getResult(player, block, item));
                     } // else ignore because empty
                 }
                 // else no ingredient here

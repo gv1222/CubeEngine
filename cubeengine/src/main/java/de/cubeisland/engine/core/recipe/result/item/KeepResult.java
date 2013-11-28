@@ -17,6 +17,7 @@
  */
 package de.cubeisland.engine.core.recipe.result.item;
 
+import org.bukkit.block.BlockState;
 import org.bukkit.entity.Player;
 import org.bukkit.inventory.ItemStack;
 
@@ -25,7 +26,7 @@ import de.cubeisland.engine.core.recipe.result.logic.Result;
 public class KeepResult extends Result
 {
     @Override
-    public ItemStack getResult(Player player, ItemStack itemStack)
+    public ItemStack getResult(Player player, BlockState block, ItemStack itemStack)
     {
         return itemStack.clone();
     }

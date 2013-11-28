@@ -17,6 +17,7 @@
  */
 package de.cubeisland.engine.core.recipe.result.logic;
 
+import org.bukkit.block.BlockState;
 import org.bukkit.entity.Player;
 import org.bukkit.inventory.ItemStack;
 
@@ -34,11 +35,11 @@ public class ConditionResult extends Result
     }
 
     @Override
-    public ItemStack getResult(Player player, ItemStack itemStack)
+    public ItemStack getResult(Player player, BlockState block, ItemStack itemStack)
     {
         if (condition.check(player, itemStack))
         {
-            return result.getResult(player, itemStack);
+            return result.getResult(player, block, itemStack);
         }
         return null;
     }

@@ -19,11 +19,12 @@ package de.cubeisland.engine.core.recipe;
 
 import java.util.Map;
 
+import org.bukkit.block.BlockState;
 import org.bukkit.entity.Player;
 import org.bukkit.inventory.ItemStack;
 
 public interface WorkbenchIngredients extends Ingredients
 {
-    Map<Integer,ItemStack> getIngredientResults(Player player, ItemStack[] matrix);
+    Map<Integer,ItemStack> getIngredientResults(Player player, BlockState block, ItemStack[] matrix);
     boolean check(Player player, ItemStack[] matrix);
 }

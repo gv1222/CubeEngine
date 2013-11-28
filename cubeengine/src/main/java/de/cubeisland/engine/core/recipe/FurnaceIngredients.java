@@ -23,6 +23,7 @@ import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
 
+import org.bukkit.block.BlockState;
 import org.bukkit.inventory.FurnaceRecipe;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.Recipe;
@@ -91,9 +92,9 @@ public class FurnaceIngredients implements Ingredients
         return recipes;
     }
 
-    public ItemStack getIngredientResult(ItemStack bukkitResult)
+    public ItemStack getIngredientResult(ItemStack bukkitResult, BlockState block)
     {
-        return this.smeltable.getResult(null, bukkitResult);
+        return this.smeltable.getResult(null, block, bukkitResult);
     }
 
     public boolean hasFuel(FuelIngredient customFuel)

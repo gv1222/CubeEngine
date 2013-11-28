@@ -20,6 +20,7 @@ package de.cubeisland.engine.core.recipe;
 import java.util.LinkedList;
 
 import org.bukkit.Material;
+import org.bukkit.block.BlockState;
 import org.bukkit.entity.Player;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.material.MaterialData;
@@ -66,16 +67,17 @@ public class Ingredient
      *
      *
      * @param player
+     * @param block
      * @param itemStack
      * @return
      */
-    public final ItemStack getResult(Player player, ItemStack itemStack)
+    public final ItemStack getResult(Player player, BlockState block, ItemStack itemStack)
     {
         if (result == null)
         {
             return null;
         }
-        return result.getResult(player, itemStack);
+        return result.getResult(player, block, itemStack);
     }
 
     public final LinkedList<MaterialData> getMaterials()

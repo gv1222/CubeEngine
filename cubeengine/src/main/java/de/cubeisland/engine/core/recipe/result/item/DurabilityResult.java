@@ -19,6 +19,7 @@ package de.cubeisland.engine.core.recipe.result.item;
 
 import java.util.LinkedList;
 
+import org.bukkit.block.BlockState;
 import org.bukkit.entity.Player;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.material.MaterialData;
@@ -43,7 +44,7 @@ public class DurabilityResult extends Result implements MaterialProvider
     }
 
     @Override
-    public ItemStack getResult(Player player, ItemStack itemStack)
+    public ItemStack getResult(Player player, BlockState block, ItemStack itemStack)
     {
         short durability = itemStack.getDurability();
         switch (this.type)
