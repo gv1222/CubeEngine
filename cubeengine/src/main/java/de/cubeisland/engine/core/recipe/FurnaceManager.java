@@ -44,6 +44,7 @@ import de.cubeisland.engine.core.util.Triplet;
 
 public class FurnaceManager implements Listener
 {
+    // TODO finish results when unloading / stopping
     protected final CoreModule coreModule;
     protected RecipeManager manager;
 

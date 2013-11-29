@@ -206,6 +206,10 @@ public class ShapedIngredients implements WorkbenchIngredients
     {
         Map<Integer, ItemStack> map = new HashMap<>();
         BlockVector2 offSet = this.checkShape(player, matrix, getSize(matrix));
+        if (offSet == null)
+        {
+            throw new InvalidIngredientsException();
+        }
         for (int x = 0; x < this.size.x - 1; x++)
         {
             for (int z = 0; z < this.size.z - 1; z++)

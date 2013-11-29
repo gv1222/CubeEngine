@@ -109,7 +109,7 @@ public class ShapelessIngredients implements WorkbenchIngredients
             int index = ingredient.find(player, matrix);
             if (index == -1)
             {
-                throw new IllegalStateException("Invalid Recipe!");
+                throw new InvalidIngredientsException();
             }
             ItemStack result = ingredient.getResult(player, block, matrix[index]);
             if (result != null)
