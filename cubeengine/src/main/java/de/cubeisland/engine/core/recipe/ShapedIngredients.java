@@ -191,7 +191,9 @@ public class ShapedIngredients implements WorkbenchIngredients
         }
         for (Map<Character, MaterialData> mats : endMaps)
         {
-            ShapedRecipe shapedRecipe = new ShapedRecipe(new ItemStack(resultMaterial.toItemStack())).shape(this.shape);
+            ItemStack result = resultMaterial.toItemStack();
+            result.setAmount(1);
+            ShapedRecipe shapedRecipe = new ShapedRecipe(new ItemStack(result)).shape(this.shape);
             for (Entry<Character, MaterialData> entry : mats.entrySet())
             {
                 shapedRecipe.setIngredient(entry.getKey(), entry.getValue());

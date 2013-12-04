@@ -34,7 +34,7 @@ import de.cubeisland.engine.core.util.Pair;
 public class FurnaceIngredients implements Ingredients
 {
     private Ingredient smeltable;
-    private List<FuelIngredient> fuels; // can be null;
+    private final List<FuelIngredient> fuels;
     // TODO FuelResult
 
     public FurnaceIngredients(Ingredient smeltable, FuelIngredient... fuels)
@@ -85,6 +85,7 @@ public class FurnaceIngredients implements Ingredients
     {
         Set<Recipe> recipes = new HashSet<>();
         ItemStack result = resultMaterial.toItemStack();
+        result.setAmount(1);
         for (MaterialData ingredient : this.smeltable.getMaterials())
         {
             recipes.add(new FurnaceRecipe(result, ingredient));
@@ -101,7 +102,7 @@ public class FurnaceIngredients implements Ingredients
     {
         if (customFuel == null)
         {
-            return this.fuels == null || this.fuels.isEmpty();
+            return this.fuels.isEmpty();
         }
         return this.fuels.contains(customFuel);
     }

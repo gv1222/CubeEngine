@@ -210,15 +210,16 @@ public class FurnaceManager implements Listener
                 }
                 if (smelt.equals(furnace.getInventory().getSmelting()))
                 {
-                    System.out.print("PREVENTED SMELTING!");
                     furnace.setCookTime(EMPTY);
                     manager.core.getTaskManager().runTaskDelayed(coreModule, this, 1);
                 }
+                else System.out.println("No Smelting STOPPED");
             }
-        } ;
+        };
 
         private NoSmelting(Furnace furnace)
         {
+            System.out.println("No Smelting STARTED");
             this.smelt = furnace.getInventory().getSmelting() == null ? null : furnace.getInventory().getSmelting().clone();
             this.furnace = furnace;
             manager.core.getTaskManager().runTaskDelayed(coreModule, runner, 1);
@@ -335,7 +336,7 @@ public class FurnaceManager implements Listener
                 ItemStack oldItem = furnace.getInventory().getSmelting();
                 ItemStack newItem = null;
                 switch (event.getAction())
-                {// TODO COLLECT TO CURSOR
+                {
                 case SWAP_WITH_CURSOR:
                 case PLACE_ALL:
                     if (event.getRawSlot() == 0)
@@ -433,9 +434,20 @@ public class FurnaceManager implements Listener
                         System.out.print("Changed smelting | Recipe valid");
                         return;
                     }
-                    System.out.print("Changed smelting | Recipe INVALID");
-                    // smelting aborts itself => search new recipe & restart if no recipe STOP progress
-                    event.setCancelled(true); // TODO instead abort smelting & search new Recipe
+                    for (FurnaceRecipe newRecipe : this.matchRecipes(newItem))
+                    {
+                        if (newRecipe.ingredients.hasFuel(customFuel))
+                        {
+                            System.out.print("Changed smelting | Recipe Changed");
+                            // TODO restart new recipe
+                        }
+                        else
+                        {
+                            System.out.print("Changed smelting | Recipe INVALID");
+                            event.setCancelled(true);
+                            // smelting aborts itself => search new recipe & restart if no recipe STOP progress
+                        }
+                    }
                     return;
                 }
                 if (newItem == null)

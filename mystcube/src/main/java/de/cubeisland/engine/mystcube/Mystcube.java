@@ -91,6 +91,8 @@ public class Mystcube extends Module implements Listener
     {
         this.recipeManager = new RecipeManager(this.getCore());
 
+        Bukkit.getServer().addRecipe(new org.bukkit.inventory.FurnaceRecipe(new ItemStack(Material.GOLD_INGOT), Material.OBSIDIAN));
+
         this.recipeManager.registerRecipe(this,
                   new WorkbenchRecipe(
                       new ShapedIngredients("ppp","prp","ppp")
@@ -114,13 +116,19 @@ public class Mystcube extends Module implements Listener
                                            "&eGreat heat is needed to",
                                            "&emake it usable in a book"))));
 
+        FuelIngredient obsidianFuel =  new FuelIngredient(Ingredient.withMaterial(Material.OBSIDIAN), 64 * 20, 20);
+
+        this.recipeManager.registerRecipe(this, new FurnaceRecipe(new FurnaceIngredients(
+            Ingredient.withMaterial(Material.BLAZE_ROD), obsidianFuel),
+                                                      new ItemStackResult(Material.BLAZE_POWDER).and(AmountResult.set(8))));
+
         this.recipeManager.registerRecipe(this,
                   new FurnaceRecipe(new FurnaceIngredients(
                       Ingredient.withCondition(MaterialCondition.of(Material.PAPER).and(NameCondition.of("&9Raw Linking Panel")
                                                            .and(AmountCondition.more(2))))
                       .withResult(AmountResult.remove(2))
                       , new FuelIngredient(Ingredient.withMaterial(Material.BLAZE_POWDER), 20 , 4 * 20),
-                        new FuelIngredient(Ingredient.withMaterial(Material.OBSIDIAN), 64 * 20, 20) // TODO remove long burning test
+                       obsidianFuel // TODO remove long burning test
                   ), new ItemStackResult(Material.PAPER).and(NameResult.of("&6Linking Panel")
                                                             .and(LoreResult.of("&eWhen used in an age or linking book",
                                                                                "&eyou will get teleported",

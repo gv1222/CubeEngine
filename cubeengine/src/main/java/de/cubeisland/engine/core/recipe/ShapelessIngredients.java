@@ -90,7 +90,9 @@ public class ShapelessIngredients implements WorkbenchIngredients
         }
         for (List<MaterialData> materials : endSets)
         {
-            ShapelessRecipe shapelessRecipe = new ShapelessRecipe(resultMaterial.toItemStack());
+            ItemStack result = resultMaterial.toItemStack();
+            result.setAmount(1);
+            ShapelessRecipe shapelessRecipe = new ShapelessRecipe(result);
             for (MaterialData material : materials)
             {
                 shapelessRecipe.addIngredient(1, material);
