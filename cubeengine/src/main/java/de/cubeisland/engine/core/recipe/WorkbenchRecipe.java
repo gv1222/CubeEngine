@@ -31,10 +31,12 @@ import de.cubeisland.engine.core.recipe.result.logic.Result;
 public class WorkbenchRecipe extends Recipe<WorkbenchIngredients>
 {
     private Result preview;
+    private int size;
 
     public WorkbenchRecipe(WorkbenchIngredients ingredients, Result result)
     {
         super(ingredients, result);
+        this.size = ingredients.getSize();
     }
 
     public final Map<Integer, ItemStack> getIngredientResults(Player player, BlockState block, ItemStack[] matrix)
@@ -81,7 +83,7 @@ public class WorkbenchRecipe extends Recipe<WorkbenchIngredients>
         {
             if (myRecipe.getClass().isAssignableFrom(checkRecipe.getClass())) // same type of recipe
             {
-                if (checkRecipe.getResult().equals(myRecipe.getResult()))
+                if (checkRecipe.getResult().isSimilar(myRecipe.getResult()))
                 {
                     if (checkRecipe instanceof ShapelessRecipe)
                     {
@@ -123,6 +125,11 @@ public class WorkbenchRecipe extends Recipe<WorkbenchIngredients>
             }
         }
         return false;
+    }
+
+    public int getSize()
+    {
+        return this.size;
     }
 
     // TODO possibility to prevent shift-crafting

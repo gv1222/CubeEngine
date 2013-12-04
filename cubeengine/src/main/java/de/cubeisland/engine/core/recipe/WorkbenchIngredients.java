@@ -27,4 +27,6 @@ public interface WorkbenchIngredients extends Ingredients
 {
     Map<Integer,ItemStack> getIngredientResults(Player player, BlockState block, ItemStack[] matrix);
     boolean check(Player player, ItemStack[] matrix);
+
+    int getSize();
 }

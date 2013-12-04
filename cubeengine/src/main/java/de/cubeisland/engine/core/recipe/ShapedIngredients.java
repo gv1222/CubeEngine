@@ -228,4 +228,21 @@ public class ShapedIngredients implements WorkbenchIngredients
         }
         return map;
     }
+
+    @Override
+    public int getSize()
+    {
+        int result = 0;
+        for (String s : this.shape)
+        {
+            for (char c : s.toCharArray())
+            {
+                if (this.ingredientMap.get(c) != null)
+                {
+                    result++;
+                }
+            }
+        }
+        return result;
+    }
 }

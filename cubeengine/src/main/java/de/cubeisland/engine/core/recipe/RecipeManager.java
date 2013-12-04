@@ -17,7 +17,6 @@
  */
 package de.cubeisland.engine.core.recipe;
 
-import java.util.Arrays;
 import java.util.HashMap;
 import java.util.HashSet;
 import java.util.Map;
@@ -39,12 +38,13 @@ import org.bukkit.inventory.ItemStack;
 import de.cubeisland.engine.core.Core;
 import de.cubeisland.engine.core.CubeEngine;
 import de.cubeisland.engine.core.module.Module;
-import de.cubeisland.engine.core.util.Triplet;
+import de.cubeisland.engine.core.util.Pair;
 
 import static org.bukkit.event.inventory.InventoryAction.MOVE_TO_OTHER_INVENTORY;
 
 public class RecipeManager implements Listener
 {
+    // TODO replace recipes OR allow (bukkit)old recipe to work
     protected Map<Module, Set<Recipe>> recipes = new HashMap<>();
     protected Set<WorkbenchRecipe> workbenchRecipes = new HashSet<>();
     protected Set<FurnaceRecipe> furnaceRecipes = new HashSet<>();
@@ -104,6 +104,7 @@ public class RecipeManager implements Listener
     @EventHandler
     public void onPrepareItemCraft(PrepareItemCraftEvent event)
     {
+        System.out.println("Prepare Craft");
         ItemStack[] matrix = event.getInventory().getMatrix();
         if (event.getViewers().size() > 1)
         {
@@ -121,45 +122,27 @@ public class RecipeManager implements Listener
                     {
                         if (recipe.matchesConditions((Player)humanEntity, matrix))
                         {
-                            Triplet<ItemStack[], Boolean, ItemStack[]> pair = this.shiftCrafting.get(humanEntity);
-                            if (pair != null && pair.getSecond() != null)
+                            Pair<ItemStack[], Integer> shift = this.shiftCrafting.get(humanEntity);
+                            if (shift != null && shift.getRight() != null)
                             {
-                                if (recipe.ingredients instanceof ShapelessIngredients)
+                                shift.setRight(shift.getRight() + 1);
+                                ItemStack[] myMatrix = shift.getLeft();
+                                if (shift.getRight() >= recipe.getSize())
                                 {
-                                    pair.setSecond(!pair.getSecond());
-                                    if (!pair.getSecond())
+                                    if (!this.reduceMyMatrix(myMatrix, recipe, (Player)humanEntity, null))// TODO block
                                     {
-                                        System.out.print("Shift-Craft step");
-                                        ItemStack[] myMatrix = pair.getFirst();
-                                        if (!this.reduceMyMatrix(myMatrix, recipe, (Player)humanEntity, null))// TODO block
-                                        {
-                                            pair.setSecond(null);
-                                            event.getInventory().setResult(null); // Stop crafting!
-                                            return;
-                                        }
-                                        event.getInventory().setResult(recipe.getResult((Player)humanEntity, null)); // TODO block
+                                        shift.setRight(null);
+                                        event.getInventory().setResult(null); // Stop crafting!
+                                        System.out.print("Shift Craft End");
                                         return;
                                     }
-                                    else System.out.print("Shift-Craft prep step");
+                                    event.getInventory().setResult(recipe.getResult((Player)humanEntity, null)); // TODO block
+                                    System.out.print("Shift Craft Result");
+                                    shift.setRight(0);
+                                    return;
                                 }
-                                else if (recipe.ingredients instanceof ShapedIngredients)
-                                {
-                                    ItemStack[] myMatrix = pair.getFirst();
-                                    ItemStack[] nextCraftMatrix = pair.getThird();
-                                    if (Arrays.equals(nextCraftMatrix, matrix))
-                                    {
-                                        this.reduceMatrix(nextCraftMatrix);
-                                        if (!this.reduceMyMatrix(myMatrix, recipe, (Player)humanEntity, null))// TODO block
-                                        {
-                                            pair.setSecond(null);
-                                            event.getInventory().setResult(null); // Stop crafting!
-                                            return;
-                                        }
-                                        event.getInventory().setResult(recipe.getResult((Player)humanEntity, null)); // TODO block
-                                        return;
-                                    }
-                                    // else preview (one of A LOT)
-                                }
+                                System.out.print("Shift Craft Preview");
+                                // else preview (one of A LOT)
                             }
                             event.getInventory().setResult(recipe.getPreview((Player)humanEntity, null)); // TODO block
                             return;
@@ -177,6 +160,10 @@ public class RecipeManager implements Listener
 
     private ItemStack[] reduceMatrix(ItemStack[] matrix)
     {
+        if (matrix == null)
+        {
+            return null;
+        }
         for (ItemStack item : matrix) // reduce
         {
             if (item != null)
@@ -210,7 +197,7 @@ public class RecipeManager implements Listener
         return true;
     }
 
-    private Map<Player, Triplet<ItemStack[], Boolean, ItemStack[]>> shiftCrafting = new HashMap<>();
+    private Map<Player, Pair<ItemStack[], Integer>> shiftCrafting = new HashMap<>();
 
     private ItemStack[] deepClone(ItemStack[] matrix)
     {
@@ -228,6 +215,7 @@ public class RecipeManager implements Listener
     @EventHandler
     public void onItemCraft(CraftItemEvent event)
     {
+        System.out.println("Craft");
         if (!(event.getWhoClicked() instanceof Player) || event.getAction() == InventoryAction.NOTHING)
         {
             return;
@@ -240,8 +228,7 @@ public class RecipeManager implements Listener
                 final ItemStack[] matrix = this.deepClone(event.getInventory().getMatrix());
                 if (event.getAction() == MOVE_TO_OTHER_INVENTORY)
                 {
-                    ItemStack[] startMatrix = recipe.ingredients instanceof ShapedIngredients ? deepClone(matrix) : null;
-                    this.shiftCrafting.put(player, new Triplet<>(matrix, false, this.reduceMatrix(startMatrix)));
+                    this.shiftCrafting.put(player, new Pair<>(matrix, 0));
                 }
                 event.getInventory().setResult(recipe.getResult(player, null)); // TODO block
                 final Map<Integer, ItemStack> ingredientResults = recipe.getIngredientResults(player, null, event.getInventory().getMatrix()); // TODO block
@@ -255,7 +242,7 @@ public class RecipeManager implements Listener
                                      @Override
                                      public void run()
                                      {
-                                         Triplet<ItemStack[], Boolean, ItemStack[]> shift = shiftCrafting.remove(player);
+                                         Pair<ItemStack[], Integer> shift = shiftCrafting.remove(player);
                                          if (shift == null)
                                          {
                                              System.out.print("Normal Craft");
@@ -264,7 +251,7 @@ public class RecipeManager implements Listener
                                          }
                                          else
                                          {
-                                             inventory.setMatrix(reduceMatrix(shift.getFirst()));
+                                             inventory.setMatrix(reduceMatrix(shift.getLeft()));
                                          }
                                      }
                                  }, 1L);

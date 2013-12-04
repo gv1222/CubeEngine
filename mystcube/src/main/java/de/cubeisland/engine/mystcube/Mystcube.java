@@ -102,15 +102,17 @@ public class Mystcube extends Module implements Listener
                           .and(AmountResult.set(8)))
                   ));
 
-        this.recipeManager.registerRecipe(this,
-                  new WorkbenchRecipe(
-                      new ShapelessIngredients(Ingredient.withMaterial(Material.PAPER),
-                                               Ingredient.withMaterial(Material.DIAMOND))
-                      ,new ItemStackResult(Material.PAPER).and(NameResult.of("&9Raw Linking Panel"))
-                          .and(LoreResult.of("&eAn unfinished linking panel.",
-                                             "&eGreat heat is needed to",
-                                             "&emake it usable in a book"))
-                  ));
+        Ingredient magicPaperIngredient = Ingredient
+            .withCondition(MaterialCondition.of(Material.PAPER).and(NameCondition.of("&3Magic Paper")));
+        // TODO LoreCondition
+
+        this.recipeManager.registerRecipe(this, new WorkbenchRecipe(
+            new ShapelessIngredients(magicPaperIngredient, Ingredient
+                     .withMaterial(Material.DIAMOND)), new ItemStackResult(Material.PAPER)
+                        .and(NameResult.of("&9Raw Linking Panel"))
+                        .and(LoreResult.of("&eAn unfinished linking panel.",
+                                           "&eGreat heat is needed to",
+                                           "&emake it usable in a book"))));
 
         this.recipeManager.registerRecipe(this,
                   new FurnaceRecipe(new FurnaceIngredients(
@@ -128,24 +130,19 @@ public class Mystcube extends Module implements Listener
                                                                                                   "&eforged together by great",
                                                                                                   "&eheat. It is still warm."))))
         ;
+        Ingredient linkingPanelIngredient = Ingredient
+            .withCondition(MaterialCondition.of(Material.PAPER).and(NameCondition.of("&6Linking Panel")));
+            // TODO LoreCondition
 
-/*
-
-
-        item = new ItemStack(Material.INK_SACK, 1, DyeColor.GRAY.getDyeData()); // Setting Color /w MaterialData does not work WHÝ?!
-        meta.setDisplayName(ChatFormat.parseFormats("&6Ash"));
-        meta.setLore(Arrays.asList(ChatFormat.parseFormats("&eThis is what happens when"),
-                                   ChatFormat.parseFormats("&eyou burn normal paper")));
-        item.setItemMeta(meta);
-        ASH = item;
-
-        item = new ItemStack(Material.BOOK, 1);
-        meta.setDisplayName(ChatFormat.parseFormats("&6Kortee'nea"));
-        meta.setLore(Arrays.asList(ChatFormat.parseFormats("&eA Blank Book just"),
-                                   ChatFormat.parseFormats("&ewaiting to be written")));
-        item.setItemMeta(meta);
-        BLANK_BOOK = item;
-        */
+        this.recipeManager.registerRecipe(this,
+                                          new WorkbenchRecipe(
+                                              new ShapelessIngredients(magicPaperIngredient, magicPaperIngredient,
+                                                                       linkingPanelIngredient,
+                                                                       Ingredient.withMaterial(Material.LEATHER))
+                                              ,new ItemStackResult(Material.BOOK).and(NameResult.of("&6Kortee'nea"))
+                                                                                  .and(LoreResult.of("&eA Blank Book just",
+                                                                                               "&ewaiting to be written"))
+                                          ));
 
         this.getCore().getEventManager().registerListener(this, this);
 
