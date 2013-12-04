@@ -71,24 +71,24 @@ public class ShapelessIngredients implements WorkbenchIngredients
     public Set<Recipe> getBukkitRecipes(MaterialData resultMaterial)
     {
         Set<Recipe> recipes = new HashSet<>();
-        Set<Set<MaterialData>> endSets = new HashSet<>();
-        endSets.add(new HashSet<MaterialData>());
-        Set<Set<MaterialData>> tempSets;
+        Set<List<MaterialData>> endSets = new HashSet<>();
+        endSets.add(new ArrayList<MaterialData>());
+        Set<List<MaterialData>> tempSets;
         for (Ingredient ingredient : ingredients)
         {
             tempSets = new HashSet<>();
             for (MaterialData material : ingredient.getMaterials())
             {
-                for (Set<MaterialData> materials : endSets)
+                for (List<MaterialData> materials : endSets)
                 {
-                    Set<MaterialData> mat = new HashSet<>(materials);
+                    List<MaterialData> mat = new ArrayList<>(materials);
                     mat.add(material);
                     tempSets.add(mat);
                 }
             }
             endSets = tempSets;
         }
-        for (Set<MaterialData> materials : endSets)
+        for (List<MaterialData> materials : endSets)
         {
             ShapelessRecipe shapelessRecipe = new ShapelessRecipe(resultMaterial.toItemStack());
             for (MaterialData material : materials)
@@ -119,5 +119,11 @@ public class ShapelessIngredients implements WorkbenchIngredients
             matrix[index] = null;
         }
         return map;
+    }
+
+    @Override
+    public int getSize()
+    {
+        return this.ingredients.size();
     }
 }
