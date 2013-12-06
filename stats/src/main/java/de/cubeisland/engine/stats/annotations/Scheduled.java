@@ -22,23 +22,27 @@ import java.lang.annotation.Retention;
 import java.lang.annotation.RetentionPolicy;
 import java.lang.annotation.Target;
 
+/**
+ * Indicates this method should be scheduled at the given interval.
+ * The interval is in ticks.
+ */
 @Retention(RetentionPolicy.RUNTIME)
 @Target(ElementType.METHOD)
 public @interface Scheduled
 {
     abstract String name();
 
-    abstract long period();
+    abstract long interval();
 
     boolean async() default false;
 
     /**
-     * If the period field is final.
-     * If this is true, the period will not be put in the config,
+     * If the interval field is final.
+     * If this is true, the interval will not be put in the config,
      * and will therefor always be the value set in the annotation.
      * @return
      */
     boolean periodFinal() default false;
 
-    String comment() default "";
+    String[] comment() default "";
 }

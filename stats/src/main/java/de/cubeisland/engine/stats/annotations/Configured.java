@@ -15,3 +15,24 @@
  * You should have received a copy of the GNU General Public License
  * along with CubeEngine.  If not, see <http://www.gnu.org/licenses/>.
  */
+package de.cubeisland.engine.stats.annotations;
+
+
+import java.lang.annotation.ElementType;
+import java.lang.annotation.Retention;
+import java.lang.annotation.RetentionPolicy;
+import java.lang.annotation.Target;
+
+/**
+ * Indicates that this field should be configured in a configuration file.
+ *
+ * Name and Comments can be done by the @Name and @Comment of ConfigurationAPI
+ * These values should not change during runtime, they will not be saved!
+ */
+@Retention(RetentionPolicy.RUNTIME)
+@Target(ElementType.FIELD)
+public @interface Configured
+{
+    public String name() default "";
+
+}
