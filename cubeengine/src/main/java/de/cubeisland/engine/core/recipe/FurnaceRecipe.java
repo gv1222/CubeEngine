@@ -56,6 +56,10 @@ public class FurnaceRecipe extends Recipe<FurnaceIngredients>
 
     public boolean matchesRecipe(ItemStack smelting)
     {
+        if (smelting == null)
+        {
+            return false;
+        }
         for (org.bukkit.inventory.Recipe recipe : this.bukkitRecipes)
         {
             if (recipe instanceof org.bukkit.inventory.FurnaceRecipe)

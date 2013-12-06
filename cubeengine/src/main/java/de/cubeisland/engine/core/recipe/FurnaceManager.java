@@ -115,6 +115,11 @@ public class FurnaceManager implements Listener
                                                                     furnace.getInventory().getSmelting());
                 if (fuel != null && fuel.getRight())
                 {
+                    if (furnace.getInventory().getResult() != null && !furnace.getInventory().getResult().isSimilar(recipe.getPreview(null, furnace)))
+                    {
+                        System.out.print("Try new Fuel | Result Blocked");
+                        return;
+                    }
                     event.setBurnTime(fuel.getLeft().fuelTicks);
                     fuelMap.put(location, fuel.getLeft());
                     System.out.print("New Fuel | BurnTime +" + event.getBurnTime());
@@ -184,13 +189,23 @@ public class FurnaceManager implements Listener
                            if (furnace.getInventory().getSmelting() != null)
                            {
                                smeltMap.remove(location);
-                               new NoSmelting(furnace);
+                               preventSmelting(furnace);
                            }
                            System.out.print("No Restart!");
                        }
                    }
                });
         }
+    }
+
+    protected void preventSmelting(Furnace furnace)
+    {
+        new NoSmelting(furnace);
+    }
+
+    protected void preventSmelting(Furnace furnace, ItemStack itemStack)
+    {
+        new NoSmelting(furnace, itemStack);
     }
 
     private class NoSmelting
@@ -219,8 +234,13 @@ public class FurnaceManager implements Listener
 
         private NoSmelting(Furnace furnace)
         {
+            this(furnace, furnace.getInventory().getSmelting());
+        }
+
+        private NoSmelting(Furnace furnace, ItemStack smelt)
+        {
             System.out.println("No Smelting STARTED");
-            this.smelt = furnace.getInventory().getSmelting() == null ? null : furnace.getInventory().getSmelting().clone();
+            this.smelt = smelt.clone();
             this.furnace = furnace;
             manager.core.getTaskManager().runTaskDelayed(coreModule, runner, 1);
         }
@@ -239,6 +259,7 @@ public class FurnaceManager implements Listener
                 if (fuelMap.get(location) != null)
                 {
                     System.out.print("Custom Fuel but no Custom Smelting detected!");
+                    this.preventSmelting(furnace);
                     event.setCancelled(true);
 
                     FurnaceRecipe newRecipe = this.findRecipeFor(furnace);
@@ -250,6 +271,13 @@ public class FurnaceManager implements Listener
                     }
                 }
                 // TODO vanilla recipe?
+                return;
+            }
+            if (!smelt.recipe.ingredients.isSmeltable(furnace.getInventory().getSmelting()))
+            {
+                System.out.print("SMELTING NOT SMELTABLE");
+                event.setCancelled(true);
+                this.preventSmelting(furnace);
                 return;
             }
             ItemStack result = smelt.recipe.getPreview(null, furnace);
@@ -315,7 +343,6 @@ public class FurnaceManager implements Listener
     @EventHandler
     public void onNewSmeltable(InventoryClickEvent event)
     {
-        // TODO prevent taking out when fuel not used up / add preview for furnacerecipe
         if (event.getInventory() instanceof FurnaceInventory)
         {
             if (event.getInventory().getHolder() instanceof Furnace)
@@ -393,6 +420,10 @@ public class FurnaceManager implements Listener
                     }
                     return;
                 case COLLECT_TO_CURSOR:
+                    if (oldItem == null)
+                    {
+                        return;
+                    }
                     if (oldItem.isSimilar(event.getCursor()))
                     {
                         int missing = event.getCursor().getMaxStackSize() - event.getCursor().getAmount();
@@ -432,14 +463,28 @@ public class FurnaceManager implements Listener
                     if (customSmelting.recipe.ingredients.isSmeltable(newItem))
                     {
                         System.out.print("Changed smelting | Recipe valid");
+                        if (customSmelting.isDone())
+                        {
+                            System.out.print("but done! Restart...");
+                            this.restartSmelting(customSmelting.recipe, furnace, location, furnace.getBurnTime());
+                        }
                         return;
                     }
                     for (FurnaceRecipe newRecipe : this.matchRecipes(newItem))
                     {
                         if (newRecipe.ingredients.hasFuel(customFuel))
                         {
-                            System.out.print("Changed smelting | Recipe Changed");
-                            // TODO restart new recipe
+                            customSmelting.done();
+                            if (newRecipe.ingredients.isSmeltable(newItem))
+                            {
+                                System.out.print("Changed smelting | Recipe Changed");
+                                this.restartSmelting(newRecipe, furnace, location, furnace.getBurnTime());
+                            }
+                            else
+                            {
+                                System.out.print("Changed smelting | Recipe Match Incomplete");
+                                this.preventSmelting(furnace, newItem);
+                            }
                         }
                         else
                         {
@@ -468,15 +513,14 @@ public class FurnaceManager implements Listener
                 }
                 if (invalidRecipe || customFuel != null)
                 {
-                    event.setCancelled(true);
                     System.out.print("No valid Recipe");
-                    // TODO prevent burning instead ??
+                    this.preventSmelting(furnace, newItem);
                 }
             }
         }
     }
 
-    public void onExtractItem(InventoryClickEvent event, Furnace furnace)
+    public void onExtractItem(final InventoryClickEvent event, Furnace furnace)
     {
         if (!(event.getWhoClicked() instanceof Player))
         {
@@ -486,10 +530,10 @@ public class FurnaceManager implements Listener
         Triplet<CustomSmelting, ItemStack, Integer> smelted = this.resultMap.remove(location);
         if (smelted != null)
         {
+            System.out.print("Extract Item Prep");
             int times = smelted.getThird();
             ItemStack result = smelted.getFirst().recipe.getResult((Player)event.getWhoClicked(), furnace);
             result.setAmount(result.getAmount() * times);
-            ItemStack preview = event.getCurrentItem();
             if (event.getSlotType() == SlotType.RESULT)
             {
                 switch (event.getAction())
@@ -506,51 +550,37 @@ public class FurnaceManager implements Listener
                 furnace.getInventory().setResult(result);
             }
             else return;
-            ((Player)event.getWhoClicked()).updateInventory();
+            this.coreModule.getCore().getTaskManager().runTaskDelayed(this.coreModule, new Runnable()
+            {
+                @Override
+                public void run()
+                {
+                    ((Player)event.getWhoClicked()).updateInventory();
+                }
+            }, 1);
         }
     }
 
+    @EventHandler
     public void onExtractItem(FurnaceExtractEvent event)
     {
-        /*
+        System.out.print("Extracted Item!");
         if (event.getBlock().getState() instanceof Furnace)
         {
-            final Furnace furnace = (Furnace)event.getBlock().getState();
-            final Player player = event.getPlayer();
-            Location location = event.getBlock().getLocation();
-            Triplet<CustomSmelting, ItemStack, Integer> smelted = this.resultMap.remove(location);
-            if (smelted != null)
+            Furnace furnace = (Furnace)event.getBlock().getState();
+            Location location = furnace.getLocation();
+            CustomSmelting smelting = this.smeltMap.get(location);
+            if (smelting == null || smelting.isDone())
             {
-                int times = smelted.getThird();
-                ItemStack result = smelted.getFirst().recipe.getResult(player, event.getBlock().getState());
-                final ItemStack preview = furnace.getInventory().getResult();
-                result.setAmount(result.getAmount() * times);
-                if (result.getAmount() == event.getItemAmount())
+                FurnaceRecipe recipe = this.findRecipeFor(furnace);
+                if (recipe != null)
                 {
-                    preview.setData(result.getData());
-                    preview.setItemMeta(result.getItemMeta());
-                    System.out.print("Take out result");
-                }
-                else
-                {
-                    preview.setAmount(preview.getAmount() - event.getItemAmount());
-                    furnace.getInventory().setResult(result);
-                    System.out.print("Take out partial result");
-                    this.manager.core.getTaskManager().runTask(coreModule,
-                                       new Runnable()
-                                       {
-                                           @Override
-                                           public void run()
-                                           {
-                                               System.out.print("Put back Preview");
-                                               furnace.getInventory().setResult(preview);
-                                               player.updateInventory();
-                                           }
-                                       });
+                    this.restartSmelting(recipe, furnace, location, furnace.getBurnTime());
+                    return;
                 }
             }
+            System.out.print("No Restart after extract");
         }
-       // */
     }
 
     // TODO intercept putting new items in furnace when smelting a custom recipe

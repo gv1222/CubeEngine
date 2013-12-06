@@ -153,6 +153,14 @@ public class CustomSmelting
                         return;
                     }
                 }
+                if (furnace.getInventory().getResult() != null && !furnace.getInventory().getResult().isSimilar(recipe.getPreview(null, furnace)))
+                {
+                    System.out.print("#"+n+" Abort Smelt: Result is blocked!");
+                    furnace.setCookTime((short)0);
+                    manager.preventSmelting(furnace);
+                    done();
+                    return;
+                }
                 curSmeltTime += lastFuelTick - furnace.getBurnTime();
                 short cookTime = (short)(curSmeltTime / factor);
                 //System.out.print("#" + n + " | " + curSmeltTime + "/" + totalSmeltTime  +
