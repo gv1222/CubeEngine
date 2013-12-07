@@ -45,7 +45,6 @@ public class LoreResult extends Result
     @Override
     public ItemStack getResult(Player player, BlockState block, ItemStack itemStack)
     {
-        // TODO what if itemStack is null ? throw illegalarg?
         ItemMeta itemMeta = itemStack.getItemMeta();
         itemMeta.setLore(Arrays.asList(lines));
         itemStack.setItemMeta(itemMeta);

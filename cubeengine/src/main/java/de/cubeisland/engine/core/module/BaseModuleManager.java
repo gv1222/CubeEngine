@@ -439,6 +439,7 @@ public abstract class BaseModuleManager implements ModuleManager
             this.core.getTaskManager().clean(module);
             this.core.getCommandManager().removeCommands(module);
             this.core.getApiServer().unregisterApiHandlers(module);
+            this.core.getRecipeManager().unregisterAllRecipes(module);
 
             this.core.getEventManager().fireEvent(new ModuleDisabledEvent(this.core, module));
 

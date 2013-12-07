@@ -20,7 +20,6 @@ package de.cubeisland.engine.core.recipe;
 import java.util.LinkedList;
 import java.util.Set;
 
-import org.bukkit.Server;
 import org.bukkit.block.BlockState;
 import org.bukkit.entity.Player;
 import org.bukkit.inventory.ItemStack;
@@ -43,6 +42,7 @@ public abstract class Recipe<T extends Ingredients>
     protected Effect effect;
 
     protected Set<org.bukkit.inventory.Recipe> bukkitRecipes;
+    private boolean allowOldRecipe = false;
 
     public Recipe(T ingredients, Result result)
     {
@@ -56,13 +56,13 @@ public abstract class Recipe<T extends Ingredients>
         return this;
     }
 
-    public final void registerBukkitRecipes(Server server)
+    public final Set<org.bukkit.inventory.Recipe> getBukkitRecipes()
     {
-        bukkitRecipes = ingredients.getBukkitRecipes(this.getResultMaterial());
-        for (org.bukkit.inventory.Recipe recipe : bukkitRecipes)
+        if (bukkitRecipes == null)
         {
-            server.addRecipe(recipe);
+            bukkitRecipes = ingredients.getBukkitRecipes(this.getResultMaterial());
         }
+        return bukkitRecipes;
     }
 
     protected final MaterialData getResultMaterial()
@@ -90,6 +90,23 @@ public abstract class Recipe<T extends Ingredients>
             return;
         }
         this.effect.runEffect(core, player);
+    }
+
+    /**
+     * Defaulted to false
+     *
+     * @param b
+     * @return
+     */
+    public final Recipe<T> allowOldRecipe(boolean b)
+    {
+        this.allowOldRecipe = b;
+        return this;
+    }
+
+    public boolean isOldRecipeAllowed()
+    {
+        return allowOldRecipe;
     }
 
     public final T getIngredients()

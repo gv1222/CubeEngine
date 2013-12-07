@@ -111,7 +111,6 @@ public class CustomSmelting
             @Override
             public void run()
             {
-                // TODO stop when result is full  OR DropResult drops the item to the ground
                 if (N != n)
                 {
                     done();

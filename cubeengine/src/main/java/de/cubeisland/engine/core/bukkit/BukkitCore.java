@@ -68,6 +68,7 @@ import de.cubeisland.engine.core.logging.Level;
 import de.cubeisland.engine.core.logging.Log;
 import de.cubeisland.engine.core.logging.LogFactory;
 import de.cubeisland.engine.core.module.Module;
+import de.cubeisland.engine.core.recipe.RecipeManager;
 import de.cubeisland.engine.core.storage.database.Database;
 import de.cubeisland.engine.core.storage.database.mysql.MySQLDatabase;
 import de.cubeisland.engine.core.user.TableUser;
@@ -131,6 +132,7 @@ public final class BukkitCore extends JavaPlugin implements Core
     private boolean loadSucceeded;
     private boolean loaded = false;
     private boolean isStartupFinished = false;
+    private RecipeManager recipeManager;
 
     @Override
     public boolean isStartupFinished()
@@ -303,6 +305,7 @@ public final class BukkitCore extends JavaPlugin implements Core
 
         this.matcherManager = new Match();
         this.inventoryGuard = new InventoryGuardFactory(this);
+        this.recipeManager = new RecipeManager(this);
 
         // depends on loaded worlds
         this.worldManager = new BukkitWorldManager(BukkitCore.this);
@@ -351,6 +354,8 @@ public final class BukkitCore extends JavaPlugin implements Core
 
         this.getServer().getPluginManager().registerEvents(new CoreListener(this), this);
 
+        this.recipeManager.init();
+
         this.moduleManager.init();
         this.moduleManager.enableModules();
         this.permissionManager.calculatePermissions();
@@ -372,6 +377,12 @@ public final class BukkitCore extends JavaPlugin implements Core
         this.loaded = false;
         this.logger.debug("utils cleanup");
         BukkitUtils.cleanup();
+
+        if (recipeManager != null)
+        {
+            this.recipeManager.shutdown();
+            this.recipeManager = null;
+        }
 
         if (freezeDetection != null)
         {
@@ -669,5 +680,12 @@ public final class BukkitCore extends JavaPlugin implements Core
     {
         return configFactory;
     }
+
+    @Override
+    public RecipeManager getRecipeManager()
+    {
+         return recipeManager;
+    }
+
     //endregion
 }

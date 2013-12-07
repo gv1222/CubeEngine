@@ -44,7 +44,8 @@ import de.cubeisland.engine.core.util.Triplet;
 
 public class FurnaceManager implements Listener
 {
-    // TODO finish results when unloading / stopping
+    // TODO allow smelting only ONCE then need to take out (set result direct no preview)
+    // TODO recipe fallbacks
     protected final CoreModule coreModule;
     protected RecipeManager manager;
 
@@ -57,7 +58,6 @@ public class FurnaceManager implements Listener
     {
         this.manager = manager;
         this.coreModule = this.manager.core.getModuleManager().getCoreModule();
-        this.manager.core.getEventManager().registerListener(coreModule, this);
     }
 
     protected FurnaceRecipe findRecipeFor(Furnace furnace)
@@ -124,6 +124,7 @@ public class FurnaceManager implements Listener
                     fuelMap.put(location, fuel.getLeft());
                     System.out.print("New Fuel | BurnTime +" + event.getBurnTime());
                     this.startSmelting(recipe, furnace, fuel.getLeft(), event.getBurnTime());
+                    // TODO fuelResult
                     return;
                 }
                 invalidRecipe = true;
@@ -206,6 +207,12 @@ public class FurnaceManager implements Listener
     protected void preventSmelting(Furnace furnace, ItemStack itemStack)
     {
         new NoSmelting(furnace, itemStack);
+    }
+
+    public void shutdown()
+    {
+        this.coreModule.getCore().getEventManager().removeListener(coreModule, this);
+        // TODO finish results when unloading / stopping
     }
 
     private class NoSmelting

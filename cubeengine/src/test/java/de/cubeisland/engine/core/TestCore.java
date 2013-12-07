@@ -35,6 +35,7 @@ import de.cubeisland.engine.core.logging.LogFactory;
 import de.cubeisland.engine.core.module.ModuleManager;
 import de.cubeisland.engine.core.module.TestModuleManager;
 import de.cubeisland.engine.core.permission.PermissionManager;
+import de.cubeisland.engine.core.recipe.RecipeManager;
 import de.cubeisland.engine.core.storage.database.Database;
 import de.cubeisland.engine.core.task.TaskManager;
 import de.cubeisland.engine.core.user.UserManager;
@@ -210,5 +211,11 @@ public class TestCore implements Core
     public boolean isStartupFinished()
     {
         return false;
+    }
+
+    @Override
+    public RecipeManager getRecipeManager()
+    {
+        throw new UnsupportedOperationException();
     }
 }

@@ -17,9 +17,7 @@
  */
 package de.cubeisland.engine.mystcube;
 
-import java.util.HashSet;
 import java.util.Random;
-import java.util.Set;
 
 import org.bukkit.Bukkit;
 import org.bukkit.Material;
@@ -30,7 +28,6 @@ import org.bukkit.WorldType;
 import org.bukkit.block.Biome;
 import org.bukkit.event.Listener;
 import org.bukkit.inventory.ItemStack;
-import org.bukkit.inventory.Recipe;
 
 import de.cubeisland.engine.core.module.Module;
 import de.cubeisland.engine.core.recipe.FuelIngredient;
@@ -63,8 +60,6 @@ public class Mystcube extends Module implements Listener
 {
     private MystcubeConfig config;
 
-    private RecipeManager recipeManager;
-
     @Override
     public void onStartupFinished()
     {
@@ -72,8 +67,7 @@ public class Mystcube extends Module implements Listener
                         .generator("CubeEngine:mystcube:flat")
                         .generateStructures(false)
                         .type(WorldType.FLAT)
-                        .environment(Environment.NORMAL)
-            ;
+                        .environment(Environment.NORMAL);
         World world = this.getCore().getWorldManager().createWorld(worldCreator);
         if (world != null)
         {
@@ -89,11 +83,9 @@ public class Mystcube extends Module implements Listener
     @Override
     public void onEnable()
     {
-        this.recipeManager = new RecipeManager(this.getCore());
-
         Bukkit.getServer().addRecipe(new org.bukkit.inventory.FurnaceRecipe(new ItemStack(Material.GOLD_INGOT), Material.OBSIDIAN));
-
-        this.recipeManager.registerRecipe(this,
+        RecipeManager recipeManager = this.getCore().getRecipeManager();
+        recipeManager.registerRecipe(this,
                   new WorkbenchRecipe(
                       new ShapedIngredients("ppp","prp","ppp")
                           .setIngredient('p', Ingredient.withMaterial(Material.PAPER))
@@ -108,7 +100,7 @@ public class Mystcube extends Module implements Listener
             .withCondition(MaterialCondition.of(Material.PAPER).and(NameCondition.of("&3Magic Paper")));
         // TODO LoreCondition
 
-        this.recipeManager.registerRecipe(this, new WorkbenchRecipe(
+        recipeManager.registerRecipe(this, new WorkbenchRecipe(
             new ShapelessIngredients(magicPaperIngredient, Ingredient
                      .withMaterial(Material.DIAMOND)), new ItemStackResult(Material.PAPER)
                         .and(NameResult.of("&9Raw Linking Panel"))
@@ -118,11 +110,11 @@ public class Mystcube extends Module implements Listener
 
         FuelIngredient obsidianFuel =  new FuelIngredient(Ingredient.withMaterial(Material.OBSIDIAN), 64 * 20, 20);
 
-        this.recipeManager.registerRecipe(this, new FurnaceRecipe(new FurnaceIngredients(
+        recipeManager.registerRecipe(this, new FurnaceRecipe(new FurnaceIngredients(
             Ingredient.withMaterial(Material.BLAZE_ROD), obsidianFuel),
                                                       new ItemStackResult(Material.BLAZE_POWDER).and(AmountResult.set(8))));
 
-        this.recipeManager.registerRecipe(this,
+        recipeManager.registerRecipe(this,
                   new FurnaceRecipe(new FurnaceIngredients(
                       Ingredient.withCondition(MaterialCondition.of(Material.PAPER).and(NameCondition.of("&9Raw Linking Panel")
                                                            .and(AmountCondition.more(2))))
@@ -142,7 +134,7 @@ public class Mystcube extends Module implements Listener
             .withCondition(MaterialCondition.of(Material.PAPER).and(NameCondition.of("&6Linking Panel")));
             // TODO LoreCondition
 
-        this.recipeManager.registerRecipe(this,
+        recipeManager.registerRecipe(this,
                                           new WorkbenchRecipe(
                                               new ShapelessIngredients(magicPaperIngredient, magicPaperIngredient,
                                                                        linkingPanelIngredient,
@@ -150,13 +142,12 @@ public class Mystcube extends Module implements Listener
                                               ,new ItemStackResult(Material.BOOK).and(NameResult.of("&6Kortee'nea"))
                                                                                   .and(LoreResult.of("&eA Blank Book just",
                                                                                                "&ewaiting to be written"))
-                                          ));
+                                          ).allowOldRecipe(true));
 
         this.getCore().getEventManager().registerListener(this, this);
 
         // TODO remove RecipeManager TEST
 
-        this.getCore().getEventManager().registerListener(this, this.recipeManager);
         de.cubeisland.engine.core.recipe.Recipe recipe = new WorkbenchRecipe(
             new ShapelessIngredients(Ingredient.withMaterial(Material.PAPER),
                                      Ingredient.withMaterial(Material.SAND).withResult(
@@ -171,7 +162,7 @@ public class Mystcube extends Module implements Listener
                             and(LoreResult.of("1% Chance to get Fine Sandpaper",
                                               "80% Chance to keep Sand",
                                               "when crafting in Desert Biome")));
-        this.recipeManager.registerRecipe(this, recipe);
+        recipeManager.registerRecipe(this, recipe);
 
         ShapelessIngredients ingredients = new ShapelessIngredients(Ingredient.withCondition(
             MaterialCondition.of(Material.WOOL).and(DurabilityCondition.exact((short)14)))); // RED WOOL
@@ -180,13 +171,13 @@ public class Mystcube extends Module implements Listener
                         Material.NETHERRACK, Material.NETHER_BRICK, Material.NETHER_BRICK_ITEM, Material.NETHER_BRICK_STAIRS,
                         Material.NETHER_FENCE, Material.NETHER_STALK, Material.APPLE, Material.MELON, Material.RAW_BEEF,
                         Material.SPIDER_EYE, Material.FERMENTED_SPIDER_EYE, Material.RECORD_4)));
-        this.recipeManager.registerRecipe(this,
+        recipeManager.registerRecipe(this,
                                           new WorkbenchRecipe(ingredients,
                                           new ItemStackResult(Material.WOOL).and(DurabilityResult.set((short)14)).
                                               and(NameResult.of("&cVery Red Wool")))
                                          );
 
-        this.recipeManager.registerRecipe(this, new WorkbenchRecipe(
+        recipeManager.registerRecipe(this, new WorkbenchRecipe(
             new ShapedIngredients(" x ", "   ", "x x")
                             .setIngredient('x', Ingredient.withCondition(MaterialCondition.of(Material.IRON_INGOT))),
             new ItemStackResult(Material.GOLD_INGOT).and(AmountResult.set(3)))
@@ -196,23 +187,12 @@ public class Mystcube extends Module implements Listener
                                                                 .and(AmountResult.set(3))));
     }
 
-    private Set<Recipe> myRecipes = new HashSet<>();
-    private ItemStack MAGIC_PAPER;
-    private ItemStack LINKING_PANEL;
-    private ItemStack RAW_PANEL;
-    private ItemStack ASH;
-    private ItemStack BLANK_BOOK; // Kortee'nea
+    // Blank Book Kortee'nea
 
     // Descriptive Book: Kor-mahn
     // Linking Book: Kor'vahkh
     // Ink: lem // Use brewing if possible (water glowstone redstone inksack) (using weakness / slowness or no effect)
     // potion data 32 = thick potion
-
-    private void registerRecipe(Recipe recipe) // TODO API in Core for Recipe Registration & unregister when unloading the module
-    {
-        Bukkit.getServer().addRecipe(recipe);
-        this.myRecipes.add(recipe);
-    }
 
     @Override
     public void onLoad()

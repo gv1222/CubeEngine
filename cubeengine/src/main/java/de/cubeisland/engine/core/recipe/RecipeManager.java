@@ -19,6 +19,7 @@ package de.cubeisland.engine.core.recipe;
 
 import java.util.HashMap;
 import java.util.HashSet;
+import java.util.Iterator;
 import java.util.Map;
 import java.util.Map.Entry;
 import java.util.Set;
@@ -34,6 +35,8 @@ import org.bukkit.event.inventory.InventoryAction;
 import org.bukkit.event.inventory.PrepareItemCraftEvent;
 import org.bukkit.inventory.CraftingInventory;
 import org.bukkit.inventory.ItemStack;
+import org.bukkit.inventory.ShapedRecipe;
+import org.bukkit.inventory.ShapelessRecipe;
 
 import de.cubeisland.engine.core.Core;
 import de.cubeisland.engine.core.CubeEngine;
@@ -44,10 +47,12 @@ import static org.bukkit.event.inventory.InventoryAction.MOVE_TO_OTHER_INVENTORY
 
 public class RecipeManager implements Listener
 {
-    // TODO replace recipes OR allow (bukkit)old recipe to work
     protected Map<Module, Set<Recipe>> recipes = new HashMap<>();
     protected Set<WorkbenchRecipe> workbenchRecipes = new HashSet<>();
     protected Set<FurnaceRecipe> furnaceRecipes = new HashSet<>();
+
+    protected Map<Recipe, Pair<Set<org.bukkit.inventory.Recipe>, Boolean>> replaceMap = new HashMap<>();
+
     private final FurnaceManager furnaceManager;
 
     protected Core core;
@@ -58,9 +63,36 @@ public class RecipeManager implements Listener
         this.furnaceManager = new FurnaceManager(this);
     }
 
+    public void init()
+    {
+        this.core.getEventManager().registerListener(core.getModuleManager().getCoreModule(), this);
+        this.core.getEventManager().registerListener(core.getModuleManager().getCoreModule(), this.furnaceManager);
+    }
+
+    @SuppressWarnings("unchecked")
     public void registerRecipe(Module module, Recipe recipe)
     {
-        recipe.registerBukkitRecipes(Bukkit.getServer());
+        Set<org.bukkit.inventory.Recipe> bukkitRecipes = recipe.getBukkitRecipes();
+        Set<org.bukkit.inventory.Recipe> oldRecipes = this.removeBukkitRecipe(recipe);
+        if (!oldRecipes.isEmpty())
+        {
+            Pair<Set<org.bukkit.inventory.Recipe>, Boolean> prev = replaceMap.put(recipe, new Pair<>(oldRecipes, recipe.isOldRecipeAllowed()));
+            if (prev != null)
+            {
+                module.getLog().warn("A Recipe with the same footprint has been registered already!");
+            }
+            System.out.print("Replaced old Recipes");
+            for (org.bukkit.inventory.Recipe oldRecipe : oldRecipes)
+            {
+                System.out.print(" - " + oldRecipe.getResult());
+            }
+        }
+        System.out.print("Registered new Recipe");
+        for (org.bukkit.inventory.Recipe bukkitRecipe : bukkitRecipes)
+        {
+            Bukkit.getServer().addRecipe(bukkitRecipe);
+            System.out.print(" - " + bukkitRecipe.getResult());
+        }
         this.getRecipes(module).add(recipe);
         if (recipe instanceof WorkbenchRecipe)
         {
@@ -76,18 +108,85 @@ public class RecipeManager implements Listener
         }
     }
 
+    protected Set<org.bukkit.inventory.Recipe> removeBukkitRecipe(Recipe recipe)
+    {
+        Set<org.bukkit.inventory.Recipe> removed = new HashSet<>();
+        Iterator<org.bukkit.inventory.Recipe> it = Bukkit.getServer().recipeIterator();
+        while (it.hasNext())
+        {
+            org.bukkit.inventory.Recipe oldRecipe = it.next();
+            if (oldRecipe instanceof org.bukkit.inventory.FurnaceRecipe && recipe instanceof FurnaceRecipe)
+            {
+                if (((FurnaceRecipe)recipe).matchesRecipe(((org.bukkit.inventory.FurnaceRecipe)oldRecipe).getInput()))
+                {
+                    it.remove();
+                    removed.add(oldRecipe);
+                }
+            }
+            else if ((oldRecipe instanceof ShapedRecipe || oldRecipe instanceof ShapelessRecipe) && recipe instanceof WorkbenchRecipe)
+            {
+                if (((WorkbenchRecipe)recipe).matchesRecipe(oldRecipe))
+                {
+                    it.remove();
+                    removed.add(oldRecipe);
+                }
+            }
+        }
+        return removed;
+    }
+
     public void unregisterRecipe(Module module, Recipe recipe)
     {
-        // TODO remove bukkit recipes (saved recipes are in our Recipe object)
         this.getRecipes(module).remove(recipe);
-        this.workbenchRecipes.remove(recipe);
+        if (recipe instanceof WorkbenchRecipe)
+        {
+            this.workbenchRecipes.remove(recipe);
+        }
+        else if (recipe instanceof FurnaceRecipe)
+        {
+            this.furnaceRecipes.remove(recipe);
+        }
+        this.finishUnregister(recipe);
+    }
+
+    private void finishUnregister(Recipe recipe)
+    {
+        System.out.print("Unregistered Recipe");
+        this.removeBukkitRecipe(recipe);
+        Pair<Set<org.bukkit.inventory.Recipe>, Boolean> pair = replaceMap.get(recipe);
+        if (pair != null)
+        {
+            System.out.print("Reregistered previous Recipes");
+            for (org.bukkit.inventory.Recipe prevRecipe : pair.getLeft())
+            {
+                System.out.print(" - "+ prevRecipe.getResult());
+                Bukkit.getServer().addRecipe(prevRecipe);
+            }
+        }
     }
 
     public void unregisterAllRecipes(Module module)
     {
-        // TODO remove bukkit recipes (saved recipes are in our Recipe object)
         Set<Recipe> remove = this.recipes.remove(module);
         this.workbenchRecipes.removeAll(remove);
+        this.furnaceRecipes.removeAll(remove);
+        for (Recipe recipe : remove)
+        {
+            this.finishUnregister(recipe);
+        }
+    }
+
+    public void unregisterAllRecipes()
+    {
+        this.recipes.clear();
+        for (Recipe recipe : this.workbenchRecipes)
+        {
+            this.finishUnregister(recipe);
+        }
+        for (Recipe recipe : this.furnaceRecipes)
+        {
+            this.finishUnregister(recipe);
+        }
     }
 
     private Set<Recipe> getRecipes(Module module)
@@ -149,8 +248,26 @@ public class RecipeManager implements Listener
                         }
                         else
                         {
+                            Pair<Set<org.bukkit.inventory.Recipe>, Boolean> pair = this.replaceMap.get(recipe);
+                            if (pair.getRight())
+                            {
+                                ItemStack result = null;
+                                for (org.bukkit.inventory.Recipe check : pair.getLeft())
+                                {
+                                    if (WorkbenchRecipe.isMatching(check, event.getRecipe()))
+                                    {
+                                        if (result != null)
+                                        {
+                                            core.getLog().warn("Custom Recipe has multiple valid fallback!");
+                                        }
+                                        result = check.getResult();
+                                    }
+                                }
+                                event.getInventory().setResult(result);
+                                System.out.print("Used FallBack Recipe");
+                                return;
+                            }
                             System.out.print("No more match!");
-                            event.getInventory().setResult(null);
                         }
                     }
                 }
@@ -189,7 +306,7 @@ public class RecipeManager implements Listener
                 }
             }
         }
-        catch (InvalidIngredientsException e) // TODO own exception for this
+        catch (InvalidIngredientsException e)
         {
             System.out.print("STOP Shift CRAFT");
             return false;
@@ -223,53 +340,83 @@ public class RecipeManager implements Listener
         final Player player = (Player)event.getWhoClicked();
         for (final WorkbenchRecipe recipe : workbenchRecipes)
         {
-            if (recipe.matchesConditions(player, event.getInventory().getMatrix()))
+            if (recipe.matchesRecipe(event.getRecipe()))
             {
-                final ItemStack[] matrix = this.deepClone(event.getInventory().getMatrix());
-                if (event.getAction() == MOVE_TO_OTHER_INVENTORY)
+                if (recipe.matchesConditions(player, event.getInventory().getMatrix()))
                 {
-                    this.shiftCrafting.put(player, new Pair<>(matrix, 0));
-                }
-                event.getInventory().setResult(recipe.getResult(player, null)); // TODO block
-                final Map<Integer, ItemStack> ingredientResults = recipe.getIngredientResults(player, null, event.getInventory().getMatrix()); // TODO block
-                if (!ingredientResults.isEmpty() || event.getAction() == MOVE_TO_OTHER_INVENTORY)
-                {
-                    recipe.runEffects(core, player);
-                    final CraftingInventory inventory = event.getInventory();
+                    final ItemStack[] matrix = this.deepClone(event.getInventory().getMatrix());
+                    if (event.getAction() == MOVE_TO_OTHER_INVENTORY)
+                    {
+                        this.shiftCrafting.put(player, new Pair<>(matrix, 0));
+                    }
+                    event.getInventory().setResult(recipe.getResult(player, null)); // TODO block
+                    final Map<Integer, ItemStack> ingredientResults = recipe.getIngredientResults(player, null, event.getInventory().getMatrix()); // TODO block
+                    if (!ingredientResults.isEmpty() || event.getAction() == MOVE_TO_OTHER_INVENTORY)
+                    {
+                        recipe.runEffects(core, player);
+                        final CraftingInventory inventory = event.getInventory();
+                        core.getTaskManager().runTaskDelayed(core.getModuleManager().getCoreModule(),
+                                                             new Runnable()
+                                                             {
+                                                                 @Override
+                                                                 public void run()
+                                                                 {
+                                                                     Pair<ItemStack[], Integer> shift = shiftCrafting.remove(player);
+                                                                     if (shift == null)
+                                                                     {
+                                                                         System.out.print("Normal Craft");
+                                                                         reduceMyMatrix(matrix, recipe, player, null); // TODO block
+                                                                         inventory.setMatrix(matrix);
+                                                                     }
+                                                                     else
+                                                                     {
+                                                                         inventory.setMatrix(reduceMatrix(shift.getLeft()));
+                                                                     }
+                                                                 }
+                                                             }, 1L);
+                    }
                     core.getTaskManager().runTaskDelayed(core.getModuleManager().getCoreModule(),
-                                 new Runnable()
-                                 {
-                                     @Override
-                                     public void run()
-                                     {
-                                         Pair<ItemStack[], Integer> shift = shiftCrafting.remove(player);
-                                         if (shift == null)
-                                         {
-                                             System.out.print("Normal Craft");
-                                             reduceMyMatrix(matrix, recipe, player, null); // TODO block
-                                             inventory.setMatrix(matrix);
-                                         }
-                                         else
-                                         {
-                                             inventory.setMatrix(reduceMatrix(shift.getLeft()));
-                                         }
-                                     }
-                                 }, 1L);
-                }
-                core.getTaskManager().runTaskDelayed(core.getModuleManager().getCoreModule(),
-                     new Runnable()
-                     {
-                         @Override
-                         public void run()
-                         {
-                             player.updateInventory();
-                         }
-                     }, 2L);
+                                                         new Runnable()
+                                                         {
+                                                             @Override
+                                                             public void run()
+                                                             {
+                                                                 player.updateInventory();
+                                                             }
+                                                         }, 2L);
 
-                return;
+                    return;
+                }
+                else
+                {
+                    Pair<Set<org.bukkit.inventory.Recipe>, Boolean> pair = this.replaceMap.get(recipe);
+                    if (pair.getRight())
+                    {
+                        ItemStack result = null;
+                        for (org.bukkit.inventory.Recipe check : pair.getLeft())
+                        {
+                            if (WorkbenchRecipe.isMatching(check, event.getRecipe()))
+                            {
+                                if (result != null)
+                                {
+                                    core.getLog().warn("Custom Recipe has multiple valid fallback!");
+                                }
+                                result = check.getResult();
+                            }
+                        }
+                        event.getInventory().setResult(result);
+                        System.out.print("Used FallBack Recipe");
+                        return;
+                    }
+                }
             }
         }
     }
 
-     //TODO remove recipe when unloading module
+    public void shutdown()
+    {
+        this.core.getEventManager().removeListener(core.getModuleManager().getCoreModule(), this);
+        this.furnaceManager.shutdown();
+        this.unregisterAllRecipes();
+    }
 }

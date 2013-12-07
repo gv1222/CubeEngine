@@ -35,7 +35,6 @@ public class FurnaceIngredients implements Ingredients
 {
     private Ingredient smeltable;
     private final List<FuelIngredient> fuels;
-    // TODO FuelResult
 
     public FurnaceIngredients(Ingredient smeltable, FuelIngredient... fuels)
     {

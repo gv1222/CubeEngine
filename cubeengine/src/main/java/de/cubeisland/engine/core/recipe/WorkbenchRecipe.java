@@ -77,6 +77,47 @@ public class WorkbenchRecipe extends Recipe<WorkbenchIngredients>
         return this.preview.getResult(player, block, null);
     }
 
+    public static <R extends org.bukkit.inventory.Recipe> boolean isMatching(R r1, R r2)
+    {
+        if (r1 instanceof ShapelessRecipe)
+        {
+            if (((ShapelessRecipe)r1).getIngredientList().equals(
+                ((ShapelessRecipe)r2).getIngredientList()))
+            {
+                return true;
+            }
+        }
+        else if (r1 instanceof ShapedRecipe)
+        {
+            String[] checkShape = ((ShapedRecipe)r1).getShape();
+            String[] myShape = ((ShapedRecipe)r2).getShape();
+            Map<Character, ItemStack> checkMap = ((ShapedRecipe)r1).getIngredientMap();
+            Map<Character, ItemStack> myMap = ((ShapedRecipe)r2).getIngredientMap();
+            try
+            {
+                for (int i = 0; i < checkShape.length; i++)
+                {
+                    for (int j = 0; j < checkShape[i].length(); j++)
+                    {
+                        ItemStack checkItem = checkMap.get(checkShape[i].charAt(j));
+                        ItemStack myItem = myMap.get(myShape[i].charAt(j));
+                        if (checkItem != myItem)
+                        {
+                            if (checkItem == null || !checkItem.getData().equals(myItem.getData()))
+                            {
+                                return false;
+                            }
+                        }
+                    }
+                }
+                return true;
+            }
+            catch (IndexOutOfBoundsException ignore) // wrong shape
+            {}
+        }
+        return false;
+    }
+
     public final boolean matchesRecipe(org.bukkit.inventory.Recipe checkRecipe)
     {
         for (org.bukkit.inventory.Recipe myRecipe : this.bukkitRecipes)
@@ -85,41 +126,9 @@ public class WorkbenchRecipe extends Recipe<WorkbenchIngredients>
             {
                 if (checkRecipe.getResult().isSimilar(myRecipe.getResult()))
                 {
-                    if (checkRecipe instanceof ShapelessRecipe)
+                    if (isMatching(myRecipe, checkRecipe))
                     {
-                        if (((ShapelessRecipe)checkRecipe).getIngredientList().equals(
-                            ((ShapelessRecipe)myRecipe).getIngredientList()))
-                        {
-                            return true;
-                        }
-                    }
-                    else if (checkRecipe instanceof ShapedRecipe)
-                    {
-                        String[] checkShape = ((ShapedRecipe)checkRecipe).getShape();
-                        String[] myShape = ((ShapedRecipe)myRecipe).getShape();
-                        Map<Character, ItemStack> checkMap = ((ShapedRecipe)checkRecipe).getIngredientMap();
-                        Map<Character, ItemStack> myMap = ((ShapedRecipe)myRecipe).getIngredientMap();
-                        try
-                        {
-                            for (int i = 0; i < checkShape.length; i++)
-                            {
-                                for (int j = 0; j < checkShape[i].length(); j++)
-                                {
-                                    ItemStack checkItem = checkMap.get(checkShape[i].charAt(j));
-                                    ItemStack myItem = myMap.get(myShape[i].charAt(j));
-                                    if (checkItem != myItem)
-                                    {
-                                        if (checkItem == null || !checkItem.getData().equals(myItem.getData()))
-                                        {
-                                            break;
-                                        }
-                                    }
-                                }
-                            }
-                            return true;
-                        }
-                        catch (IndexOutOfBoundsException ignore) // wrong shape
-                        {}
+                        return true;
                     }
                 }
             }
